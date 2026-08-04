@@ -11,11 +11,17 @@ fi
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# Skip oh-my-zsh's compaudit permission-scan of every directory in $fpath on
+# every shell startup. This was measured to be ~90% of total .zshrc load time
+# (compinit -> compaudit + compdump). Safe here: this is a single-user
+# machine and $fpath only contains Homebrew/oh-my-zsh paths we trust.
+ZSH_DISABLE_COMPFIX="true"
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME=""
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -32,6 +38,7 @@ CASE_SENSITIVE="true"
 
 # Uncomment one of the following lines to change the auto-update behavior
 # zstyle ':omz:update' mode disabled  # disable automatic updates
+zstyle ':omz:update' mode disabled      # also silences the custom 'autoupdate' plugin's periodic prompt
 # zstyle ':omz:update' mode auto      # update automatically without asking
 # zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
@@ -82,21 +89,18 @@ ZSH_TMUX_AUTONAME_SESSION=true
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
         1password
-        ajhctl
         alias-finder
         autoupdate
         azure
 		bkt
         brew
         eza
-        # fd-zsh
         git
         git-auto-fetch
         gnu-utils
         helm
         kubectl
         macos
-        # opencode
         prek
         terraform
         tmux
@@ -108,6 +112,11 @@ plugins=(
         zsh-completions
         zsh-syntax-highlighting
         )
+
+# Hook for machine-specific plugins (e.g. work-only custom plugins) to be
+# appended before oh-my-zsh loads, without hardcoding them in this generic
+# file. Populated by the private dotfiles-cegeka overlay on work Macs.
+[[ -f ~/.zshrc.work.plugins ]] && source ~/.zshrc.work.plugins
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
@@ -131,8 +140,10 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias watch='watch '
-alias grep="$(which grg)"
-alias find="$(which fnd)"
+# grg/fnd are already on $PATH (~/.local/bin); aliasing straight to the name
+# avoids spawning a `which` subshell on every shell startup.
+alias grep='grg'
+alias find='fnd'
 
 source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 eval "$(mise activate zsh)"
