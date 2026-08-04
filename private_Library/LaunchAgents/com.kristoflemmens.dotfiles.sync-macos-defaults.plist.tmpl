@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.kristoflemmens.dotfiles.sync-macos-defaults</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi/bin/sync-macos-defaults.sh</string>
+	</array>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StartInterval</key>
+	<integer>14400</integer>
+	<key>StandardOutPath</key>
+	<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi-logs/sync-macos-defaults.log</string>
+	<key>StandardErrorPath</key>
+	<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi-logs/sync-macos-defaults.log</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+</dict>
+</plist>

@@ -8,6 +8,12 @@
 #   git add -A && git commit ...    # accept drift as the new desired state
 #   git checkout -- macos-defaults.tsv && chezmoi apply   # revert the system instead
 #
+# Runs automatically via a LaunchAgent (see
+# Library/LaunchAgents/com.kristoflemmens.dotfiles.sync-macos-defaults.plist),
+# so you don't have to remember to run this yourself. When drift is found,
+# it sends a macOS notification. Logs go to ~/.local/share/chezmoi-logs/
+# for debugging the scheduled runs.
+#
 # Usage: bin/sync-macos-defaults.sh   (run from anywhere; finds the repo itself)
 
 set -eufo pipefail
@@ -70,6 +76,9 @@ if [ "$changed" -eq 1 ]; then
   echo
   echo "==> macos-defaults.tsv updated to reflect actual system state."
   echo "    Review with: cd ${SCRIPT_DIR} && git diff macos-defaults.tsv"
+  if command -v osascript >/dev/null 2>&1; then
+    osascript -e 'display notification "Run `git diff macos-defaults.tsv` in your dotfiles repo to review." with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
+  fi
 else
   echo "==> No drift detected. macos-defaults.tsv already matches the system."
 fi

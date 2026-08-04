@@ -34,14 +34,22 @@ need something like nix-darwin, which was a deliberate trade-off (see repo histo
 (`bin/sync-macos-defaults.sh`) read/write this one file.
 
 - **Declare a new desired value:** edit `macos-defaults.tsv`, `chezmoi apply`.
-- **Detect drift** (e.g. after changing something via System Settings):
-  run `bin/sync-macos-defaults.sh`. It reads the *live* system state and
+- **Detect drift** (e.g. after changing something via System Settings): this
+  happens **automatically** — a LaunchAgent
+  (`Library/LaunchAgents/com.kristoflemmens.dotfiles.sync-macos-defaults.plist`)
+  runs `bin/sync-macos-defaults.sh` at login and every 4 hours, so you don't
+  have to remember to run it yourself. It reads the *live* system state and
   overwrites `macos-defaults.tsv` with it — nothing is applied to the system
-  and nothing is auto-committed. Run `git diff macos-defaults.tsv` to see
-  exactly what changed, then either:
+  and nothing is auto-committed. If it finds drift, you'll get a macOS
+  notification; run `git diff macos-defaults.tsv` (in `~/.local/share/chezmoi`)
+  to see exactly what changed, then either:
   - `git add -A && git commit` to **accept** the drift as the new desired state, or
   - `git checkout -- macos-defaults.tsv` to discard it and re-apply the old
     declared value (see caveat below).
+  - Run it manually any time with `~/.local/share/chezmoi/bin/sync-macos-defaults.sh`,
+    or force an immediate run with
+    `launchctl kickstart -k gui/$(id -u)/com.kristoflemmens.dotfiles.sync-macos-defaults`.
+  - Logs: `~/.local/share/chezmoi-logs/sync-macos-defaults.log`.
 
 **Important caveat:** `chezmoi apply` only re-runs a script when its rendered
 content's hash differs from the hash it last recorded as applied. If you
