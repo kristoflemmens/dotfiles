@@ -1,40 +1,23 @@
 #!/bin/bash
 set -eufo pipefail
+# defaults data hash: {{ include "macos-defaults.tsv" | sha256sum }}
 
 echo "==> Applying macOS system defaults..."
 
-# --- Dock ---
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock autohide-delay -float 0
-defaults write com.apple.dock autohide-time-modifier -float 0.15
-defaults write com.apple.dock show-recents -bool false
-defaults write com.apple.dock tilesize -int 42
+DEFAULTS_FILE="{{ .chezmoi.sourceDir }}/macos-defaults.tsv"
 
-# --- Finder ---
-defaults write com.apple.finder AppleShowAllExtensions -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write NSGlobalDomain AppleShowAllFiles -bool true
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # list view
-defaults write com.apple.finder NewWindowTarget -string "PfHm"     # new windows open in Home
-defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # search current folder by default
+while IFS='|' read -r flag domain key type value; do
+  # skip blank lines and comments
+  [ -z "$domain" ] && continue
+  case "$domain" in \#*) continue ;; esac
 
-# --- Trackpad / mouse ---
-defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+  # shellcheck disable=SC2086
+  defaults $flag write "$domain" "$key" "-$type" "$value"
+done < <(grep -v '^\s*#' "$DEFAULTS_FILE" | grep -v '^\s*$')
 
-# --- Keyboard ---
-defaults write NSGlobalDomain KeyRepeat -int 2
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
-
-# --- Screenshots ---
+# --- Screenshots (not tracked in macos-defaults.tsv: path depends on $HOME) ---
 mkdir -p "${HOME}/Documents/Screenshots"
 defaults write com.apple.screencapture location -string "${HOME}/Documents/Screenshots"
-defaults write com.apple.screencapture type -string "png"
 
 # Restart affected apps so changes take effect
 killall Dock >/dev/null 2>&1 || true

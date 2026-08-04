@@ -1,0 +1,45 @@
+# macOS defaults, tracked as data so both the apply script and the sync
+# script (bin/sync-macos-defaults.sh) share a single source of truth.
+#
+# Format: host_flag|domain|key|type|value
+#   host_flag: empty, or "-currentHost" for defaults -currentHost
+#   type:      bool | int | float | string
+#
+# Edit this file to change the DECLARED (desired) state, then run
+# `chezmoi apply` to push it to the system.
+#
+# Run `bin/sync-macos-defaults.sh` to pull the CURRENT system state back
+# into this file (e.g. after changing something via System Settings), so
+# the drift shows up as a normal git diff you can review, commit (accept)
+# or discard + `chezmoi apply` (revert).
+
+# --- Dock ---
+|com.apple.dock|autohide|bool|true
+|com.apple.dock|autohide-delay|float|0
+|com.apple.dock|autohide-time-modifier|float|0.15
+|com.apple.dock|show-recents|bool|false
+|com.apple.dock|tilesize|int|42
+
+# --- Finder ---
+|com.apple.finder|AppleShowAllExtensions|bool|true
+|com.apple.finder|ShowPathbar|bool|true
+|com.apple.finder|ShowStatusBar|bool|true
+|NSGlobalDomain|AppleShowAllFiles|bool|true
+|com.apple.finder|FXPreferredViewStyle|string|Nlsv
+|com.apple.finder|NewWindowTarget|string|PfHm
+|com.apple.finder|FXDefaultSearchScope|string|SCcf
+
+# --- Trackpad / mouse ---
+|com.apple.AppleMultitouchTrackpad|Clicking|bool|true
+|com.apple.driver.AppleBluetoothMultitouch.trackpad|Clicking|bool|true
+-currentHost|NSGlobalDomain|com.apple.mouse.tapBehavior|int|1
+
+# --- Keyboard ---
+|NSGlobalDomain|KeyRepeat|int|2
+|NSGlobalDomain|InitialKeyRepeat|int|15
+|NSGlobalDomain|ApplePressAndHoldEnabled|bool|false
+|NSGlobalDomain|NSAutomaticCapitalizationEnabled|bool|false
+|NSGlobalDomain|NSAutomaticSpellingCorrectionEnabled|bool|false
+
+# --- Screenshots ---
+|com.apple.screencapture|type|string|png
