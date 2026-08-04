@@ -113,13 +113,14 @@ Notes:
 ## Day to day usage
 
 Note: on a machine where the `dotfiles-cegeka` overlay is also applied,
-`chezmoi status`/`chezmoi diff` here will permanently show
-`Library/Application Support/Code/User/settings.json` as changed. That's
-expected — the overlay repo merges extra keys into that same file after this
-repo writes it, and jq's re-serialization also reformats a few unrelated
-lines (dropped comment, normalized trailing commas) and can flip the file's
-permission bits. Harmless, but don't be surprised by it; re-apply the
-`dotfiles-cegeka` overlay after applying this repo, as documented there.
+`chezmoi status`/`chezmoi diff` here will permanently show three files as
+changed: `Library/Application Support/Code/User/settings.json`, `.warprc`
+and `.gitconfig`. That's expected — the overlay repo appends/merges its own
+content into these same files after this repo writes them (jq's
+re-serialization of settings.json also reformats a few unrelated lines:
+dropped comment, normalized trailing commas, possible permission bit flip).
+Harmless, but don't be surprised by it; re-apply the `dotfiles-cegeka`
+overlay after applying this repo, as documented there.
 
 ```sh
 # edit a tracked dotfile through chezmoi (keeps source + target in sync)
