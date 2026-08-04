@@ -26,6 +26,37 @@ Settings afterwards — there's no continuous enforcement, only "declare once,
 re-apply when you edit the declaration". For always-on drift correction you'd
 need something like nix-darwin, which was a deliberate trade-off (see repo history/PR discussion).
 
+### Tracking macOS defaults & detecting drift
+
+`macos-defaults.tsv` is the single source of truth for macOS system defaults
+(Dock, Finder, trackpad, keyboard). Both the apply script
+(`run_onchange_after_02-macos-defaults.sh.tmpl`) and the drift-sync helper
+(`bin/sync-macos-defaults.sh`) read/write this one file.
+
+- **Declare a new desired value:** edit `macos-defaults.tsv`, `chezmoi apply`.
+- **Detect drift** (e.g. after changing something via System Settings):
+  run `bin/sync-macos-defaults.sh`. It reads the *live* system state and
+  overwrites `macos-defaults.tsv` with it — nothing is applied to the system
+  and nothing is auto-committed. Run `git diff macos-defaults.tsv` to see
+  exactly what changed, then either:
+  - `git add -A && git commit` to **accept** the drift as the new desired state, or
+  - `git checkout -- macos-defaults.tsv` to discard it and re-apply the old
+    declared value (see caveat below).
+
+**Important caveat:** `chezmoi apply` only re-runs a script when its rendered
+content's hash differs from the hash it last recorded as applied. If you
+revert `macos-defaults.tsv` to a value that was already applied *before* the
+drift happened, the hash will match a value chezmoi has already seen, so
+`chezmoi apply` (even with `--force`) will think there is nothing to do —
+even though the live system still has the drifted value. Chezmoi never
+inspects the actual system state, only the hash of what it last wrote.
+To force a real re-apply in that situation:
+
+```sh
+chezmoi state delete --bucket=entryState --key="$HOME/02-macos-defaults.sh"
+chezmoi apply --force
+```
+
 ## Bootstrap a new Mac
 
 ```sh
