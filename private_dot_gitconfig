@@ -2,10 +2,6 @@
 	path = ~/.gitconfig_personal
 [includeIf "gitdir:~/Projects/ThirdParty/"]
 	path = ~/.gitconfig_personal
-[includeIf "gitdir:~/Projects/Work/Cegeka/AJH/"]
-	path = ~/.gitconfig_cegeka_ajh
-[includeIf "gitdir:~/Projects/Work/Cegeka/VUTG/"]
-	path = ~/.gitconfig_cegeka_vutg
 [init]
 	defaultBranch = main
 	templateDir = ~/.git-template

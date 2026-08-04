@@ -136,7 +136,7 @@ alias find="$(which fnd)"
 
 source /opt/homebrew/share/powerlevel10k/powerlevel10k.zsh-theme
 eval "$(mise activate zsh)"
-source ~/Projects/Work/Cegeka/AJH/Azure/datagrip/_completions.zsh
+[[ -f ~/.zshrc.work ]] && source ~/.zshrc.work
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
