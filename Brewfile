@@ -1,15 +1,9 @@
-# NOTE: private work tap, requires Bitbucket SSH access to be configured first
-tap "ajh/tap", "git@bitbucket.org:vo-ajh/homebrew-tap.git", trusted: true
 tap "anomalyco/tap", trusted: true
-tap "avivsinai/tap", trusted: true
-tap "azure/kubelogin", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "homebrew/core"
 tap "homeport/tap", trusted: true
 # GitOps Continuous Delivery for Kubernetes
 brew "argocd"
-# Microsoft Azure CLI 2.0
-brew "azure-cli"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -82,8 +76,6 @@ brew "node@22"
 brew "pam-reattach"
 # Shell command parallelization utility
 brew "parallel"
-# Copy a Postgres database to a target Postgres server
-brew "pgcopydb"
 # Fast, disk space efficient package manager
 brew "pnpm"
 # Theme for zsh
@@ -120,28 +112,12 @@ brew "uv"
 brew "watch"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
-# ACD firewall and DNS connectivity Tester
-brew "ajh/tap/ajhctl-acdtester"
-# Azure Key Vault certificate management tool
-brew "ajh/tap/ajhctl-certificates"
-# Database connection utilities for AJH with PostgreSQL
-brew "ajh/tap/ajhctl-databases"
-# CLI to list and activate Azure PIM roles
-brew "ajh/tap/az-pim-cli"
-# CLI tools for Azure PIM (Privileged Identity Management) operations
-brew "ajh/tap/ajhctl-pim"
-# CLI tools for Azure Storage operations
-brew "ajh/tap/ajhctl-storage"
-# The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
-# CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal
-brew "avivsinai/tap/bitbucket-cli"
-# A Kubernetes credential (exec) plugin implementing azure authentication
-brew "azure/kubelogin/kubelogin"
 # Terraform
 brew "hashicorp/tap/terraform"
 # δyƒƒ /ˈdʏf/ - A diff tool for YAML files, and sometimes JSON
 brew "homeport/tap/dyff"
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
@@ -178,8 +154,6 @@ cask "logi-options+"
 cask "maccy"
 # Provides updates to various Microsoft products
 cask "microsoft-auto-update"
-# Explorer for Azure Storage
-cask "microsoft-azure-storage-explorer"
 # Tool to control external monitor brightness & volume
 cask "monitorcontrol"
 # Control your tools with a few keystrokes

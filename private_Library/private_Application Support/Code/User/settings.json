@@ -70,12 +70,6 @@
     "tags": false,
     "worktrees": true
   },
-  "rest-client.certificates": {
-    "digitaal-ondertekenen-api-ti.vlaanderen.be": {
-      "cert": "/Users/kristole/Projects/Work/Cegeka/AJH/VHP/secrets/handtekenmap.crt",
-      "key": "/Users/kristole/Projects/Work/Cegeka/AJH/VHP/secrets/handtekenmap.key"
-    }
-  },
   "rest-client.previewOption": "exchange",
   "shellcheck.executablePath": "/opt/homebrew/bin/shellcheck",
   "shellformat.path": "/opt/homebrew/bin/shfmt",

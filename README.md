@@ -75,7 +75,29 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply kristoflemmens
 ```
 
 That's it. Homebrew, all CLI tools/casks, Java/Node via mise, dotfiles, and macOS
-defaults are set up automatically.
+defaults are set up automatically. This repo is intentionally generic and
+public: it contains nothing employer- or client-specific, so it works
+unmodified on a personal Mac too.
+
+### On a Cegeka-issued work Mac: a second, private overlay
+
+Employer/client-specific config (work git identity, Azure/AJH-specific
+CLI tools, a client project's VS Code settings) lives in a **separate,
+private** repo: [`dotfiles-cegeka`](https://github.com/kristoflemmens/dotfiles-cegeka),
+applied as its own independent chezmoi source, on top of this one:
+
+```sh
+chezmoi --source ~/.local/share/chezmoi-cegeka \
+  --config ~/.config/chezmoi/chezmoi-cegeka.toml \
+  init --apply git@github.com:kristoflemmens/dotfiles-cegeka.git
+```
+
+Run this *after* the base bootstrap above — by then Homebrew, 1Password and
+`gh` are already installed, so authenticating to this private repo (via the
+1Password SSH agent or `gh auth login`) is no longer a chicken-and-egg
+problem. See that repo's README for details, including an important
+ordering caveat around VS Code settings.
+
 
 Notes:
 - The `ajh/tap` Homebrew tap is a private work tap hosted on Bitbucket. It requires
