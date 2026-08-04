@@ -1,0 +1,43 @@
+#!/bin/bash
+set -eufo pipefail
+
+echo "==> Applying macOS system defaults..."
+
+# --- Dock ---
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0.15
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock tilesize -int 42
+
+# --- Finder ---
+defaults write com.apple.finder AppleShowAllExtensions -bool true
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+defaults write NSGlobalDomain AppleShowAllFiles -bool true
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv" # list view
+defaults write com.apple.finder NewWindowTarget -string "PfHm"     # new windows open in Home
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf" # search current folder by default
+
+# --- Trackpad / mouse ---
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+# --- Keyboard ---
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+
+# --- Screenshots ---
+mkdir -p "${HOME}/Documents/Screenshots"
+defaults write com.apple.screencapture location -string "${HOME}/Documents/Screenshots"
+defaults write com.apple.screencapture type -string "png"
+
+# Restart affected apps so changes take effect
+killall Dock >/dev/null 2>&1 || true
+killall Finder >/dev/null 2>&1 || true
+
+echo "==> macOS defaults applied. Some settings may require a logout/restart."

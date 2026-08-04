@@ -1,0 +1,9 @@
+#!/bin/bash
+set -eufo pipefail
+
+echo "==> Installing runtimes via mise (from ~/.tool-versions)..."
+if command -v mise >/dev/null 2>&1; then
+  mise install
+else
+  echo "mise not found on PATH yet, skipping (it will be available after shell restart)."
+fi

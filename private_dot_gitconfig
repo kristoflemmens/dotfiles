@@ -1,0 +1,50 @@
+[includeIf "gitdir:~/Projects/Personal/"]
+	path = ~/.gitconfig_personal
+[includeIf "gitdir:~/Projects/ThirdParty/"]
+	path = ~/.gitconfig_personal
+[includeIf "gitdir:~/Projects/Work/Cegeka/AJH/"]
+	path = ~/.gitconfig_cegeka_ajh
+[includeIf "gitdir:~/Projects/Work/Cegeka/VUTG/"]
+	path = ~/.gitconfig_cegeka_vutg
+[init]
+	defaultBranch = main
+	templateDir = ~/.git-template
+[core]
+	editor = "code --new-window --wait"
+	autocrlf = input
+	pager = 
+	excludesfile = ~/.gitignore
+[alias]
+	tags = "tag -l"
+	branches = "branch -a"
+	remotes = "remote -v"
+	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
+[merge]
+	tool = "code"
+[mergetool "code"]
+	cmd = "code -n -w $MERGED"
+[diff]
+	tool = "code"
+[difftool]
+	prompt = false
+[difftool "code"]
+	cmd = "code -n -w --diff $LOCAL $REMOTE"
+	trustExitCode = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[diff "ansible-vault"]
+	textconv = ansible-vault view
+	cachetextconv = false
+[pull]
+	rebase = true
+[user]
+	name = Kristof Lemmens
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[commit]
+	gpgsign = true

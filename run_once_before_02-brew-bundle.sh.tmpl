@@ -1,0 +1,5 @@
+#!/bin/bash
+set -eufo pipefail
+
+echo "==> Installing packages from Brewfile..."
+brew bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile"

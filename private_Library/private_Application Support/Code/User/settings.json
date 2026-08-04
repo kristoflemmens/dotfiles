@@ -1,0 +1,237 @@
+{
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonl]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[yaml]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "azureTerraform.survey": {
+    "surveyPromptDate": "never",
+    "surveyPromptIgnoredCount": 0
+  },
+  "chat.agent.maxRequests": 50,
+  "chat.mcp.autostart": "newAndOutdated",
+  "chat.mcp.serverSampling": {
+    "Global in Code: azure": {
+      "allowedDuringChat": true
+    }
+  },
+  "containers.containerCommand": "/opt/homebrew/bin/docker",
+  "containers.contexts.showInStatusBar": true,
+  "containers.environment": {
+    "DOCKER_CONTEXT": "colima",
+    "DOCKER_HOST": "unix:///Users/kristole/.colima/default/docker.sock"
+  },
+  "diffEditor.experimental.showMoves": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.maxComputationTime": 0,
+  "diffEditor.useInlineViewWhenSpaceIsLimited": false,
+  "editor.fontFamily": "MesloLGS NF",
+  "editor.fontLigatures": true,
+  "editor.minimap.enabled": false,
+  "editor.multiCursorLimit": 100000,
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [
+    120
+  ],
+  "editor.unicodeHighlight.invisibleCharacters": false,
+  "files.associations": {
+    "*.chatmode.md": "markdown",
+    "*.instructions.md": "markdown",
+    "*-instructions.md": "markdown",
+    "*.prompt.md": "markdown"
+  },
+  "files.autoSave": "afterDelay",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "git.autofetch": true,
+  "git.enableCommitSigning": true,
+  "git.path": "/opt/homebrew/bin/git",
+  "github.copilot.chat.codesearch.enabled": true,
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "gitlens.plusFeatures.enabled": false,
+  "gitlens.statusBar.enabled": false,
+  "gitlens.views.scm.grouped.views": {
+    "branches": false,
+    "commits": false,
+    "contributors": false,
+    "launchpad": true,
+    "remotes": false,
+    "repositories": false,
+    "searchAndCompare": false,
+    "stashes": false,
+    "tags": false,
+    "worktrees": true
+  },
+  "rest-client.certificates": {
+    "digitaal-ondertekenen-api-ti.vlaanderen.be": {
+      "cert": "/Users/kristole/Projects/Work/Cegeka/AJH/VHP/secrets/handtekenmap.crt",
+      "key": "/Users/kristole/Projects/Work/Cegeka/AJH/VHP/secrets/handtekenmap.key"
+    }
+  },
+  "rest-client.previewOption": "exchange",
+  "shellcheck.executablePath": "/opt/homebrew/bin/shellcheck",
+  "shellformat.path": "/opt/homebrew/bin/shfmt",
+  "terminal.external.osxExec": "iTerm.app",
+  "terminal.integrated.copyOnSelection": true,
+  // "terminal.integrated.defaultProfile.osx": "code-shell",
+  "terminal.integrated.fontFamily": "MesloLGS NF",
+  "terminal.integrated.fontSize": 12,
+  "terminal.integrated.inheritEnv": false,
+  "terminal.integrated.profiles.osx": {
+    "code-shell": {
+      "args": [
+        "-l",
+        "-c",
+        "${env:HOME}/.local/bin/code-shell"
+      ],
+      "env": {
+        "IDE": "vscode"
+      },
+      "path": "zsh"
+    }
+  },
+  "vscode-kubernetes.helm-path-mac": "/opt/homebrew/bin/helm",
+  "vscode-kubernetes.kubectl-path-mac": "/opt/homebrew/bin/kubectl",
+  "window.confirmSaveUntitledWorkspace": false,
+  "window.title": "${dirty}${activeEditorLong}${separator}${rootName}${separator}${appName}",
+  "workbench.panel.defaultLocation": "right",
+  "workbench.startupEditor": "none",
+  "workbench.tree.indent": 24,
+  "markdown-preview-github-styles.colorTheme": "light",
+  "application.shellEnvironmentResolutionTimeout": 30,
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "explorer.confirmDragAndDrop": false,
+  "claudeCode.preferredLocation": "panel",
+  "chat.viewSessions.orientation": "stacked",
+  "scm.repositories.selectionMode": "single",
+  "gitlens.views.commits.files.layout": "tree",
+  "acp.agents": {
+
+
+
+    "GitHub Copilot": {
+      "command": "npx",
+      "args": [
+        "@github/copilot-language-server@latest",
+        "--acp"
+      ],
+      "env": {}
+    },
+    "Claude Code": {
+      "command": "npx",
+      "args": [
+        "@zed-industries/claude-code-acp@latest"
+      ],
+      "env": {}
+    },
+    "Gemini CLI": {
+      "command": "npx",
+      "args": [
+        "@google/gemini-cli@latest",
+        "--experimental-acp"
+      ],
+      "env": {}
+    },
+    "Qwen Code": {
+      "command": "npx",
+      "args": [
+        "@qwen-code/qwen-code@latest",
+        "--acp",
+        "--experimental-skills"
+      ],
+      "env": {}
+    },
+    "Auggie CLI": {
+      "command": "npx",
+      "args": [
+        "@augmentcode/auggie@latest",
+        "--acp"
+      ],
+      "env": {
+        "AUGMENT_DISABLE_AUTO_UPDATE": "1"
+      }
+    },
+    "Qoder CLI": {
+      "command": "npx",
+      "args": [
+        "@qoder-ai/qodercli@latest",
+        "--acp"
+      ],
+      "env": {}
+    },
+    "Codex CLI": {
+      "command": "npx",
+      "args": [
+        "@zed-industries/codex-acp@latest"
+      ],
+      "env": {}
+    },
+    "OpenCode": {
+      "command": "npx",
+      "args": [
+        "opencode-ai@latest",
+        "acp"
+      ],
+      "env": {}
+    },
+    "OpenClaw": {
+      "command": "npx",
+      "args": [
+        "openclaw",
+        "acp"
+      ],
+      "env": {}
+    },
+    "OpenCode (local install)": {
+      "command": "/opt/homebrew/bin/opencode",
+      "args": [
+        "acp",
+      ],
+      "env": {},
+    },
+  },
+  "workbench.colorTheme": "Catppuccin Mocha",
+  "json.schemaDownload.trustedDomains": {
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://json-schema.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://models.dev": true,
+    "https://opencode.ai": true,
+    "https://raw.githubusercontent.com/devcontainers/spec/": true,
+    "https://raw.githubusercontent.com/microsoft/vscode/": true,
+    "https://schemastore.azurewebsites.net/": true,
+    "https://www.schemastore.org/": true
+  },
+  "chat.tools.urls.autoApprove": {
+    "https://code.visualstudio.com": true,
+    "https://github.com/microsoft/vscode/wiki/*": true,
+    "https://learn.microsoft.com": true,
+    "https://carbone.io": true,
+    "https://*.githubusercontent.com": true
+  },
+  "gitlens.views.stashes.files.layout": "tree",
+  "gitlens.views.tags.branches.layout": "list",
+  "gitlens.ai.model": "vscode",
+  "gitlens.ai.vscode.model": "copilotcli:claude-sonnet-5"
+}
