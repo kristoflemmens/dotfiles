@@ -1,0 +1,12 @@
+cpu: 4
+disk: 60
+memory: 8
+arch: aarch64
+runtime: docker
+autoActivate: true
+kubernetes:
+  enabled: false
+network:
+  address: false
+vmType: vz
+mountType: virtiofs
