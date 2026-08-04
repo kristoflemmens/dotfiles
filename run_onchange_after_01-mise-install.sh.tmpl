@@ -1,5 +1,6 @@
 #!/bin/bash
 set -eufo pipefail
+# tool-versions hash: {{ include "dot_tool-versions" | sha256sum }}
 
 echo "==> Installing runtimes via mise (from ~/.tool-versions)..."
 if command -v mise >/dev/null 2>&1; then
