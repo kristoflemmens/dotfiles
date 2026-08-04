@@ -10,11 +10,21 @@ Personal macOS dotfiles and machine bootstrap, managed with [chezmoi](https://ww
 - VS Code user `settings.json`
 - `Brewfile` — every Homebrew tap/formula/cask this machine needs
 - `.tool-versions` — runtime versions (Java, Node), installed via [mise](https://mise.jdx.dev/)
-- `run_once_*` scripts — executed automatically, exactly once, by `chezmoi apply`:
-  - Install Homebrew if missing
-  - `brew bundle install` from the `Brewfile`
-  - `mise install` for the runtimes in `.tool-versions`
-  - Apply macOS system defaults (Dock, Finder, trackpad, keyboard, screenshots)
+- `run_once_*` / `run_onchange_*` scripts — executed automatically by `chezmoi apply`:
+  - Install Homebrew if missing (`run_once_` — a true one-time bootstrap step)
+  - `brew bundle install` from the `Brewfile` (`run_onchange_` — re-runs whenever
+    the Brewfile changes, so adding/removing a package and running
+    `chezmoi apply` actually reconciles the machine)
+  - `mise install` for the runtimes in `.tool-versions` (`run_onchange_`, same idea)
+  - Apply macOS system defaults — Dock, Finder, trackpad, keyboard, screenshots
+    (`run_onchange_` — edit the script, commit, `chezmoi apply`, and the new
+    defaults get applied; this is how macOS settings are "tracked" here)
+
+Note: `run_onchange_` only re-applies when the *declared* state (this repo)
+changes. It does not detect drift if you change a setting manually via System
+Settings afterwards — there's no continuous enforcement, only "declare once,
+re-apply when you edit the declaration". For always-on drift correction you'd
+need something like nix-darwin, which was a deliberate trade-off (see repo history/PR discussion).
 
 ## Bootstrap a new Mac
 
