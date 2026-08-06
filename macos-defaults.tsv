@@ -18,7 +18,7 @@
 |com.apple.dock|autohide-delay|float|0
 |com.apple.dock|autohide-time-modifier|float|0.15
 |com.apple.dock|show-recents|bool|false
-|com.apple.dock|tilesize|int|42
+|com.apple.dock|tilesize|int|70
 
 # --- Finder ---
 |com.apple.finder|AppleShowAllExtensions|bool|true
