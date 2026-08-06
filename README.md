@@ -163,3 +163,24 @@ silently drifting from what's declared.
 - Same `chezmoi state delete --bucket=entryState --key=...` caveat as the
   macOS defaults applies here too, if you ever need to force a real re-apply
   after reverting `Brewfile` to a previously-seen value.
+
+### Detecting drift in everything else (plain dotfiles)
+
+`.zshrc`, `.gitconfig`, `.tool-versions`, k9s/gh/ssh config, etc. don't have
+a dedicated sync script like the two above — they're plain files chezmoi
+manages directly, so `chezmoi status`/`chezmoi diff` already shows drift
+between the live file and what's declared here. The problem was that nobody
+was actually running that check regularly. `bin/check-dotfiles-drift.sh`
+closes that gap: it runs `chezmoi status` and sends a macOS notification if
+anything differs, via the same LaunchAgent pattern (login + every 4 hours,
+logs in `~/.local/share/chezmoi-logs/check-dotfiles-drift.log`).
+
+This one is **notification-only**, unlike the two above: it never writes
+anything back automatically. `chezmoi re-add` (which would pull all live
+changes back into the source repo) is deliberately not used here, because
+`.gitconfig`, `.warprc` and VS Code `settings.json` are jointly managed with
+the private work overlay — blindly re-adding would leak the overlay's
+merged-in content into this public repo. When notified, review with
+`chezmoi diff` and handle drift file-by-file: `chezmoi add <path>` to pull a
+real edit back into the source, or `chezmoi apply <path>` to overwrite the
+live file back to the declared state.
