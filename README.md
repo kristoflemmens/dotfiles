@@ -135,9 +135,31 @@ chezmoi apply
 
 # pull latest from git and apply
 chezmoi update
-
-# after installing/removing a brew package, refresh the Brewfile
-chezmoi cd
-brew bundle dump --force --file=Brewfile
-git add Brewfile && git commit -m "Update Brewfile" && git push
 ```
+
+### Tracking installed Homebrew packages & detecting drift
+
+Same idea as the macOS defaults above: `Brewfile` is the single source of
+truth for taps/formulae/casks/VS Code extensions. The apply script
+(`run_onchange_before_02-brew-bundle.sh.tmpl`) pushes it to the system
+(`brew bundle install`). `bin/sync-brewfile.sh` does the reverse: it runs
+`brew bundle dump` and writes the result back into `Brewfile`, so ad-hoc
+`brew install`/`brew uninstall` shows up as a normal git diff instead of
+silently drifting from what's declared.
+
+- Runs **automatically** via a LaunchAgent (at login + every 4 hours), same
+  as the macOS-defaults sync. Logs: `~/.local/share/chezmoi-logs/sync-brewfile.log`.
+- Run it manually any time with `~/.local/share/chezmoi/bin/sync-brewfile.sh`.
+- Nothing is installed/uninstalled and nothing is auto-committed — review
+  with `git diff Brewfile`, then `git commit` to accept, or `git checkout --
+  Brewfile && chezmoi apply` to revert the system instead.
+- If a private work overlay repo is also applied on this machine, its own
+  Brewfile's entries are automatically excluded here, so work-specific
+  packages never leak into this public Brewfile just because they're
+  installed on the same machine. If you install something ad hoc that
+  actually belongs in the work overlay, move it there yourself after
+  reviewing the diff (this happened during development of this feature —
+  see git history).
+- Same `chezmoi state delete --bucket=entryState --key=...` caveat as the
+  macOS defaults applies here too, if you ever need to force a real re-apply
+  after reverting `Brewfile` to a previously-seen value.
