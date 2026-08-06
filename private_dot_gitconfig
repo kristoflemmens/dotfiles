@@ -38,6 +38,16 @@
 	rebase = true
 [user]
 	name = Kristof Lemmens
+	# Fallback identity used everywhere commit.gpgsign is enabled below,
+	# except where overridden by a private work overlay's includeIf blocks
+	# for specific work project trees. Without this, any repo outside
+	# those specific directories (e.g. an ad-hoc clone, or
+	# ~/.local/share/chezmoi itself) has no signingkey configured, and
+	# `commit.gpgsign = true` below causes:
+	#   fatal: either user.signingkey or gpg.ssh.defaultKeyCommand needs
+	#   to be configured
+	email = kristof@klconsultancy.be
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIgSPYSZafVtcwwEBFpzzrjsl+zGGcVAj36Z7nModaSq
 [gpg]
 	format = ssh
 [gpg "ssh"]

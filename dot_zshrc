@@ -115,7 +115,7 @@ plugins=(
 
 # Hook for machine-specific plugins (e.g. work-only custom plugins) to be
 # appended before oh-my-zsh loads, without hardcoding them in this generic
-# file. Populated by the private dotfiles-cegeka overlay on work Macs.
+# file. Populated by a private work overlay repo.
 [[ -f ~/.zshrc.work.plugins ]] && source ~/.zshrc.work.plugins
 
 fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src

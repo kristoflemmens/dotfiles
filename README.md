@@ -6,7 +6,7 @@ Personal macOS dotfiles and machine bootstrap, managed with [chezmoi](https://ww
 
 - Shell / terminal config: `.zshrc`, `.p10k.zsh`, `.tmux.conf`, `.warprc`
 - Git config: `.gitconfig` + a `.gitconfig_personal` include (employer/client-specific
-  includes are added by the private `dotfiles-cegeka` overlay, see below)
+  includes are added by a private work overlay, see below)
 - SSH client config (`.ssh/config`) — no keys or secrets, just client settings (1Password SSH agent, colima include)
 - VS Code user `settings.json`
 - `Brewfile` — every Homebrew tap/formula/cask this machine needs
@@ -80,31 +80,32 @@ defaults are set up automatically. This repo is intentionally generic and
 public: it contains nothing employer- or client-specific, so it works
 unmodified on a personal Mac too.
 
-### On a Cegeka-issued work Mac: a second, private overlay
+### On a work Mac: a second, private overlay
 
-Employer/client-specific config (work git identity, Azure/AJH-specific
-CLI tools, a client project's VS Code settings) lives in a **separate,
-private** repo: [`dotfiles-cegeka`](https://github.com/kristoflemmens/dotfiles-cegeka),
-applied as its own independent chezmoi source, on top of this one:
+Employer/client-specific config (work git identity, employer-specific CLI
+tools, a client project's VS Code settings) lives in a **separate, private**
+overlay repo, applied as its own independent chezmoi source, on top of this
+one:
 
 ```sh
-chezmoi --source ~/.local/share/chezmoi-cegeka \
-  --config ~/.config/chezmoi/chezmoi-cegeka.toml \
-  init --apply git@github.com:kristoflemmens/dotfiles-cegeka.git
+chezmoi --source ~/.local/share/chezmoi-work \
+  --config ~/.config/chezmoi/chezmoi-work.toml \
+  init --apply <private-overlay-repo-url>
 ```
 
 Run this *after* the base bootstrap above — by then Homebrew, 1Password and
-`gh` are already installed, so authenticating to this private repo (via the
+`gh` are already installed, so authenticating to the private repo (via the
 1Password SSH agent or `gh auth login`) is no longer a chicken-and-egg
 problem. See that repo's README for details, including an important
 ordering caveat around VS Code settings.
 
 
 Notes:
-- The `ajh/tap` Homebrew tap is a private work tap hosted on Bitbucket. It requires
-  SSH access to Bitbucket to be configured first, otherwise `brew bundle install`
-  will fail on that one tap (everything else will still install fine — rerun
-  `brew bundle install` afterwards once Bitbucket SSH access works).
+- A private Homebrew tap is used for some employer-specific CLI tools. It
+  requires SSH access to the tap's host to be configured first, otherwise
+  `brew bundle install` will fail on that one tap (everything else will
+  still install fine — rerun `brew bundle install` afterwards once access
+  works).
 - Company-managed software (VPN client, MDM/Company Portal, Defender, printing, etc.)
   is intentionally NOT included here — that's provisioned by corporate IT/MDM.
 - Secrets, SSH keys, kube/azure/docker credentials, etc. are deliberately NOT
@@ -112,15 +113,15 @@ Notes:
 
 ## Day to day usage
 
-Note: on a machine where the `dotfiles-cegeka` overlay is also applied,
+Note: on a machine where the private work overlay is also applied,
 `chezmoi status`/`chezmoi diff` here will permanently show three files as
 changed: `Library/Application Support/Code/User/settings.json`, `.warprc`
 and `.gitconfig`. That's expected — the overlay repo appends/merges its own
 content into these same files after this repo writes them (jq's
 re-serialization of settings.json also reformats a few unrelated lines:
 dropped comment, normalized trailing commas, possible permission bit flip).
-Harmless, but don't be surprised by it; re-apply the `dotfiles-cegeka`
-overlay after applying this repo, as documented there.
+Harmless, but don't be surprised by it; re-apply the work overlay after
+applying this repo, as documented there.
 
 ```sh
 # edit a tracked dotfile through chezmoi (keeps source + target in sync)
