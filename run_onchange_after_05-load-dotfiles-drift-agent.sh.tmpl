@@ -1,0 +1,13 @@
+#!/bin/bash
+set -eufo pipefail
+# LaunchAgent plist hash: {{ include "private_Library/LaunchAgents/com.kristoflemmens.dotfiles.check-dotfiles-drift.plist.tmpl" | sha256sum }}
+
+PLIST="${HOME}/Library/LaunchAgents/com.kristoflemmens.dotfiles.check-dotfiles-drift.plist"
+LABEL="com.kristoflemmens.dotfiles.check-dotfiles-drift"
+
+mkdir -p "${HOME}/.local/share/chezmoi-logs"
+
+echo "==> (Re)loading LaunchAgent ${LABEL}..."
+launchctl unload "$PLIST" >/dev/null 2>&1 || true
+launchctl load -w "$PLIST"
+echo "==> LaunchAgent loaded. It will run bin/check-dotfiles-drift.sh at login and every 4 hours."

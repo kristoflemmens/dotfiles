@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.kristoflemmens.dotfiles.check-dotfiles-drift</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi/bin/check-dotfiles-drift.sh</string>
+	</array>
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+	</dict>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>StartInterval</key>
+	<integer>14400</integer>
+	<key>StandardOutPath</key>
+	<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi-logs/check-dotfiles-drift.log</string>
+	<key>StandardErrorPath</key>
+	<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi-logs/check-dotfiles-drift.log</string>
+	<key>ProcessType</key>
+	<string>Background</string>
+</dict>
+</plist>
