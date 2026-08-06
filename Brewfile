@@ -112,12 +112,12 @@ brew "uv"
 brew "watch"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# The AI coding agent built for the terminal.
+brew "anomalyco/tap/opencode"
 # Terraform
 brew "hashicorp/tap/terraform"
 # δyƒƒ /ˈdʏf/ - A diff tool for YAML files, and sometimes JSON
 brew "homeport/tap/dyff"
-# The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
