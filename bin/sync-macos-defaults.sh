@@ -1,12 +1,14 @@
 #!/bin/bash
 # Pulls the CURRENT macOS defaults values back into macos-defaults.tsv,
 # so drift (e.g. changes made via System Settings) shows up as a normal
-# git diff in the dotfiles repo. It does NOT touch the system, and it does
-# NOT commit anything automatically -- you decide what to do with the diff:
+# git diff in the dotfiles repo, viewable from anywhere with `chezmoi git
+# diff`. It does NOT touch the system, and it does NOT commit anything
+# automatically -- you decide what to do with the diff:
 #
-#   git diff                        # review what changed on the system
-#   git add -A && git commit ...    # accept drift as the new desired state
-#   git checkout -- macos-defaults.tsv && chezmoi apply   # revert the system instead
+#   chezmoi git diff -- macos-defaults.tsv          # review what changed
+#   chezmoi git add -A
+#   chezmoi git -- commit -m "..."                  # accept drift as the new desired state
+#   chezmoi git checkout -- macos-defaults.tsv && chezmoi apply   # revert the system instead
 #
 # Runs automatically via a LaunchAgent (see
 # Library/LaunchAgents/com.kristoflemmens.dotfiles.sync-macos-defaults.plist),
@@ -75,9 +77,9 @@ trap - EXIT
 if [ "$changed" -eq 1 ]; then
   echo
   echo "==> macos-defaults.tsv updated to reflect actual system state."
-  echo "    Review with: cd ${SCRIPT_DIR} && git diff macos-defaults.tsv"
+  echo "    Review with: chezmoi git diff -- macos-defaults.tsv"
   if command -v osascript >/dev/null 2>&1; then
-    osascript -e 'display notification "Run `git diff macos-defaults.tsv` in your dotfiles repo to review." with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
+    osascript -e 'display notification "Run `chezmoi git diff -- macos-defaults.tsv` to review." with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
   fi
 else
   echo "==> No drift detected. macos-defaults.tsv already matches the system."

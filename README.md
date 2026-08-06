@@ -42,10 +42,10 @@ need something like nix-darwin, which was a deliberate trade-off (see repo histo
   have to remember to run it yourself. It reads the *live* system state and
   overwrites `macos-defaults.tsv` with it — nothing is applied to the system
   and nothing is auto-committed. If it finds drift, you'll get a macOS
-  notification; run `git diff macos-defaults.tsv` (in `~/.local/share/chezmoi`)
-  to see exactly what changed, then either:
-  - `git add -A && git commit` to **accept** the drift as the new desired state, or
-  - `git checkout -- macos-defaults.tsv` to discard it and re-apply the old
+  notification; run `chezmoi git diff -- macos-defaults.tsv` (works from
+  anywhere, no need to `cd` into the repo) to see exactly what changed, then either:
+  - `chezmoi git add -A` then `chezmoi git -- commit -m "..."` to **accept** the drift as the new desired state, or
+  - `chezmoi git checkout -- macos-defaults.tsv` to discard it and re-apply the old
     declared value (see caveat below).
   - Run it manually any time with `~/.local/share/chezmoi/bin/sync-macos-defaults.sh`,
     or force an immediate run with
@@ -144,15 +144,16 @@ truth for taps/formulae/casks/VS Code extensions. The apply script
 (`run_onchange_before_02-brew-bundle.sh.tmpl`) pushes it to the system
 (`brew bundle install`). `bin/sync-brewfile.sh` does the reverse: it runs
 `brew bundle dump` and writes the result back into `Brewfile`, so ad-hoc
-`brew install`/`brew uninstall` shows up as a normal git diff instead of
+`brew install`/`brew uninstall` shows up as a normal diff instead of
 silently drifting from what's declared.
 
 - Runs **automatically** via a LaunchAgent (at login + every 4 hours), same
   as the macOS-defaults sync. Logs: `~/.local/share/chezmoi-logs/sync-brewfile.log`.
 - Run it manually any time with `~/.local/share/chezmoi/bin/sync-brewfile.sh`.
 - Nothing is installed/uninstalled and nothing is auto-committed — review
-  with `git diff Brewfile`, then `git commit` to accept, or `git checkout --
-  Brewfile && chezmoi apply` to revert the system instead.
+  with `chezmoi git diff -- Brewfile` (works from anywhere), then
+  `chezmoi git add -A` + `chezmoi git -- commit -m "..."` to accept, or
+  `chezmoi git checkout -- Brewfile && chezmoi apply` to revert the system instead.
 - If a private work overlay repo is also applied on this machine, its own
   Brewfile's entries are automatically excluded here, so work-specific
   packages never leak into this public Brewfile just because they're

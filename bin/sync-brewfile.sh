@@ -6,9 +6,10 @@
 # does NOT commit anything automatically -- you decide what to do with the
 # diff:
 #
-#   git diff Brewfile               # review what changed
-#   git add -A && git commit ...    # accept drift as the new desired state
-#   git checkout -- Brewfile && chezmoi apply   # revert the system instead
+#   chezmoi git diff -- Brewfile          # review what changed (works from anywhere)
+#   chezmoi git add -A
+#   chezmoi git -- commit -m "..."        # accept drift as the new desired state
+#   chezmoi git checkout -- Brewfile && chezmoi apply   # revert the system instead
 #
 # IMPORTANT: this machine may also have a private work overlay repo with its
 # own Brewfile (employer/client-specific taps & packages). Anything declared
@@ -91,8 +92,8 @@ mv "$tmp_filtered" "$BREWFILE"
 
 echo
 echo "==> Brewfile updated to reflect actually-installed packages."
-echo "    Review with: cd ${SCRIPT_DIR} && git diff Brewfile"
+echo "    Review with: chezmoi git diff -- Brewfile"
 
 if command -v osascript >/dev/null 2>&1; then
-  osascript -e 'display notification "Run `git diff Brewfile` in your dotfiles repo to review." with title "Brewfile drift detected" sound name "Funk"' >/dev/null 2>&1 || true
+  osascript -e 'display notification "Run `chezmoi git diff -- Brewfile` to review." with title "Brewfile drift detected" sound name "Funk"' >/dev/null 2>&1 || true
 fi
