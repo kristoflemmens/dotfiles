@@ -2,6 +2,12 @@
 	path = ~/.gitconfig_personal
 [includeIf "gitdir:~/Projects/ThirdParty/"]
 	path = ~/.gitconfig_personal
+[include]
+	# Optional work overlay hook: if a private overlay repo creates this file,
+	# git will load additional includeIf rules from it (for work identities,
+	# signing keys, etc.). Keeping this reference in the base config avoids
+	# requiring any post-apply mutation of ~/.gitconfig by other repos.
+	path = ~/.config/work-overlay/gitconfig/includeif-cegeka.conf
 [init]
 	defaultBranch = main
 	templateDir = ~/.git-template

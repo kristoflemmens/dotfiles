@@ -114,10 +114,10 @@ Notes:
 ## Day to day usage
 
 Note: on a machine where the private work overlay is also applied,
-`chezmoi status`/`chezmoi diff` here will permanently show three files as
-changed: `Library/Application Support/Code/User/settings.json`, `.warprc`
-and `.gitconfig`. That's expected — the overlay repo appends/merges its own
-content into these same files after this repo writes them (jq's
+`chezmoi status`/`chezmoi diff` here will permanently show one file as
+changed: `Library/Application Support/Code/User/settings.json`.
+That's expected — the overlay repo merges its own
+content into that file after this repo writes it (jq's
 re-serialization of settings.json also reformats a few unrelated lines:
 dropped comment, normalized trailing commas, possible permission bit flip).
 Harmless, but don't be surprised by it; re-apply the work overlay after
@@ -167,7 +167,7 @@ silently drifting from what's declared.
 
 ### Detecting drift in everything else (plain dotfiles)
 
-`.zshrc`, `.gitconfig`, `.tool-versions`, k9s/gh/ssh config, etc. don't have
+`.zshrc`, `.tool-versions`, k9s/gh/ssh config, etc. don't have
 a dedicated sync script like the two above — they're plain files chezmoi
 manages directly, so `chezmoi status`/`chezmoi diff` already shows drift
 between the live file and what's declared here. The problem was that nobody
@@ -179,7 +179,7 @@ logs in `~/.local/share/chezmoi-logs/check-dotfiles-drift.log`).
 This one is **notification-only**, unlike the two above: it never writes
 anything back automatically. `chezmoi re-add` (which would pull all live
 changes back into the source repo) is deliberately not used here, because
-`.gitconfig`, `.warprc` and VS Code `settings.json` are jointly managed with
+`.warprc` and VS Code `settings.json` are jointly managed with
 the private work overlay — blindly re-adding would leak the overlay's
 merged-in content into this public repo. When notified, review with
 `chezmoi diff` and handle drift file-by-file: `chezmoi add <path>` to pull a

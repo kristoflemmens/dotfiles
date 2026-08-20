@@ -7,7 +7,7 @@
 # Deliberately notification-only, unlike sync-macos-defaults.sh /
 # sync-brewfile.sh: those safely auto-write drift into a dedicated data file
 # they own outright. Plain dotfiles here can't be blindly auto-synced the
-# same way, because some of them (.gitconfig, .warprc, VS Code settings.json)
+# same way, because some of them (VS Code settings.json)
 # are jointly managed with a private work overlay repo that merges extra
 # content into these same files -- blindly pulling the live (merged) state
 # back into this source with `chezmoi re-add` would leak that private
@@ -37,8 +37,8 @@ echo "    Then either:"
 echo "      chezmoi add <path>     # pull a specific live change back into the source repo"
 echo "      chezmoi apply <path>   # overwrite a specific live file back to the declared state"
 echo
-echo "    Note: Library/Application Support/Code/User/settings.json, .warprc and"
-echo "    .gitconfig are expected to always show up here if a private work overlay"
+echo "    Note: Library/Application Support/Code/User/settings.json is expected"
+echo "    to show up here if a private work overlay"
 echo "    is also applied (it merges extra content into these same files). That's"
 echo "    normal noise, not real drift -- see the README."
 
