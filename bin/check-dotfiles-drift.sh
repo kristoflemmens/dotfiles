@@ -7,10 +7,9 @@
 # Deliberately notification-only, unlike sync-macos-defaults.sh /
 # sync-brewfile.sh: those safely auto-write drift into a dedicated data file
 # they own outright. Plain dotfiles here can't be blindly auto-synced the
-# same way, because some of them (VS Code settings.json)
-# are jointly managed with a private work overlay repo that merges extra
-# content into these same files -- blindly pulling the live (merged) state
-# back into this source with `chezmoi re-add` would leak that private
+# same way, because some files might be intentionally managed by a private
+# work overlay repo instead of this public repo. Blindly pulling live state
+# back into this source with `chezmoi re-add` could leak private overlay
 # content into the public repo. So: review manually, per file.
 #
 # Runs automatically via a LaunchAgent (login + every 4 hours). Logs to
@@ -37,10 +36,9 @@ echo "    Then either:"
 echo "      chezmoi add <path>     # pull a specific live change back into the source repo"
 echo "      chezmoi apply <path>   # overwrite a specific live file back to the declared state"
 echo
-echo "    Note: Library/Application Support/Code/User/settings.json is expected"
-echo "    to show up here if a private work overlay"
-echo "    is also applied (it merges extra content into these same files). That's"
-echo "    normal noise, not real drift -- see the README."
+echo "    Note: if a private work overlay is used on this machine, check whether"
+echo "    a drifted file is intentionally owned there before re-adding it here."
+echo "    See the README for ownership boundaries."
 
 if command -v osascript >/dev/null 2>&1; then
   osascript -e 'display notification "Run `chezmoi diff` in your dotfiles repo to review." with title "Dotfiles drift detected" sound name "Funk"' >/dev/null 2>&1 || true

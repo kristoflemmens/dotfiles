@@ -113,15 +113,10 @@ Notes:
 
 ## Day to day usage
 
-Note: on a machine where the private work overlay is also applied,
-`chezmoi status`/`chezmoi diff` here will permanently show one file as
-changed: `Library/Application Support/Code/User/settings.json`.
-That's expected — the overlay repo merges its own
-content into that file after this repo writes it (jq's
-re-serialization of settings.json also reformats a few unrelated lines:
-dropped comment, normalized trailing commas, possible permission bit flip).
-Harmless, but don't be surprised by it; re-apply the work overlay after
-applying this repo, as documented there.
+On work machines where the private overlay creates
+`~/.config/work-overlay/vscode/managed-by-work`, this repo intentionally
+ignores `Library/Application Support/Code/User/settings.json` so the private
+repo can own it end-to-end via the "externally modified file" symlink pattern.
 
 ```sh
 # edit a tracked dotfile through chezmoi (keeps source + target in sync)
@@ -179,9 +174,10 @@ logs in `~/.local/share/chezmoi-logs/check-dotfiles-drift.log`).
 This one is **notification-only**, unlike the two above: it never writes
 anything back automatically. `chezmoi re-add` (which would pull all live
 changes back into the source repo) is deliberately not used here, because
-`.warprc` and VS Code `settings.json` are jointly managed with
-the private work overlay — blindly re-adding would leak the overlay's
-merged-in content into this public repo. When notified, review with
+some files may be intentionally managed by the private work overlay instead of
+this public repo (for example VS Code settings) — blindly re-adding live state
+here could leak private overlay content into the public repo. When notified,
+review with
 `chezmoi diff` and handle drift file-by-file: `chezmoi add <path>` to pull a
 real edit back into the source, or `chezmoi apply <path>` to overwrite the
 live file back to the declared state.

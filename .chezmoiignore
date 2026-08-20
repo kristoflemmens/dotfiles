@@ -2,3 +2,6 @@ README.md
 Brewfile
 macos-defaults.tsv
 bin
+{{- if stat (joinPath .chezmoi.homeDir ".config/work-overlay/vscode/managed-by-work") }}
+Library/Application Support/Code/User/settings.json
+{{- end }}
