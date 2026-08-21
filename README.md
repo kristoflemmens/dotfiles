@@ -132,6 +132,13 @@ chezmoi apply
 chezmoi update
 ```
 
+Gotcha: `~/.config/chezmoi/chezmoi.yaml` contains literal `{{ ... }}` in the
+`merge.args` command. Those placeholders are meant for chezmoi *at merge runtime*
+and must stay literal text in the config file. So add/manage this file as a
+normal file (`dot_config/chezmoi/chezmoi.yaml`), **not** as a template
+(`--template` / `.tmpl`), otherwise chezmoi will try to evaluate `.Target` /
+`.Source` while applying the file and fail.
+
 ### Tracking installed Homebrew packages & detecting drift
 
 Same idea as the macOS defaults above: `Brewfile` is the single source of
