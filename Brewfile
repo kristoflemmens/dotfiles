@@ -1,4 +1,5 @@
 tap "anomalyco/tap", trusted: true
+tap "atlassian/acli", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "homebrew/core"
 tap "homeport/tap", trusted: true
@@ -114,6 +115,8 @@ brew "watch"
 brew "yq"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
+# Software to interact with Atlassian Cloud from the terminal
+brew "atlassian/acli/acli"
 # Terraform
 brew "hashicorp/tap/terraform"
 # δyƒƒ /ˈdʏf/ - A diff tool for YAML files, and sometimes JSON
@@ -182,7 +185,6 @@ vscode "chrisdias.vscode-opennewinstance"
 vscode "codezombiech.gitignore"
 vscode "eamodio.gitlens"
 vscode "esbenp.prettier-vscode"
-vscode "formulahendry.acp-client"
 vscode "hashicorp.terraform"
 vscode "humao.rest-client"
 vscode "iliazeus.vscode-ansi"
@@ -195,7 +197,6 @@ vscode "moshfeu.compare-folders"
 vscode "ms-azuretools.vscode-azureterraform"
 vscode "ms-azuretools.vscode-containers"
 vscode "ms-azuretools.vscode-docker"
-vscode "ms-kubernetes-tools.vscode-kubernetes-tools"
 vscode "ms-python.debugpy"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
