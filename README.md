@@ -4,10 +4,11 @@ Personal macOS dotfiles and machine bootstrap, managed with [chezmoi](https://ww
 
 ## What's in here
 
-- Shell / terminal config: `.zshrc`, `.p10k.zsh`, `.tmux.conf`, `.warprc`
+- Shell / terminal config: `.zshrc`, `.zshenv`, `.zprofile`, `.p10k.zsh`, `.tmux.conf`, `.warprc`
 - Git config: `.gitconfig` + a `.gitconfig_personal` include (employer/client-specific
   includes are added by a private work overlay, see below)
 - SSH client config (`.ssh/config`) — no keys or secrets, just client settings (1Password SSH agent, colima include)
+- SSH signing allowlist: `.ssh/allowed_signers` (public key identities only)
 - VS Code user `settings.json`
 - `Brewfile` — every Homebrew tap/formula/cask this machine needs
 - `.tool-versions` — runtime versions (Java, Node), installed via [mise](https://mise.jdx.dev/)

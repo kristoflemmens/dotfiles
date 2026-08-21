@@ -1,0 +1,26 @@
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
+export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+export KUBECTL_EXTERNAL_DIFF="dyff between --omit-header --set-exit-code"
+
+# Preferred editor for local and remote sessions
+if [[ -n $SSH_CONNECTION ]]; then
+  export EDITOR='vim'
+else
+  export EDITOR='code --new-window --wait'
+fi
+
+# remove duplicate entries from $PATH
+# zsh uses $path array along with $PATH
+typeset -U PATH path
+
+# Added by Toolbox App
+export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+export PATH="$(go env GOPATH)/bin:$PATH"
+
+# Optional work overlay hook.
+[[ -f ~/.zshenv.work ]] && source ~/.zshenv.work

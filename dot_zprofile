@@ -1,0 +1,2 @@
+# Optional work overlay hook.
+[[ -f ~/.zprofile.work ]] && source ~/.zprofile.work
