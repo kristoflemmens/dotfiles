@@ -7,7 +7,7 @@
 	# git will load additional includeIf rules from it (for work identities,
 	# signing keys, etc.). Keeping this reference in the base config avoids
 	# requiring any post-apply mutation of ~/.gitconfig by other repos.
-	path = ~/.config/work-overlay/gitconfig/includeif-cegeka.conf
+	path = ~/.config/work-overlay/gitconfig/includeif-work.conf
 [init]
 	defaultBranch = main
 	templateDir = ~/.git-template
