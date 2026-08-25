@@ -11,13 +11,13 @@ Personal macOS dotfiles and machine bootstrap, managed with [chezmoi](https://ww
 - SSH signing allowlist: `.ssh/allowed_signers` (public key identities only)
 - VS Code user `settings.json`
 - `Brewfile` — every Homebrew tap/formula/cask this machine needs
-- `.tool-versions` — runtime versions (Java, Node), installed via [mise](https://mise.jdx.dev/)
+- `.config/mise/config.toml` — global runtime versions (Java, Node), installed via [mise](https://mise.jdx.dev/)
 - `run_once_*` / `run_onchange_*` scripts — executed automatically by `chezmoi apply`:
   - Install Homebrew if missing (`run_once_` — a true one-time bootstrap step)
   - `brew bundle install` from the `Brewfile` (`run_onchange_` — re-runs whenever
     the Brewfile changes, so adding/removing a package and running
     `chezmoi apply` actually reconciles the machine)
-  - `mise install` for the runtimes in `.tool-versions` (`run_onchange_`, same idea)
+  - `mise install` for the runtimes in `~/.config/mise/config.toml` (`run_onchange_`, same idea)
   - Apply macOS system defaults — Dock, Finder, trackpad, keyboard, screenshots
     (`run_onchange_` — edit the script, commit, `chezmoi apply`, and the new
     defaults get applied; this is how macOS settings are "tracked" here)
@@ -170,7 +170,7 @@ silently drifting from what's declared.
 
 ### Detecting drift in everything else (plain dotfiles)
 
-`.zshrc`, `.tool-versions`, k9s/gh/ssh config, etc. don't have
+`.zshrc`, `.zshenv`, k9s/gh/ssh config, etc. don't have
 a dedicated sync script like the two above — they're plain files chezmoi
 manages directly, so `chezmoi status`/`chezmoi diff` already shows drift
 between the live file and what's declared here. The problem was that nobody

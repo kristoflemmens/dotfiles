@@ -1,8 +1,8 @@
 #!/bin/bash
 set -eufo pipefail
-# tool-versions hash: {{ include "dot_tool-versions" | sha256sum }}
+# dot_config/mise/config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
 
-echo "==> Installing runtimes via mise (from ~/.tool-versions)..."
+echo "==> Installing runtimes via mise (from ~/.config/mise/config.toml)..."
 if command -v mise >/dev/null 2>&1; then
   mise install
 else
