@@ -20,7 +20,8 @@
 	tags = "tag -l"
 	branches = "branch -a"
 	remotes = "remote -v"
-	prune-branches = !git remote prune origin && git branch -vv | grep ': gone]' | awk '{print $1}' | xargs -r git branch -d
+	worktrees = "worktree list -vv"
+	prune-branches = "!f(){ tmp=$(mktemp) && git worktree list --porcelain | awk '/^branch /{sub(\"^refs/heads/\", \"\", $2); print $2}' | sort -u > \"$tmp\" && git remote prune origin && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads/ | awk '$2 ~ /gone/ { print $1 }' | grep -vxFf \"$tmp\" | xargs -r -n 1 git branch -d; rm -f \"$tmp\"; }; f"
 [merge]
 	tool = "code"
 [mergetool "code"]
