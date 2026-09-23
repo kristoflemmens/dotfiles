@@ -48,7 +48,7 @@ tmp_exclude="$(mktemp)"
 tmp_filtered="$(mktemp)"
 trap 'rm -f "$tmp_live" "$tmp_exclude" "$tmp_filtered"' EXIT
 
-brew bundle dump --describe --force --file="$tmp_live"
+brew bundle dump --force --file="$tmp_live"
 
 # Collect tap/brew/cask/vscode/krew names declared in any private overlay
 # Brewfile, so they get excluded from the public one below.
@@ -59,9 +59,8 @@ for f in "${PRIVATE_BREWFILES[@]}"; do
     | sed -E 's/^(tap|brew|cask|vscode|krew) "([^"]+)"/\2/' >> "$tmp_exclude"
 done
 
-# Filter the live dump: drop any tap/brew/cask/vscode/krew entry (and its
-# preceding '#' description comment, which `--describe` adds) whose name is
-# excluded above.
+# Filter the live dump: drop any tap/brew/cask/vscode/krew entry (and any
+# preceding comment lines Homebrew emits) whose name is excluded above.
 awk -v exclude_file="$tmp_exclude" '
   BEGIN {
     while ((getline name < exclude_file) > 0) excluded[name] = 1

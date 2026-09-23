@@ -54,6 +54,8 @@ brew "kubernetes-cli"
 brew "krew"
 # Tool that can switch between kubectl contexts easily and create aliases
 brew "kubectx"
+# Simple terminal UI for git commands
+brew "lazygit"
 # Utility for directing compilation
 brew "make"
 # Polyglot runtime manager (asdf rust clone)
@@ -91,7 +93,7 @@ brew "yq"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode"
 # Terraform
-brew "hashicorp/tap/terraform"
+brew "hashicorp/tap/terraform", trusted: true
 # δyƒƒ /ˈdʏf/ - A diff tool for YAML files, and sometimes JSON
 brew "homeport/tap/dyff"
 # Password manager that keeps all passwords secure behind one password
@@ -104,14 +106,14 @@ cask "appcleaner"
 cask "codexbar"
 # Server and cloud storage browser
 cask "cyberduck"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
 # Web browser
 cask "google-chrome"
 # Client for the Google Drive storage service
 cask "google-drive"
 # Set up your HP printer
 cask "hp-easy-start"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
 # Password manager app
@@ -126,8 +128,6 @@ cask "microsoft-auto-update"
 cask "monitorcontrol"
 # Local-first alternative to Logitech Options+ for HID++ devices
 cask "openlogi"
-# Control your tools with a few keystrokes
-cask "raycast"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
 # Unpacks archive files
