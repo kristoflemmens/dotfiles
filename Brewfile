@@ -82,8 +82,6 @@ brew "terraform-docs"
 brew "tflint"
 # Update version constraints in your Terraform configurations
 brew "tfupdate"
-# Terminal multiplexer
-brew "tmux"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Executes a program periodically, showing output fullscreen
@@ -102,7 +100,9 @@ cask "1password"
 cask "1password-cli"
 # Application uninstaller
 cask "appcleaner"
-# Menu bar usage monitor for Codex and Claude
+# Terminal-based AI coding assistant
+cask "claude-code@latest"
+# Menu bar app for tracking agentic coding limits and usage
 cask "codexbar"
 # Server and cloud storage browser
 cask "cyberduck"
@@ -134,11 +134,6 @@ cask "rectangle"
 cask "the-unarchiver"
 # Open-source code editor
 cask "visual-studio-code"
-vscode "bierner.github-markdown-preview"
-vscode "bierner.markdown-checkbox"
-vscode "bierner.markdown-emoji"
-vscode "bierner.markdown-footnotes"
-vscode "bierner.markdown-preview-github-styles"
 vscode "catppuccin.catppuccin-vsc"
 vscode "chrisdias.vscode-opennewinstance"
 vscode "codezombiech.gitignore"

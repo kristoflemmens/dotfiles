@@ -1,10 +1,10 @@
-diff:
-  pager: ""
-  command: code
-  args:
-    - --new-window
-    - --wait
-    - --diff
+# diff:
+#   pager: ""
+#   command: code
+#   args:
+#     - --new-window
+#     - --wait
+#     - --diff
 edit:
   command: code
   args:
