@@ -1,0 +1,5 @@
+kristof@klconsultancy.be ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIgSPYSZafVtcwwEBFpzzrjsl+zGGcVAj36Z7nModaSq
+{{- $overlay := joinPath .chezmoi.homeDir ".config/work-overlay/ssh/allowed_signers" }}
+{{- if stat $overlay }}
+{{ include $overlay | trim }}
+{{- end }}

@@ -1,4 +1,4 @@
 [tools]
 java = "temurin-25.0.4+101.0.LTS"
-node = "latest"
+node = "lts"
 pnpm = "latest"

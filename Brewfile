@@ -69,8 +69,6 @@ brew "powerlevel10k"
 brew "prek"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
-# Safe, concurrent, practical language
-brew "rust"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Autoformat shell script source code
@@ -119,8 +117,6 @@ cask "keepassxc"
 cask "keystore-explorer"
 # Clipboard manager
 cask "maccy"
-# Provides updates to various Microsoft products
-cask "microsoft-auto-update"
 # Tool to control external monitor brightness & volume
 cask "monitorcontrol"
 # Local-first alternative to Logitech Options+ for HID++ devices

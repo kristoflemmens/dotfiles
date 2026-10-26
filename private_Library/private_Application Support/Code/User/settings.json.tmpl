@@ -227,5 +227,19 @@
   "gitlens.views.stashes.files.layout": "tree",
   "gitlens.views.tags.branches.layout": "list",
   "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilotcli:claude-sonnet-5"
+  "gitlens.ai.vscode.model": "copilotcli:claude-sonnet-5",
+  "git.repositoryScanIgnoredFolders": [
+    "node_modules",
+    ".terraform"
+  ],
+  "git.detectWorktrees": true,
+  "[markdown]": {
+    "diffEditor.ignoreTrimWhitespace": false
+  }
+{{- /* Work-only settings come from a fragment the private overlay installs. */}}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/work-overlay/vscode/settings.fragment.jsonc" }}
+{{- if stat $overlay }},
+  // --- from ~/.config/work-overlay/vscode/settings.fragment.jsonc ---
+{{ include $overlay | trimSuffix "\n" }}
+{{- end }}
 }

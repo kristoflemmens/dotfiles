@@ -1,0 +1,7 @@
+# LaunchAgents installed from bin/. Each runs at login and every 4 hours and
+# only *reports* drift (macOS notification + log); none of them write into
+# the source repo.
+launchAgents:
+  - name: check-dotfiles-drift
+  - name: sync-brewfile
+  - name: sync-macos-defaults

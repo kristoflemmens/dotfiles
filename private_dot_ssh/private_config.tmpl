@@ -1,6 +1,7 @@
 WarnWeakCrypto no
 
-Include /Users/kristole/.colima/ssh_config
+Include {{ .chezmoi.homeDir }}/.colima/ssh_config
+Include {{ .chezmoi.homeDir }}/.ssh/config.d/*.conf
 
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

@@ -1,2 +1,5 @@
+# Re-apply PATH after macOS' path_helper reordered it (see ~/.config/zsh/path.zsh).
+source ~/.config/zsh/path.zsh
+
 # Optional work overlay hook.
 [[ -f ~/.zprofile.work ]] && source ~/.zprofile.work

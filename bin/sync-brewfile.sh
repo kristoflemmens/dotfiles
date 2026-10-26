@@ -1,98 +1,69 @@
 #!/bin/bash
-# Pulls the CURRENT Homebrew state (taps, formulae, casks, vscode extensions,
-# krew plugins) back into Brewfile, so drift (e.g. `brew install X` or
-# `brew uninstall Y` run ad hoc, outside chezmoi) shows up as a normal git
-# diff in the dotfiles repo. It does NOT install/uninstall anything, and it
-# does NOT commit anything automatically -- you decide what to do with the
-# diff:
+# Reports drift between the Homebrew packages declared for this machine and
+# what is actually installed. Read-only: it never touches the system or the
+# source repo, so `chezmoi update` never trips over a dirty working tree and
+# two machines with different package sets don't overwrite each other's
+# Brewfile.
 #
-#   chezmoi git diff -- Brewfile          # review what changed (works from anywhere)
-#   chezmoi git add -A
-#   chezmoi git -- commit -m "..."        # accept drift as the new desired state
-#   chezmoi git checkout -- Brewfile && chezmoi apply   # revert the system instead
+# Declared = Brewfile (shared) + Brewfile.<profile> (if present) + the
+# Brewfile of every private overlay source (~/.local/share/chezmoi-*/Brewfile).
 #
-# IMPORTANT: this machine may also have a private work overlay repo with its
-# own Brewfile (employer/client-specific taps & packages). Anything declared
-# there is EXCLUDED from what gets written here, so work-specific packages
-# never leak into this public Brewfile just because they're installed on
-# this machine. If you install something ad hoc that actually belongs in the
-# work overlay, move it there yourself after reviewing the diff.
+# To resolve drift, edit the right Brewfile by hand (shared, per-profile or
+# overlay), commit, `chezmoi apply`. Packages that are declared but missing are
+# installed by that apply; packages to drop must be uninstalled with
+# `brew uninstall` (brew bundle never removes anything).
 #
-# Runs automatically via a LaunchAgent (see
-# Library/LaunchAgents/com.kristoflemmens.dotfiles.sync-brewfile.plist), so
-# you don't have to remember to run this yourself. When drift is found, it
-# sends a macOS notification. Logs go to ~/.local/share/chezmoi-logs/ for
-# debugging the scheduled runs.
+# Runs automatically via a LaunchAgent (login + every 4 hours). Logs to
+# ~/.local/share/chezmoi-logs/sync-brewfile.log.
 #
-# Usage: bin/sync-brewfile.sh   (run from anywhere; finds the repo itself)
+# Usage: bin/sync-brewfile.sh
 
 set -euo pipefail
-# NOTE: intentionally NOT `-f` (noglob) here, unlike the other scripts in
-# this repo -- this script relies on globbing to find private overlay
-# Brewfiles (PRIVATE_BREWFILES=(...*.../Brewfile)).
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-BREWFILE="${SCRIPT_DIR}/Brewfile"
+SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+profile="$(chezmoi --source "$SOURCE_DIR" execute-template '{{ .profile }}' 2>/dev/null || true)"
 
-# Any private work overlay repos next to this one. Their Brewfiles' entries
-# are excluded from what we write here.
-PRIVATE_BREWFILES=("${HOME}"/.local/share/chezmoi-*/Brewfile)
-
-if [ ! -f "$BREWFILE" ]; then
-  echo "Could not find Brewfile next to this script (looked in ${SCRIPT_DIR})" >&2
-  exit 1
-fi
-
-tmp_live="$(mktemp)"
-tmp_exclude="$(mktemp)"
-tmp_filtered="$(mktemp)"
-trap 'rm -f "$tmp_live" "$tmp_exclude" "$tmp_filtered"' EXIT
-
-brew bundle dump --force --file="$tmp_live"
-
-# Collect tap/brew/cask/vscode/krew names declared in any private overlay
-# Brewfile, so they get excluded from the public one below.
-: > "$tmp_exclude"
-for f in "${PRIVATE_BREWFILES[@]}"; do
-  [ -f "$f" ] || continue
-  grep -oE '^(tap|brew|cask|vscode|krew) "[^"]+"' "$f" \
-    | sed -E 's/^(tap|brew|cask|vscode|krew) "([^"]+)"/\2/' >> "$tmp_exclude"
+declared_files=("${SOURCE_DIR}/Brewfile")
+[ -n "$profile" ] && [ -f "${SOURCE_DIR}/Brewfile.${profile}" ] && declared_files+=("${SOURCE_DIR}/Brewfile.${profile}")
+for f in "${HOME}"/.local/share/chezmoi-*/Brewfile; do
+  [ -f "$f" ] && declared_files+=("$f")
 done
 
-# Filter the live dump: drop any tap/brew/cask/vscode/krew entry (and any
-# preceding comment lines Homebrew emits) whose name is excluded above.
-awk -v exclude_file="$tmp_exclude" '
-  BEGIN {
-    while ((getline name < exclude_file) > 0) excluded[name] = 1
-  }
-  /^#/ { pending = pending $0 "\n"; next }
-  /^(tap|brew|cask|vscode|krew) "/ {
-    name = $0
-    sub(/^(tap|brew|cask|vscode|krew) "/, "", name)
-    sub(/".*/, "", name)
-    if (name in excluded) { pending = ""; next }
-    printf "%s", pending
-    pending = ""
-    print
-    next
-  }
-  { printf "%s", pending; pending = ""; print }
-' "$tmp_live" > "$tmp_filtered"
+# Normalise Brewfile lines to `type "name"` so options/comments don't matter.
+entries() {
+  grep -hoE '^(tap|brew|cask|vscode|krew) "[^"]+"' "$@" | sort -u
+}
 
-if diff -q "$BREWFILE" "$tmp_filtered" >/dev/null 2>&1; then
-  echo "==> No drift detected. Brewfile already matches installed packages (excluding private overlay packages)."
+tmp_live="$(mktemp)"
+tmp_declared="$(mktemp)"
+trap 'rm -f "$tmp_live" "$tmp_declared"' EXIT
+
+brew bundle dump --force --file=- | entries /dev/stdin > "$tmp_live"
+entries "${declared_files[@]}" > "$tmp_declared"
+
+undeclared="$(comm -23 "$tmp_live" "$tmp_declared")"
+missing="$(comm -13 "$tmp_live" "$tmp_declared")"
+
+if [ -z "$undeclared" ] && [ -z "$missing" ]; then
+  echo "==> No drift detected (profile: ${profile:-unknown})."
   exit 0
 fi
 
-echo "==> Drift detected in Homebrew packages:"
-diff -u "$BREWFILE" "$tmp_filtered" | grep -E '^[+-](tap|brew|cask|vscode|krew) "' || true
-
-mv "$tmp_filtered" "$BREWFILE"
-
-echo
-echo "==> Brewfile updated to reflect actually-installed packages."
-echo "    Review with: chezmoi git diff -- Brewfile"
+echo "==> Homebrew drift detected (profile: ${profile:-unknown})"
+echo "    Declared in: ${declared_files[*]}"
+if [ -n "$undeclared" ]; then
+  echo
+  echo "Installed but not declared (add to a Brewfile, or brew uninstall):"
+  # shellcheck disable=SC2001
+  sed 's/^/  /' <<< "$undeclared"
+fi
+if [ -n "$missing" ]; then
+  echo
+  echo "Declared but not installed (chezmoi apply installs them, or remove from the Brewfile):"
+  # shellcheck disable=SC2001
+  sed 's/^/  /' <<< "$missing"
+fi
 
 if command -v osascript >/dev/null 2>&1; then
-  osascript -e 'display notification "Run `chezmoi git diff -- Brewfile` to review." with title "Brewfile drift detected" sound name "Funk"' >/dev/null 2>&1 || true
+  osascript -e 'display notification "Run ~/.local/share/chezmoi/bin/sync-brewfile.sh to review." with title "Brewfile drift detected" sound name "Funk"' >/dev/null 2>&1 || true
 fi

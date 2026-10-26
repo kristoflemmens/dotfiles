@@ -1,0 +1,8 @@
+# Packages for profile=work, installed on top of the shared Brewfile.
+# Nothing employer- or client-identifying belongs here: that goes in the
+# private work overlay's Brewfile.
+
+# Safe, concurrent, practical language
+brew "rust"
+# Provides updates to various Microsoft products
+cask "microsoft-auto-update"
