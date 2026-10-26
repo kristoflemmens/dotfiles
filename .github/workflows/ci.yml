@@ -40,6 +40,7 @@ jobs:
       - name: render
         run: |
           export PATH="$HOME/.local/bin:$PATH"
+          mkdir -p "$RUNNER_TEMP/home"
           chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=${{ matrix.personal }}"
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --verbose --exclude=externals \
             --destination "$RUNNER_TEMP/home" > /dev/null
