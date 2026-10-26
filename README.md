@@ -24,7 +24,7 @@ machines (extra Brewfile, `.warprc` bookmarks). Change it with
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template, `.warprc`
-- `Brewfile` (shared) + `Brewfile.<profile>`
+- `Brewfile` (shared, curated by hand) + `Brewfile.personal` (maintained by `bin/sync-brewfile.sh`); work packages live in the private overlay
 - `~/.config/mise/config.toml` — global runtimes (Java, Node, pnpm)
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
@@ -76,29 +76,29 @@ chezmoi update          # git pull + apply
 
 ## Drift detection
 
-Three LaunchAgents run at login and every 4 hours and **only report** drift
-(macOS notification + log in `~/.local/share/chezmoi-logs/`). None of them
-write into this repo, so the working tree stays clean and `chezmoi update`
-always works, and machines with different profiles never overwrite each
-other's state.
+Three LaunchAgents run at login and every 4 hours (logs in
+`~/.local/share/chezmoi-logs/`, macOS notification on changes). Nothing is ever
+committed automatically.
 
-| Script | Checks |
+| Script | What it does |
 |---|---|
-| `bin/check-dotfiles-drift.sh` | `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/` |
-| `bin/sync-brewfile.sh` | installed Homebrew packages vs. `Brewfile` + `Brewfile.<profile>` + overlay Brewfiles |
-| `bin/sync-macos-defaults.sh` | live macOS defaults vs. `macos-defaults.tsv` (`--write` accepts the live values into the file) |
+| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: the private overlay's `Brewfile` on `profile=work`, `Brewfile.personal` on `profile=personal`. New installs are appended, uninstalled entries removed. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
+| `bin/sync-macos-defaults.sh` | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report). |
+| `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
+
+`chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
+don't block it.
 
 Resolving drift:
 
+- **Homebrew:** review `chezmoi git diff` (or `chezcegeka git diff`), commit, and
+  move packages you want everywhere to the shared `Brewfile` yourself.
+- **macOS defaults:** review `chezmoi git diff -- macos-defaults.tsv` and commit,
+  or discard and force a re-apply (below).
 - **Dotfiles:** `chezmoi add <path>` to keep the live change, or
   `chezmoi apply <path>` to restore the declared one. Files composed from
   overlay fragments (VS Code settings, `.warprc`, `allowed_signers`) must be
   edited in the right repo, never with `chezmoi re-add`.
-- **Homebrew:** add the package to the right Brewfile (shared, profile or
-  overlay) and commit, or `brew uninstall` it. `brew bundle install` never
-  removes packages.
-- **macOS defaults:** `bin/sync-macos-defaults.sh --write`, review and commit;
-  or revert the system (below).
 
 ### Forcing a run_onchange script
 

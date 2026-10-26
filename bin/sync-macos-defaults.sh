@@ -1,29 +1,23 @@
 #!/bin/bash
-# Compares the CURRENT macOS defaults with macos-defaults.tsv and reports
-# drift (e.g. changes made via System Settings). It never touches the system.
+# Pulls the CURRENT macOS defaults values back into macos-defaults.tsv, so
+# drift (e.g. a change made via System Settings) shows up as a normal git
+# diff instead of being lost. It never touches the system and never commits:
 #
-# By default it is read-only, so the scheduled run never dirties the source
-# repo (which would block `chezmoi update`). Pass --write to accept the live
-# values into macos-defaults.tsv, then review and commit:
+#   chezmoi git diff -- macos-defaults.tsv            # review
+#   chezmoi git add -A && chezmoi git -- commit -m "..."   # accept
+#   chezmoi git checkout -- macos-defaults.tsv        # discard (see README to re-apply)
 #
-#   bin/sync-macos-defaults.sh --write
-#   chezmoi git diff -- macos-defaults.tsv
-#   chezmoi git add -A && chezmoi git -- commit -m "..."
+# Runs automatically via a LaunchAgent at login and every 4 hours; logs go to
+# ~/.local/share/chezmoi-logs/sync-macos-defaults.log.
 #
-# To revert the system instead, see the README (force re-apply of the
-# run_onchange script).
-#
-# Runs automatically (without --write) via a LaunchAgent at login and every
-# 4 hours; logs go to ~/.local/share/chezmoi-logs/sync-macos-defaults.log.
-#
-# Usage: bin/sync-macos-defaults.sh [--write]
+# Usage: bin/sync-macos-defaults.sh [--check]   (--check: report only, don't write)
 
 set -eufo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DEFAULTS_FILE="${SCRIPT_DIR}/macos-defaults.tsv"
-write=0
-[ "${1:-}" = "--write" ] && write=1
+write=1
+[ "${1:-}" = "--check" ] && write=0
 
 if [ ! -f "$DEFAULTS_FILE" ]; then
   echo "Could not find macos-defaults.tsv next to this script (looked in ${SCRIPT_DIR})" >&2
@@ -79,12 +73,12 @@ if [ "$changed" -eq 1 ] && [ "$write" -eq 1 ]; then
   echo
   echo "==> macos-defaults.tsv updated to reflect actual system state."
   echo "    Review with: chezmoi git diff -- macos-defaults.tsv"
+  if command -v osascript >/dev/null 2>&1; then
+    osascript -e 'display notification "Review with: chezmoi git diff -- macos-defaults.tsv" with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
+  fi
 elif [ "$changed" -eq 1 ]; then
   echo
-  echo "==> Run with --write to accept these values into macos-defaults.tsv."
-  if command -v osascript >/dev/null 2>&1; then
-    osascript -e 'display notification "Run ~/.local/share/chezmoi/bin/sync-macos-defaults.sh to review." with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
-  fi
+  echo "==> --check: macos-defaults.tsv left unchanged."
 else
   echo "==> No drift detected. macos-defaults.tsv already matches the system."
 fi
