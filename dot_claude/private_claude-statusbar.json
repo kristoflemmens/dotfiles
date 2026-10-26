@@ -1,0 +1,7 @@
+{
+  "color_ok": "#9ece6a",
+  "color_warn": "#e0af68",
+  "color_hot": "#f7768e",
+  "color_worktree": "#7aa2f7",
+  "ui_version": 3
+}
