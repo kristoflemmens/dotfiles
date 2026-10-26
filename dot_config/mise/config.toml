@@ -1,0 +1,6 @@
+# Only applied on profile=work (see .chezmoiignore): personal Macs don't use
+# mise; Node comes from Homebrew there and Java isn't needed.
+[tools]
+java = "temurin-25.0.4+101.0.LTS"
+node = "lts"
+pnpm = "latest"

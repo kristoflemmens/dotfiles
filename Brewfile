@@ -57,8 +57,6 @@ brew "kubectx"
 brew "lazygit"
 # Utility for directing compilation
 brew "make"
-# Polyglot runtime manager (asdf rust clone)
-brew "mise"
 # PAM module for reattaching to the user's GUI (Aqua) session
 brew "pam-reattach"
 # Shell command parallelization utility

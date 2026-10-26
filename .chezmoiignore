@@ -4,3 +4,6 @@ Brewfile.*
 macos-defaults.tsv
 bin
 .github
+{{- if ne .profile "work" }}
+.config/mise
+{{- end }}
