@@ -18,16 +18,12 @@
   },
   "chat.agent.maxRequests": 50,
   "chat.mcp.autostart": "newAndOutdated",
-  "chat.mcp.serverSampling": {
-    "Global in Code: azure": {
-      "allowedDuringChat": true
-    }
-  },
+  "chat.agent.enabled": false,
   "containers.containerCommand": "/opt/homebrew/bin/docker",
   "containers.contexts.showInStatusBar": true,
   "containers.environment": {
     "DOCKER_CONTEXT": "colima",
-    "DOCKER_HOST": "unix:///Users/kristole/.colima/default/docker.sock"
+    "DOCKER_HOST": "unix://{{ .chezmoi.homeDir }}/.colima/default/docker.sock"
   },
   "diffEditor.experimental.showMoves": true,
   "diffEditor.ignoreTrimWhitespace": false,
@@ -38,9 +34,7 @@
   "editor.minimap.enabled": false,
   "editor.multiCursorLimit": 100000,
   "editor.renderWhitespace": "all",
-  "editor.rulers": [
-    120
-  ],
+  "editor.unicodeHighlight.ambiguousCharacters": false,
   "editor.unicodeHighlight.invisibleCharacters": false,
   "files.associations": {
     "*.chatmode.md": "markdown",
@@ -49,6 +43,8 @@
     "*.prompt.md": "markdown"
   },
   "files.autoSave": "afterDelay",
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.autofetch": true,
@@ -56,6 +52,9 @@
   "git.path": "/opt/homebrew/bin/git",
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": true,
+  "githubIssues.showIssueNumberInTree": true,
+  "githubPullRequests.pullBranch": "never",
+  "dataWrangler.experiments.autoDetectCsvDelimiter": true,
   "gitlens.plusFeatures.enabled": false,
   "gitlens.statusBar.enabled": false,
   "gitlens.views.scm.grouped.views": {
@@ -205,9 +204,11 @@
       "env": {},
     },
   },
-  "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.colorTheme": "Tokyo Night",
+  "workbench.iconTheme": "catppuccin-mocha",
   "json.schemaDownload.trustedDomains": {
     "https://developer.microsoft.com/json-schemas/": true,
+    "https://docs.renovatebot.com/renovate-schema.json": true,
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
     "https://models.dev": true,
@@ -222,10 +223,52 @@
     "https://github.com/microsoft/vscode/wiki/*": true,
     "https://learn.microsoft.com": true,
     "https://carbone.io": true,
-    "https://*.githubusercontent.com": true
+    "https://*.githubusercontent.com": true,
+    "https://www.vlaamsenutsregulator.be": true,
+    "https://www.vreg.be": {
+      "approveRequest": true,
+      "approveResponse": false
+    },
+    "https://www.fluvius.be": true,
+    "https://www.creg.be": true,
+    "https://www.energiesparen.be": {
+      "approveRequest": true,
+      "approveResponse": false
+    }
   },
   "gitlens.views.stashes.files.layout": "tree",
   "gitlens.views.tags.branches.layout": "list",
-  "gitlens.ai.model": "vscode",
-  "gitlens.ai.vscode.model": "copilotcli:claude-sonnet-5"
+  "git.repositoryScanIgnoredFolders": [
+    "node_modules",
+    ".terraform"
+  ],
+  "git.detectWorktrees": true,
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ],
+  "[markdown]": {
+    "diffEditor.ignoreTrimWhitespace": false,
+    "files.trimTrailingWhitespace": false
+  }
+{{- if .personal }},
+  "editor.rulers": [
+    100
+  ],
+  "python.analysis.typeCheckingMode": "strict",
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.md": "vscode.markdown.preview.editor"
+  }
+{{- end }}
+{{- /* Overlay-specific settings come from a fragment the overlay installs. */}}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/vscode-settings.jsonc" }}
+{{- if stat $overlay }},
+  // --- from ~/.config/dotfiles-overlay/vscode-settings.jsonc ---
+{{ include $overlay | trimSuffix "\n" }}
+{{- end }}
 }

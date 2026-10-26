@@ -1,3 +1,11 @@
 Projects:~/Projects
-Work:~/Projects/Work
-{{ output "bash" "-lc" "if [ -f \"$HOME/.config/work-overlay/warprc/entries.txt\" ]; then printf '\n'; cat \"$HOME/.config/work-overlay/warprc/entries.txt\"; fi" }}
+{{- if .personal }}
+Personal:~/Projects/Personal
+ck-n-hrn:~/Projects/ck-n-hrn
+ThirdParty:~/Projects/ThirdParty
+homelab:~/Projects/Personal/homelab
+{{- end }}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/warprc" }}
+{{- if stat $overlay }}
+{{ include $overlay | trim }}
+{{- end }}

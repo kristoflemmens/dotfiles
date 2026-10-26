@@ -4,8 +4,7 @@
 [core]
 	editor = "code --new-window --wait"
 	autocrlf = input
-	pager = 
-	excludesfile = ~/.gitignore
+	pager = delta
 [alias]
 	tags = "tag -l"
 	branches = "branch -a"
@@ -31,13 +30,34 @@
 [diff "ansible-vault"]
 	textconv = ansible-vault view
 	cachetextconv = false
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = tokyonight_night
 [pull]
 	rebase = true
+[push]
+	autoSetupRemote = true
+[fetch]
+	prune = true
+[rebase]
+	autoStash = true
+[rerere]
+	enabled = true
+[branch]
+	sort = -committerdate
+[diff]
+	algorithm = histogram
+[merge]
+	conflictStyle = zdiff3
 [user]
 	name = Kristof Lemmens
 	# Fallback identity used everywhere commit.gpgsign is enabled below,
-	# except where overridden by a private work overlay's includeIf blocks
-	# for specific work project trees. Without this, any repo outside
+	# except where overridden by an overlay's includeIf blocks for specific
+	# project trees. Without this, any repo outside
 	# those specific directories (e.g. an ad-hoc clone, or
 	# ~/.local/share/chezmoi itself) has no signingkey configured, and
 	# `commit.gpgsign = true` below causes:
@@ -49,11 +69,12 @@
 	format = ssh
 [gpg "ssh"]
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+	allowedSignersFile = ~/.ssh/allowed_signers
 [commit]
 	gpgsign = true
 [include]
-	# Optional work overlay hook: if a private overlay repo creates this file,
-	# git will load additional includeIf rules from it (for work identities,
-	# signing keys, etc.). Keeping this reference in the base config avoids
+	# Optional overlay hook: if an overlay repo creates this file, git loads
+	# additional (includeIf) rules from it, e.g. work identities and keys.
+	# Keeping this reference in the base config avoids
 	# requiring any post-apply mutation of ~/.gitconfig by other repos.
-	path = ~/.config/work-overlay/gitconfig/includeif-work.conf
+	path = ~/.config/dotfiles-overlay/gitconfig

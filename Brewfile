@@ -27,6 +27,8 @@ brew "findutils"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Syntax-highlighting pager for git, diff, grep, and blame output
+brew "git-delta"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
 # GNU version of the tar archiving utility
@@ -57,8 +59,6 @@ brew "kubectx"
 brew "lazygit"
 # Utility for directing compilation
 brew "make"
-# Polyglot runtime manager (asdf rust clone)
-brew "mise"
 # PAM module for reattaching to the user's GUI (Aqua) session
 brew "pam-reattach"
 # Shell command parallelization utility
@@ -69,8 +69,6 @@ brew "powerlevel10k"
 brew "prek"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
-# Safe, concurrent, practical language
-brew "rust"
 # Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
 # Autoformat shell script source code
@@ -119,8 +117,6 @@ cask "keepassxc"
 cask "keystore-explorer"
 # Clipboard manager
 cask "maccy"
-# Provides updates to various Microsoft products
-cask "microsoft-auto-update"
 # Tool to control external monitor brightness & volume
 cask "monitorcontrol"
 # Local-first alternative to Logitech Options+ for HID++ devices
@@ -131,10 +127,11 @@ cask "rectangle"
 cask "the-unarchiver"
 # Open-source code editor
 cask "visual-studio-code"
-vscode "catppuccin.catppuccin-vsc"
+vscode "catppuccin.catppuccin-vsc-icons"
 vscode "chrisdias.vscode-opennewinstance"
 vscode "codezombiech.gitignore"
 vscode "eamodio.gitlens"
+vscode "enkia.tokyo-night"
 vscode "esbenp.prettier-vscode"
 vscode "hashicorp.terraform"
 vscode "humao.rest-client"

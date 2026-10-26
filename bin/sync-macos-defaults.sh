@@ -1,27 +1,31 @@
 #!/bin/bash
-# Pulls the CURRENT macOS defaults values back into macos-defaults.tsv,
-# so drift (e.g. changes made via System Settings) shows up as a normal
-# git diff in the dotfiles repo, viewable from anywhere with `chezmoi git
-# diff`. It does NOT touch the system, and it does NOT commit anything
-# automatically -- you decide what to do with the diff:
+# Pulls the CURRENT macOS defaults values back into macos-defaults.tsv, so
+# drift (e.g. a change made via System Settings) shows up as a normal git
+# diff instead of being lost. It never touches the system and never commits:
 #
-#   chezmoi git diff -- macos-defaults.tsv          # review what changed
-#   chezmoi git add -A
-#   chezmoi git -- commit -m "..."                  # accept drift as the new desired state
-#   chezmoi git checkout -- macos-defaults.tsv && chezmoi apply   # revert the system instead
+#   chezmoi git diff -- macos-defaults.tsv            # review
+#   chezmoi git add -A && chezmoi git -- commit -m "..."   # accept
+#   chezmoi git checkout -- macos-defaults.tsv        # discard (see README to re-apply)
 #
-# Runs automatically via a LaunchAgent (see
-# Library/LaunchAgents/com.kristoflemmens.dotfiles.sync-macos-defaults.plist),
-# so you don't have to remember to run this yourself. When drift is found,
-# it sends a macOS notification. Logs go to ~/.local/share/chezmoi-logs/
-# for debugging the scheduled runs.
+# Runs automatically via a LaunchAgent at login and every 4 hours; logs go to
+# ~/.local/share/chezmoi-logs/sync-macos-defaults.log.
 #
-# Usage: bin/sync-macos-defaults.sh   (run from anywhere; finds the repo itself)
+# Usage: bin/sync-macos-defaults.sh [--check]   (--check: report only, don't write)
 
 set -eufo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DEFAULTS_FILE="${SCRIPT_DIR}/macos-defaults.tsv"
+write=1
+[ "${1:-}" = "--check" ] && write=0
+
+# If the declared defaults haven't been applied yet (e.g. after a pull or an
+# apply with --exclude=scripts), the live values are stale, not drift:
+# writing them back would undo the declared change.
+if [ "$write" -eq 1 ] && chezmoi --source "$SCRIPT_DIR" status --include=scripts 2>/dev/null | grep -q 'macos-defaults'; then
+  echo "==> macos-defaults.tsv has changes that aren't applied yet; reporting only. Run chezmoi apply first."
+  write=0
+fi
 
 if [ ! -f "$DEFAULTS_FILE" ]; then
   echo "Could not find macos-defaults.tsv next to this script (looked in ${SCRIPT_DIR})" >&2
@@ -71,16 +75,18 @@ while IFS= read -r line; do
   echo "${flag}|${domain}|${key}|${type}|${current}" >> "$tmp_file"
 done < "$DEFAULTS_FILE"
 
-mv "$tmp_file" "$DEFAULTS_FILE"
-trap - EXIT
-
-if [ "$changed" -eq 1 ]; then
+if [ "$changed" -eq 1 ] && [ "$write" -eq 1 ]; then
+  mv "$tmp_file" "$DEFAULTS_FILE"
+  trap - EXIT
   echo
   echo "==> macos-defaults.tsv updated to reflect actual system state."
   echo "    Review with: chezmoi git diff -- macos-defaults.tsv"
   if command -v osascript >/dev/null 2>&1; then
-    osascript -e 'display notification "Run `chezmoi git diff -- macos-defaults.tsv` to review." with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
+    osascript -e 'display notification "Review with: chezmoi git diff -- macos-defaults.tsv" with title "macOS defaults drift detected" sound name "Funk"' >/dev/null 2>&1 || true
   fi
+elif [ "$changed" -eq 1 ]; then
+  echo
+  echo "==> --check: macos-defaults.tsv left unchanged."
 else
   echo "==> No drift detected. macos-defaults.tsv already matches the system."
 fi

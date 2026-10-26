@@ -1,6 +1,18 @@
 #!/bin/bash
 set -eufo pipefail
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
+{{- if .personal }}
+# Brewfile.personal hash: {{ include "Brewfile.personal" | sha256sum }}
+{{- end }}
+
+# Each script runs in its own process, so the PATH from 01-install-homebrew
+# is not inherited: always call brew by absolute path.
+brew=/opt/homebrew/bin/brew
 
 echo "==> Installing packages from Brewfile..."
-brew bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile"
+"$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile"
+{{- if .personal }}
+
+echo "==> Installing personal packages from Brewfile.personal..."
+"$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile.personal"
+{{- end }}

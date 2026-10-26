@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: shellcheck
+        run: shellcheck bin/*.sh dot_git-template/hooks/executable_pre-commit
+      - name: zsh syntax
+        run: |
+          sudo apt-get install -y zsh >/dev/null
+          zsh -n dot_zshrc dot_zshenv dot_zprofile dot_config/zsh/path.zsh
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  render:
+    # Renders every template and script for personal and non-personal Macs without touching a
+    # real home directory, so a broken template fails here instead of on
+    # `chezmoi apply`.
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        personal: [true, false]
+    steps:
+      - uses: actions/checkout@v4
+      - name: install chezmoi
+        run: sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
+      - name: render
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          mkdir -p "$RUNNER_TEMP/home"
+          chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=${{ matrix.personal }}"
+          chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --verbose --exclude=externals \
+            --destination "$RUNNER_TEMP/home" > /dev/null

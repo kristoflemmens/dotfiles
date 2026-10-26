@@ -1,0 +1,80 @@
+# Packages for personal Macs, installed on top of the shared Brewfile.
+# Maintained by bin/sync-brewfile.sh; move anything that turns out to be
+# useful on every machine to Brewfile.
+
+# Static checker for GitHub Actions workflow files
+brew "actionlint"
+# Bash Automated Testing System
+brew "bats-core"
+# Reference implementation of the Development Containers specification
+brew "devcontainer"
+# Command-line interface for Hetzner Cloud
+brew "hcloud"
+# Handy way to save and run project-specific commands
+brew "just"
+# Bridge between Streamable HTTP and stdio MCP transports
+brew "mcp-proxy"
+# Message broker implementing the MQTT protocol
+brew "mosquitto"
+# Ambitious Vim-fork focused on extensibility and agility
+brew "neovim"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Rust toolchain installer
+brew "rustup"
+# Parser generator tool
+brew "tree-sitter-cli"
+# Etcher is a powerful OS image flasher built with web technologies
+cask "balenaetcher"
+# Anthropic's official Claude AI desktop app
+cask "claude"
+# 3D parametric modeler
+cask "freecad"
+# Kubernetes IDE
+cask "freelens"
+# Free and open-source image editor
+cask "gimp"
+# Companion app for Home Assistant home automation software
+cask "home-assistant"
+# Menu bar utility to prevent the system from going into sleep mode
+cask "keepingyouawake"
+# Open source slicing tool for 3D printers
+cask "orcaslicer"
+# USB to UART bridge VCP drivers
+cask "silicon-labs-vcp-driver"
+# Snapmaker's fork of OrcaSlicer
+cask "snapmaker-orca"
+# Music streaming service
+cask "spotify"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
+# Native desktop client for WhatsApp
+cask "whatsapp"
+# Network scanner and speed test by Ubiquiti
+cask "wifiman"
+krew "radar"
+tap "avivsinai/tap"
+tap "fluxcd/tap", trusted: true
+tap "steipete/tap", trusted: true
+# Open-source, cross-platform JavaScript runtime environment
+brew "node"
+# CLI for Bitbucket Cloud - manage repos, PRs, and pipelines from the terminal
+brew "avivsinai/tap/bitbucket-cli", trusted: true
+vscode "bierner.markdown-mermaid"
+vscode "bierner.markdown-yaml-preamble"
+vscode "editorconfig.editorconfig"
+vscode "github.vscode-github-actions"
+vscode "github.vscode-pull-request-github"
+vscode "hashicorp.hcl"
+vscode "jetmartin.bats"
+vscode "ms-toolsai.datawrangler"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode.remote-explorer"
+vscode "streetsidesoftware.code-spell-checker"
+uv "graphifyy"
+krew "ctx"
+krew "ns"
+npm "ctx7"
+uv "claude-statusbar"
