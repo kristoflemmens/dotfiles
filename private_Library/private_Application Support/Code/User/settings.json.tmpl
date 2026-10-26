@@ -27,7 +27,7 @@
   "containers.contexts.showInStatusBar": true,
   "containers.environment": {
     "DOCKER_CONTEXT": "colima",
-    "DOCKER_HOST": "unix:///Users/kristole/.colima/default/docker.sock"
+    "DOCKER_HOST": "unix://{{ .chezmoi.homeDir }}/.colima/default/docker.sock"
   },
   "diffEditor.experimental.showMoves": true,
   "diffEditor.ignoreTrimWhitespace": false,
