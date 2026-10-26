@@ -1,6 +1,5 @@
 tap "anomalyco/tap", trusted: true
 tap "hashicorp/tap", trusted: true
-tap "homebrew/core"
 tap "homeport/tap", trusted: true
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
@@ -78,8 +77,6 @@ brew "shellcheck"
 brew "shfmt"
 # Tool to generate documentation from Terraform modules
 brew "terraform-docs"
-# Linter for Terraform files
-brew "tflint"
 # Update version constraints in your Terraform configurations
 brew "tfupdate"
 # Extremely fast Python package installer and resolver, written in Rust
@@ -89,11 +86,11 @@ brew "watch"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
 # The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode"
+brew "anomalyco/tap/opencode", trusted: true
 # Terraform
 brew "hashicorp/tap/terraform", trusted: true
 # δyƒƒ /ˈdʏf/ - A diff tool for YAML files, and sometimes JSON
-brew "homeport/tap/dyff"
+brew "homeport/tap/dyff", trusted: true
 # Password manager that keeps all passwords secure behind one password
 cask "1password"
 # Command-line interface for 1Password
