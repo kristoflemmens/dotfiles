@@ -76,9 +76,6 @@ zstyle ':omz:update' mode disabled      # also silences the custom 'autoupdate' 
 # see 'man strftime' for details.
 HIST_STAMPS="yyyy-mm-dd"
 
-# ZSH_TMUX_AUTOSTART=true
-ZSH_TMUX_AUTONAME_SESSION=true
-
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
@@ -92,7 +89,7 @@ plugins=(
         alias-finder
         autoupdate
         azure
-		bkt
+        bkt
         brew
         eza
         git
@@ -103,7 +100,6 @@ plugins=(
         macos
         prek
         terraform
-        tmux
         vscode
         wd
         web-search
