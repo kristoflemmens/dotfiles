@@ -18,11 +18,7 @@
   },
   "chat.agent.maxRequests": 50,
   "chat.mcp.autostart": "newAndOutdated",
-  "chat.mcp.serverSampling": {
-    "Global in Code: azure": {
-      "allowedDuringChat": true
-    }
-  },
+  "chat.agent.enabled": false,
   "containers.containerCommand": "/opt/homebrew/bin/docker",
   "containers.contexts.showInStatusBar": true,
   "containers.environment": {
@@ -39,8 +35,9 @@
   "editor.multiCursorLimit": 100000,
   "editor.renderWhitespace": "all",
   "editor.rulers": [
-    120
+    {{ if eq .profile "personal" }}100{{ else }}120{{ end }}
   ],
+  "editor.unicodeHighlight.ambiguousCharacters": false,
   "editor.unicodeHighlight.invisibleCharacters": false,
   "files.associations": {
     "*.chatmode.md": "markdown",
@@ -49,6 +46,8 @@
     "*.prompt.md": "markdown"
   },
   "files.autoSave": "afterDelay",
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "git.autofetch": true,
@@ -56,6 +55,9 @@
   "git.path": "/opt/homebrew/bin/git",
   "github.copilot.chat.codesearch.enabled": true,
   "github.copilot.nextEditSuggestions.enabled": true,
+  "githubIssues.showIssueNumberInTree": true,
+  "githubPullRequests.pullBranch": "never",
+  "dataWrangler.experiments.autoDetectCsvDelimiter": true,
   "gitlens.plusFeatures.enabled": false,
   "gitlens.statusBar.enabled": false,
   "gitlens.views.scm.grouped.views": {
@@ -206,8 +208,10 @@
     },
   },
   "workbench.colorTheme": "Catppuccin Mocha",
+  "workbench.iconTheme": "catppuccin-mocha",
   "json.schemaDownload.trustedDomains": {
     "https://developer.microsoft.com/json-schemas/": true,
+    "https://docs.renovatebot.com/renovate-schema.json": true,
     "https://json-schema.org/": true,
     "https://json.schemastore.org/": true,
     "https://models.dev": true,
@@ -222,7 +226,18 @@
     "https://github.com/microsoft/vscode/wiki/*": true,
     "https://learn.microsoft.com": true,
     "https://carbone.io": true,
-    "https://*.githubusercontent.com": true
+    "https://*.githubusercontent.com": true,
+    "https://www.vlaamsenutsregulator.be": true,
+    "https://www.vreg.be": {
+      "approveRequest": true,
+      "approveResponse": false
+    },
+    "https://www.fluvius.be": true,
+    "https://www.creg.be": true,
+    "https://www.energiesparen.be": {
+      "approveRequest": true,
+      "approveResponse": false
+    }
   },
   "gitlens.views.stashes.files.layout": "tree",
   "gitlens.views.tags.branches.layout": "list",
@@ -233,9 +248,25 @@
     ".terraform"
   ],
   "git.detectWorktrees": true,
+  "yaml.disableSchemaDetection": [
+    "**/.github/workflows/*.yml",
+    "**/.github/workflows/*.yaml",
+    "**/.gitea/workflows/*.yml",
+    "**/.gitea/workflows/*.yaml",
+    "**/.forgejo/workflows/*.yml",
+    "**/.forgejo/workflows/*.yaml"
+  ],
   "[markdown]": {
-    "diffEditor.ignoreTrimWhitespace": false
+    "diffEditor.ignoreTrimWhitespace": false,
+    "files.trimTrailingWhitespace": false
   }
+{{- if eq .profile "personal" }},
+  "python.analysis.typeCheckingMode": "strict",
+  "workbench.editorAssociations": {
+    "*.copilotmd": "vscode.markdown.preview.editor",
+    "*.md": "vscode.markdown.preview.editor"
+  }
+{{- end }}
 {{- /* Work-only settings come from a fragment the private overlay installs. */}}
 {{- $overlay := joinPath .chezmoi.homeDir ".config/work-overlay/vscode/settings.fragment.jsonc" }}
 {{- if stat $overlay }},
