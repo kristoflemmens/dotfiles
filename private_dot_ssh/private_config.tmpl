@@ -1,7 +1,11 @@
-WarnWeakCrypto no
-
 Include {{ .chezmoi.homeDir }}/.colima/ssh_config
 Include {{ .chezmoi.homeDir }}/.ssh/config.d/*.conf
+
+# LAN devices (routers, appliances) often lack post-quantum key exchange;
+# don't warn for private addresses. Internet hosts keep the warning.
+# Placed after the includes so it matches the HostName they set.
+Match host 10.*,192.168.*,172.16.*,172.17.*,172.18.*,172.19.*,172.2?.*,172.30.*,172.31.*
+	WarnWeakCrypto no
 
 Host *
 	IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"

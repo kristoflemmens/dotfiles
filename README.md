@@ -76,7 +76,7 @@ chezmoi update          # git pull + apply
 
 ## Drift detection
 
-Three LaunchAgents run at login and every 4 hours (logs in
+Four LaunchAgents run at login and every 4 hours (logs in
 `~/.local/share/chezmoi-logs/`, macOS notification on changes). Nothing is ever
 committed automatically.
 
@@ -84,6 +84,7 @@ committed automatically.
 |---|---|
 | `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: the private overlay's `Brewfile` on `profile=work`, `Brewfile.personal` on `profile=personal`. New installs are appended, uninstalled entries removed. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
 | `bin/sync-macos-defaults.sh` | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report). |
+| `bin/prune-app-logs.sh` | Deletes Reolink desktop client SDK logs older than 24h (~3 GB/day, no setting in the app). |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results

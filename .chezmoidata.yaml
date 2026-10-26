@@ -4,3 +4,4 @@ launchAgents:
   - name: check-dotfiles-drift
   - name: sync-brewfile
   - name: sync-macos-defaults
+  - name: prune-app-logs
