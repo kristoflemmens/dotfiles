@@ -19,8 +19,11 @@ done < <(grep -v '^\s*#' "$DEFAULTS_FILE" | grep -v '^\s*$')
 mkdir -p "${HOME}/Documents/Screenshots"
 defaults write com.apple.screencapture location -string "${HOME}/Documents/Screenshots"
 
-# Restart affected apps so changes take effect
-killall Dock >/dev/null 2>&1 || true
+# Restart affected apps so changes take effect. Restart the Dock through
+# launchd: after a plain `killall Dock` it isn't always relaunched, which
+# leaves you without Dock, Mission Control and trackpad swipes.
+launchctl kickstart -k "gui/$(id -u)/com.apple.Dock.agent" >/dev/null 2>&1 || killall Dock >/dev/null 2>&1 || true
+pgrep -qx Dock || open -a Dock
 killall Finder >/dev/null 2>&1 || true
 
 echo "==> macOS defaults applied. Some settings may require a logout/restart."
