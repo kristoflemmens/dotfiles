@@ -19,12 +19,16 @@
 |com.apple.dock|autohide-time-modifier|float|0.15
 |com.apple.dock|show-recents|bool|false
 |com.apple.dock|tilesize|int|70
+|com.apple.dock|mru-spaces|bool|false
 
 # --- Finder ---
-|com.apple.finder|AppleShowAllExtensions|bool|true
+|NSGlobalDomain|AppleShowAllExtensions|bool|true
 |com.apple.finder|ShowPathbar|bool|true
 |com.apple.finder|ShowStatusBar|bool|true
-|NSGlobalDomain|AppleShowAllFiles|bool|true
+|com.apple.finder|AppleShowAllFiles|bool|false
+|com.apple.finder|_FXSortFoldersFirst|bool|true
+|com.apple.desktopservices|DSDontWriteNetworkStores|bool|true
+|com.apple.desktopservices|DSDontWriteUSBStores|bool|true
 |com.apple.finder|FXPreferredViewStyle|string|Nlsv
 |com.apple.finder|NewWindowTarget|string|PfHm
 |com.apple.finder|FXDefaultSearchScope|string|SCcf
@@ -37,9 +41,13 @@
 # --- Keyboard ---
 |NSGlobalDomain|KeyRepeat|int|2
 |NSGlobalDomain|InitialKeyRepeat|int|15
-|NSGlobalDomain|ApplePressAndHoldEnabled|bool|false
+|NSGlobalDomain|ApplePressAndHoldEnabled|bool|true
 |NSGlobalDomain|NSAutomaticCapitalizationEnabled|bool|false
 |NSGlobalDomain|NSAutomaticSpellingCorrectionEnabled|bool|false
+|NSGlobalDomain|NSAutomaticQuoteSubstitutionEnabled|bool|false
+|NSGlobalDomain|NSAutomaticDashSubstitutionEnabled|bool|false
+|NSGlobalDomain|NSDocumentSaveNewDocumentsToCloud|bool|false
 
 # --- Screenshots ---
 |com.apple.screencapture|type|string|png
+|com.apple.screencapture|disable-shadow|bool|true
