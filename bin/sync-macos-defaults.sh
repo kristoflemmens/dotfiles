@@ -19,6 +19,14 @@ DEFAULTS_FILE="${SCRIPT_DIR}/macos-defaults.tsv"
 write=1
 [ "${1:-}" = "--check" ] && write=0
 
+# If the declared defaults haven't been applied yet (e.g. after a pull or an
+# apply with --exclude=scripts), the live values are stale, not drift:
+# writing them back would undo the declared change.
+if [ "$write" -eq 1 ] && chezmoi --source "$SCRIPT_DIR" status --include=scripts 2>/dev/null | grep -q 'macos-defaults'; then
+  echo "==> macos-defaults.tsv has changes that aren't applied yet; reporting only. Run chezmoi apply first."
+  write=0
+fi
+
 if [ ! -f "$DEFAULTS_FILE" ]; then
   echo "Could not find macos-defaults.tsv next to this script (looked in ${SCRIPT_DIR})" >&2
   exit 1
