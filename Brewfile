@@ -27,6 +27,8 @@ brew "findutils"
 brew "gh"
 # Distributed revision control system
 brew "git"
+# Syntax-highlighting pager for git, diff, grep, and blame output
+brew "git-delta"
 # GNU implementation of the famous stream editor
 brew "gnu-sed"
 # GNU version of the tar archiving utility

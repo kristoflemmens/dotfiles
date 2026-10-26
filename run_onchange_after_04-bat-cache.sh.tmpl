@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eufo pipefail
+# Rebuild bat's theme cache (also used by delta) when a custom theme changes.
+# themes hash: {{ range (glob (joinPath .chezmoi.sourceDir "dot_config/bat/themes/*")) }}{{ include . | sha256sum }} {{ end }}
+
+/opt/homebrew/bin/bat cache --build

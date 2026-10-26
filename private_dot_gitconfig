@@ -4,7 +4,7 @@
 [core]
 	editor = "code --new-window --wait"
 	autocrlf = input
-	pager = 
+	pager = delta
 [alias]
 	tags = "tag -l"
 	branches = "branch -a"
@@ -30,6 +30,13 @@
 [diff "ansible-vault"]
 	textconv = ansible-vault view
 	cachetextconv = false
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
+	line-numbers = true
+	syntax-theme = tokyonight_night
 [pull]
 	rebase = true
 [push]

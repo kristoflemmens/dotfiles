@@ -20,7 +20,7 @@ bookmarks. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
 - oh-my-zsh and third-party zsh plugins via `.chezmoiexternal.toml` (refreshed
   weekly by `chezmoi apply`). Own plugins go in `dot_config/oh-my-zsh-custom/plugins/`
   (`ZSH_CUSTOM`). Plugins listed in `.zshrc` that aren't installed are skipped.
-- Git: `.gitconfig`, global ignore in `~/.config/git/ignore`, commit signing via
+- Git: `.gitconfig` (delta side-by-side as pager, Tokyo Night theme from `~/.config/bat/themes`), global ignore in `~/.config/git/ignore`, commit signing via
   1Password with `~/.ssh/allowed_signers` for verification, `~/.git-template`
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
