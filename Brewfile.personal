@@ -61,8 +61,6 @@ brew "node"
 brew "avivsinai/tap/bitbucket-cli", trusted: true
 vscode "bierner.markdown-mermaid"
 vscode "bierner.markdown-yaml-preamble"
-vscode "catppuccin.catppuccin-vsc-icons"
-vscode "catppuccin.catppuccin-vsc-pack"
 vscode "editorconfig.editorconfig"
 vscode "github.vscode-github-actions"
 vscode "github.vscode-pull-request-github"
