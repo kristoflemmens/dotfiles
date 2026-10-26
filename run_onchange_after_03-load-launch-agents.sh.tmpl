@@ -1,14 +1,16 @@
 #!/bin/bash
 set -eufo pipefail
 # plist template hash: {{ include ".chezmoitemplates/launchagent.plist" | sha256sum }}
-# agents: {{ range .launchAgents }}{{ .name }} {{ end }}
+# agents: {{ range .launchAgents }}{{ if or (not (get . "profiles")) (has $.profile (get . "profiles")) }}{{ .name }} {{ end }}{{ end }}
 
 mkdir -p "${HOME}/.local/share/chezmoi-logs"
 domain="gui/$(id -u)"
 
 {{ range .launchAgents -}}
+{{ if or (not (get . "profiles")) (has $.profile (get . "profiles")) -}}
 label="com.kristoflemmens.dotfiles.{{ .name }}"
 echo "==> (Re)loading LaunchAgent ${label}..."
 launchctl bootout "${domain}/${label}" >/dev/null 2>&1 || true
 launchctl bootstrap "${domain}" "${HOME}/Library/LaunchAgents/${label}.plist"
+{{ end -}}
 {{ end -}}
