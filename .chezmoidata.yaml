@@ -1,9 +1,9 @@
 # LaunchAgents installed from bin/. Each runs at login and every 4 hours;
 # see the README ("Drift detection") for what each one reports or writes.
-# `profiles` limits an agent to those machine profiles (default: all).
+# `personal: true` limits an agent to personal Macs.
 launchAgents:
   - name: check-dotfiles-drift
   - name: sync-brewfile
   - name: sync-macos-defaults
   - name: prune-app-logs
-    profiles: [personal]
+    personal: true

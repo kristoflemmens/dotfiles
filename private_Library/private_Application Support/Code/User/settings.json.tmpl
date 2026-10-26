@@ -34,9 +34,6 @@
   "editor.minimap.enabled": false,
   "editor.multiCursorLimit": 100000,
   "editor.renderWhitespace": "all",
-  "editor.rulers": [
-    {{ if eq .profile "personal" }}100{{ else }}120{{ end }}
-  ],
   "editor.unicodeHighlight.ambiguousCharacters": false,
   "editor.unicodeHighlight.invisibleCharacters": false,
   "files.associations": {
@@ -258,17 +255,20 @@
     "diffEditor.ignoreTrimWhitespace": false,
     "files.trimTrailingWhitespace": false
   }
-{{- if eq .profile "personal" }},
+{{- if .personal }},
+  "editor.rulers": [
+    100
+  ],
   "python.analysis.typeCheckingMode": "strict",
   "workbench.editorAssociations": {
     "*.copilotmd": "vscode.markdown.preview.editor",
     "*.md": "vscode.markdown.preview.editor"
   }
 {{- end }}
-{{- /* Work-only settings come from a fragment the private overlay installs. */}}
-{{- $overlay := joinPath .chezmoi.homeDir ".config/work-overlay/vscode/settings.fragment.jsonc" }}
+{{- /* Overlay-specific settings come from a fragment the overlay installs. */}}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/vscode-settings.jsonc" }}
 {{- if stat $overlay }},
-  // --- from ~/.config/work-overlay/vscode/settings.fragment.jsonc ---
+  // --- from ~/.config/dotfiles-overlay/vscode-settings.jsonc ---
 {{ include $overlay | trimSuffix "\n" }}
 {{- end }}
 }

@@ -1,5 +1,6 @@
-# Packages for profile=personal, installed on top of the shared Brewfile.
-# Move anything that turns out to be useful on every machine to Brewfile.
+# Packages for personal Macs, installed on top of the shared Brewfile.
+# Maintained by bin/sync-brewfile.sh; move anything that turns out to be
+# useful on every machine to Brewfile.
 
 # Static checker for GitHub Actions workflow files
 brew "actionlint"

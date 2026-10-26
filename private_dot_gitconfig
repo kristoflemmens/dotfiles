@@ -49,8 +49,8 @@
 [user]
 	name = Kristof Lemmens
 	# Fallback identity used everywhere commit.gpgsign is enabled below,
-	# except where overridden by a private work overlay's includeIf blocks
-	# for specific work project trees. Without this, any repo outside
+	# except where overridden by an overlay's includeIf blocks for specific
+	# project trees. Without this, any repo outside
 	# those specific directories (e.g. an ad-hoc clone, or
 	# ~/.local/share/chezmoi itself) has no signingkey configured, and
 	# `commit.gpgsign = true` below causes:
@@ -66,8 +66,8 @@
 [commit]
 	gpgsign = true
 [include]
-	# Optional work overlay hook: if a private overlay repo creates this file,
-	# git will load additional includeIf rules from it (for work identities,
-	# signing keys, etc.). Keeping this reference in the base config avoids
+	# Optional overlay hook: if an overlay repo creates this file, git loads
+	# additional (includeIf) rules from it, e.g. work identities and keys.
+	# Keeping this reference in the base config avoids
 	# requiring any post-apply mutation of ~/.gitconfig by other repos.
-	path = ~/.config/work-overlay/gitconfig/includeif-work.conf
+	path = ~/.config/dotfiles-overlay/gitconfig

@@ -1,10 +1,8 @@
 #!/bin/bash
 set -eufo pipefail
-{{- $profileBrewfile := printf "Brewfile.%s" .profile }}
-{{- $hasProfileBrewfile := stat (joinPath .chezmoi.sourceDir $profileBrewfile) }}
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
-{{- if $hasProfileBrewfile }}
-# {{ $profileBrewfile }} hash: {{ include $profileBrewfile | sha256sum }}
+{{- if .personal }}
+# Brewfile.personal hash: {{ include "Brewfile.personal" | sha256sum }}
 {{- end }}
 
 # Each script runs in its own process, so the PATH from 01-install-homebrew
@@ -13,8 +11,8 @@ brew=/opt/homebrew/bin/brew
 
 echo "==> Installing packages from Brewfile..."
 "$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile"
-{{- if $hasProfileBrewfile }}
+{{- if .personal }}
 
-echo "==> Installing {{ .profile }} packages from {{ $profileBrewfile }}..."
-"$brew" bundle install --file="{{ joinPath .chezmoi.sourceDir $profileBrewfile }}"
+echo "==> Installing personal packages from Brewfile.personal..."
+"$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile.personal"
 {{- end }}

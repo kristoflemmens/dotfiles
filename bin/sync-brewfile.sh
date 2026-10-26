@@ -3,12 +3,13 @@
 # so an ad-hoc `brew install X` / `brew uninstall Y` ends up in chezmoi
 # instead of silently drifting.
 #
-# Declared = Brewfile (shared) + Brewfile.<profile> + the Brewfile of every
-# private overlay source (~/.local/share/chezmoi-*/Brewfile).
+# Declared = Brewfile (shared) + Brewfile.personal (on personal Macs) + the
+# Brewfile of every overlay source (~/.local/share/chezmoi-*/Brewfile).
 #
 # Writes go to exactly one file, the machine's own:
-#   profile=work      -> the private overlay's Brewfile
-#   profile=personal  -> Brewfile.personal
+#   personal Mac          -> Brewfile.personal
+#   otherwise, overlay    -> the overlay's Brewfile (e.g. the work overlay)
+#   otherwise             -> nothing is written, drift is only reported
 # - installed but declared nowhere   -> appended to the machine's own file
 # - in the machine's own file but no longer installed -> removed from it
 # The shared Brewfile is curated by hand and never written: shared entries
@@ -25,22 +26,23 @@
 set -euo pipefail
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-profile="$(chezmoi --source "$SOURCE_DIR" execute-template '{{ .profile }}')"
+personal="$(chezmoi --source "$SOURCE_DIR" execute-template '{{ .personal }}')"
 
 overlay_brewfiles=()
 for f in "${HOME}"/.local/share/chezmoi-*/Brewfile; do
   [ -f "$f" ] && overlay_brewfiles+=("$f")
 done
 
-if [ "$profile" = "work" ] && [ "${#overlay_brewfiles[@]}" -gt 0 ]; then
+if [ "$personal" = "true" ]; then
+  target="${SOURCE_DIR}/Brewfile.personal"
+elif [ "${#overlay_brewfiles[@]}" -gt 0 ]; then
   target="${overlay_brewfiles[0]}"
 else
-  target="${SOURCE_DIR}/Brewfile.${profile}"
-  [ -f "$target" ] || printf '# Packages for profile=%s, maintained by bin/sync-brewfile.sh.\n' "$profile" > "$target"
+  target=""
 fi
 
 declared_files=("${SOURCE_DIR}/Brewfile")
-[ -f "${SOURCE_DIR}/Brewfile.${profile}" ] && declared_files+=("${SOURCE_DIR}/Brewfile.${profile}")
+[ "$personal" = "true" ] && declared_files+=("${SOURCE_DIR}/Brewfile.personal")
 declared_files+=(${overlay_brewfiles[@]+"${overlay_brewfiles[@]}"})
 
 # Normalise Brewfile lines to `type "name"` so options/comments don't matter.
@@ -61,8 +63,27 @@ keys "$tmp_dump" > "$tmp_live"
 keys "${declared_files[@]}" > "$tmp_declared"
 
 comm -23 "$tmp_live" "$tmp_declared" > "$tmp_add"
-comm -12 <(comm -13 "$tmp_live" "$tmp_declared") <(keys "$target") > "$tmp_remove"
 shared_missing="$(comm -13 "$tmp_live" <(keys "${SOURCE_DIR}/Brewfile"))"
+
+report_shared_missing() {
+  if [ -n "$shared_missing" ]; then
+    echo "In the shared Brewfile but not installed here (chezmoi apply installs them):"
+    # shellcheck disable=SC2001
+    sed 's/^/  /' <<< "$shared_missing"
+  fi
+}
+
+if [ -z "$target" ]; then
+  echo "==> Not a personal Mac and no overlay Brewfile: reporting only."
+  if [ -s "$tmp_add" ]; then
+    echo "Installed but declared nowhere:"
+    sed 's/^/  /' "$tmp_add"
+  fi
+  report_shared_missing
+  exit 0
+fi
+
+comm -12 <(comm -13 "$tmp_live" "$tmp_declared") <(keys "$target") > "$tmp_remove"
 
 # Rewrite the target: drop removed entries (with the description comment
 # brew puts above them), then append new entries as `brew bundle dump`
@@ -94,7 +115,7 @@ if ! cmp -s "$target" "$tmp_target"; then
   cp "$tmp_target" "$target"
 fi
 
-echo "==> profile: ${profile}, writing to: ${target}"
+echo "==> Writing to: ${target}"
 if [ -s "$tmp_add" ]; then
   echo "Added (installed but declared nowhere):"
   sed 's/^/  /' "$tmp_add"
@@ -103,11 +124,7 @@ if [ -s "$tmp_remove" ]; then
   echo "Removed (no longer installed):"
   sed 's/^/  /' "$tmp_remove"
 fi
-if [ -n "$shared_missing" ]; then
-  echo "In the shared Brewfile but not installed here (chezmoi apply installs them):"
-  # shellcheck disable=SC2001
-  sed 's/^/  /' <<< "$shared_missing"
-fi
+report_shared_missing
 
 if [ "$changed" -eq 0 ]; then
   echo "==> ${target##*/} is up to date."

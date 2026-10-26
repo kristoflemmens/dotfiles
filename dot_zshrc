@@ -47,10 +47,8 @@ plugins=(
         zsh-syntax-highlighting
         )
 
-# Hook for machine-specific plugins (e.g. work-only custom plugins) to be
-# appended before oh-my-zsh loads, without hardcoding them in this generic
-# file. Populated by a private work overlay repo.
-[[ -f ~/.zshrc.work.plugins ]] && source ~/.zshrc.work.plugins
+# Overlay hook for extra plugins, appended before oh-my-zsh loads.
+[[ -f ~/.config/dotfiles-overlay/zsh/plugins.zsh ]] && source ~/.config/dotfiles-overlay/zsh/plugins.zsh
 
 # Drop plugins that aren't installed on this machine instead of letting
 # oh-my-zsh print a warning on every shell start.
@@ -72,7 +70,7 @@ alias watch='watch '
 (( $+commands[fnd] )) && alias find='fnd'
 
 source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
-[[ -f ~/.zshrc.work ]] && source ~/.zshrc.work
+[[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

@@ -1,16 +1,17 @@
 # dotfiles
 
 Personal macOS dotfiles and machine bootstrap, managed with [chezmoi](https://www.chezmoi.io/).
-Public and generic: nothing employer- or client-specific lives here (see
-[work overlay](#on-a-work-mac-a-second-private-overlay)).
+Public and generic: nothing employer- or client-specific lives here. Work
+config comes from a private overlay repo (see
+[Overlays](#overlays-eg-a-work-mac)).
 
-## Profiles
+## Personal or not
 
-`chezmoi init` asks once for a machine **profile** (`personal` or `work`) and
-stores it in the generated `~/.config/chezmoi/chezmoi.yaml` (from
-`.chezmoi.yaml.tmpl`). Templates use `.profile` for the few differences between
-machines (extra Brewfile, `.warprc` bookmarks). Change it with
-`chezmoi init --promptChoice "Machine profile=work"`.
+`chezmoi init` asks once whether this is a **personal Mac** and stores the
+answer in the generated `~/.config/chezmoi/chezmoi.yaml` (from
+`.chezmoi.yaml.tmpl`). It only switches personal extras on: `Brewfile.personal`,
+the Reolink log-pruning agent, a few VS Code preferences and `.warprc`
+bookmarks. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
 
 ## What's in here
 
@@ -24,11 +25,11 @@ machines (extra Brewfile, `.warprc` bookmarks). Change it with
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template, `.warprc`
-- `Brewfile` (shared, curated by hand) + `Brewfile.personal` (maintained by `bin/sync-brewfile.sh`); work packages live in the private overlay
+- `Brewfile` (shared, curated by hand) + `Brewfile.personal` (personal Macs, maintained by `bin/sync-brewfile.sh`)
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
   - `run_once_before_01` install Homebrew
-  - `run_onchange_before_02` `brew bundle install` for `Brewfile` and `Brewfile.<profile>`
+  - `run_onchange_before_02` `brew bundle install` for `Brewfile` (+ `Brewfile.personal` on personal Macs)
   - `run_onchange_after_02` apply `macos-defaults.tsv`
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
 
@@ -42,23 +43,25 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply kristoflemmens
 Homebrew, all CLI tools/casks, runtimes, dotfiles, oh-my-zsh and macOS defaults
 are set up automatically.
 
-### On a work Mac: a second, private overlay
+### Overlays (e.g. a work Mac)
 
-Employer/client-specific config lives in a separate private repo, applied as an
-independent chezmoi source **with its own config and state** after the base
+Machine-specific config that doesn't belong in a public repo (a work identity,
+employer tools, client settings) lives in a separate private repo, applied as
+an independent chezmoi source **with its own config and state** after the base
 bootstrap (by then 1Password, gh and SSH work, so cloning a private repo is no
 chicken-and-egg problem). See that repo's README.
 
-The overlay integrates through optional files under `~/.config/work-overlay/`
-that templates here include when present, plus `~/.*.work` shell hooks:
+This repo never refers to a specific overlay. It reads these optional files
+when they exist, all under `~/.config/dotfiles-overlay/`:
 
 | Overlay file | Used by |
 |---|---|
-| `gitconfig/includeif-work.conf` | `[include]` in `.gitconfig` |
-| `ssh/allowed_signers` | appended to `~/.ssh/allowed_signers` |
-| `vscode/settings.fragment.jsonc` | appended to VS Code `settings.json` |
-| `warprc/entries.txt` | appended to `~/.warprc` |
-| `~/.zshenv.work`, `~/.zprofile.work`, `~/.zshrc.work`, `~/.zshrc.work.plugins` | sourced by the zsh files |
+| `gitconfig` | `[include]` in `.gitconfig` (e.g. includeIf identities) |
+| `allowed_signers` | appended to `~/.ssh/allowed_signers` |
+| `vscode-settings.jsonc` | appended to VS Code `settings.json` |
+| `warprc` | appended to `~/.warprc` |
+| `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh`, `zsh/plugins.zsh` | sourced by the zsh files |
+| `~/.local/share/chezmoi-*/Brewfile` | declared packages for `bin/sync-brewfile.sh` |
 
 Because the base templates read overlay files, apply the overlay **first** and
 the base second when both changed (`dotfiles-apply` in the overlay does this).
@@ -74,15 +77,15 @@ chezmoi update          # git pull + apply
 
 ## Drift detection
 
-LaunchAgents (listed in `.chezmoidata.yaml`, optionally per profile) run at login and every 4 hours (logs in
+LaunchAgents (listed in `.chezmoidata.yaml`; `personal: true` limits one to personal Macs) run at login and every 4 hours (logs in
 `~/.local/share/chezmoi-logs/`, macOS notification on changes). Nothing is ever
 committed automatically.
 
 | Script | What it does |
 |---|---|
-| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: the private overlay's `Brewfile` on `profile=work`, `Brewfile.personal` on `profile=personal`. New installs are appended, uninstalled entries removed. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
+| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: `Brewfile.personal` on a personal Mac, otherwise the overlay's `Brewfile` (or only reports, without either). New installs are appended, uninstalled entries removed. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
 | `bin/sync-macos-defaults.sh` | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report). |
-| `bin/prune-app-logs.sh` | *Personal profile only.* Deletes Reolink desktop client SDK logs older than 24h (~3 GB/day, no setting in the app). |
+| `bin/prune-app-logs.sh` | *Personal Macs only.* Deletes Reolink desktop client SDK logs older than 24h (~3 GB/day, no setting in the app). |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results

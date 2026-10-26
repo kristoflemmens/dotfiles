@@ -1,9 +1,11 @@
 {{- /* Generates ~/.config/chezmoi/chezmoi.yaml on `chezmoi init`.
-       The profile prompt is asked once and remembered; override with
-       `chezmoi init --promptChoice "Machine profile=work"`. */ -}}
-{{- $profile := promptChoiceOnce . "profile" "Machine profile" (list "personal" "work") -}}
+       Asked once and remembered; override with
+       `chezmoi init --promptBool "Personal Mac=false"`.
+       Work-specific config never lives here: it comes from a private
+       overlay repo (see README). */ -}}
+{{- $personal := promptBoolOnce . "personal" "Personal Mac" -}}
 data:
-  profile: {{ $profile | quote }}
+  personal: {{ $personal }}
 diff:
   exclude:
     - scripts
