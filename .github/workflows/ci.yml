@@ -41,5 +41,5 @@ jobs:
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=${{ matrix.personal }}"
-          chezmoi apply --source "$GITHUB_WORKSPACE" --dry-run --verbose --exclude=externals \
+          chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --verbose --exclude=externals \
             --destination "$RUNNER_TEMP/home" > /dev/null
