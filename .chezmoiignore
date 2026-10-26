@@ -4,9 +4,6 @@ Brewfile.*
 macos-defaults.tsv
 bin
 .github
-{{- if ne .profile "work" }}
-.config/mise
-{{- end }}
 {{- range .launchAgents }}{{ if and (get . "profiles") (not (has $.profile (get . "profiles"))) }}
 Library/LaunchAgents/com.kristoflemmens.dotfiles.{{ .name }}.plist
 {{- end }}{{ end }}

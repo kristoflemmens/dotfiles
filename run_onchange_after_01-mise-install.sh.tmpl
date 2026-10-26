@@ -1,8 +1,0 @@
-{{- if eq .profile "work" -}}
-#!/bin/bash
-set -eufo pipefail
-# dot_config/mise/config.toml hash: {{ include "dot_config/mise/config.toml" | sha256sum }}
-
-echo "==> Installing runtimes via mise (from ~/.config/mise/config.toml)..."
-/opt/homebrew/bin/mise install
-{{- end }}

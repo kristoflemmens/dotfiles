@@ -25,12 +25,10 @@ machines (extra Brewfile, `.warprc` bookmarks). Change it with
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template, `.warprc`
 - `Brewfile` (shared, curated by hand) + `Brewfile.personal` (maintained by `bin/sync-brewfile.sh`); work packages live in the private overlay
-- `~/.config/mise/config.toml` — runtimes (Java, Node, pnpm), **work profile only**; mise itself is installed by the work overlay's Brewfile. Personal Macs use Homebrew Node and no mise.
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
   - `run_once_before_01` install Homebrew
   - `run_onchange_before_02` `brew bundle install` for `Brewfile` and `Brewfile.<profile>`
-  - `run_onchange_after_01` `mise install` (work profile only)
   - `run_onchange_after_02` apply `macos-defaults.tsv`
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
 

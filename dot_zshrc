@@ -72,7 +72,6 @@ alias watch='watch '
 (( $+commands[fnd] )) && alias find='fnd'
 
 source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
-(( $+commands[mise] )) && eval "$(mise activate zsh)"
 [[ -f ~/.zshrc.work ]] && source ~/.zshrc.work
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
