@@ -1,0 +1,8 @@
+[tools]
+java = "temurin-25.0.4+101.0.LTS"
+{{- if eq .profile "work" }}
+# Work: Node via mise. On personal Macs Node comes from Homebrew, which GUI
+# apps and npx-based MCP servers use anyway (they don't see mise activate).
+node = "lts"
+pnpm = "latest"
+{{- end }}

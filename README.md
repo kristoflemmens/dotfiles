@@ -25,7 +25,7 @@ machines (extra Brewfile, `.warprc` bookmarks). Change it with
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template, `.warprc`
 - `Brewfile` (shared, curated by hand) + `Brewfile.personal` (maintained by `bin/sync-brewfile.sh`); work packages live in the private overlay
-- `~/.config/mise/config.toml` — global runtimes (Java, Node, pnpm)
+- `~/.config/mise/config.toml` — global runtimes: Java everywhere; Node + pnpm only on `profile=work` (personal uses Homebrew Node, which GUI apps and npx MCP servers use anyway)
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
   - `run_once_before_01` install Homebrew
