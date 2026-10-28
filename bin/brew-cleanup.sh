@@ -29,6 +29,6 @@ if [ ! -t 0 ]; then
 fi
 
 /opt/homebrew/bin/brew bundle cleanup --zap --file="$combined" ||
-  echo "==> Kept. The next sync-brewfile records them in this machine's own Brewfile."
+  echo "==> Declined or failed: what is still installed gets recorded in this machine's own Brewfile by the next sync-brewfile."
 # Removed or kept on purpose: either way no uninstall request is left.
 rm -f "$brew_removed"
