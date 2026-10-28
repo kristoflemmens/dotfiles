@@ -1,5 +1,6 @@
 # zsh plugins, loaded by antidote from ~/.zshrc (after compinit). One bundle
-# per line: a GitHub repo, `repo path:<subdir>` or a local directory. An
+# per line: a GitHub repo, `repo path:<subdir>`, a local directory or file
+# (e.g. a plugin's settings, right before it). An
 # overlay adds its own list in ~/.config/dotfiles-overlay/zsh/plugins.txt.
 # Clones live in ~/Library/Caches/antidote; update them with `antidote update`.
 
@@ -8,6 +9,7 @@ ohmyzsh/ohmyzsh path:lib/git.zsh
 ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/kubectl
 ohmyzsh/ohmyzsh path:plugins/brew
+$HOME/.config/zsh/eza.zsh
 ohmyzsh/ohmyzsh path:plugins/eza
 # GNU coreutils/findutils/sed/tar/grep/time/make under their plain names, for
 # commands typed here only (hash, not PATH): scripts keep the macOS versions.
