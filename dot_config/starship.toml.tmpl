@@ -1,0 +1,2 @@
+{{- /* Starship only reads TOML; the config is maintained as YAML. */ -}}
+{{ include "dot_config/starship.yaml" | fromYaml | toToml }}
