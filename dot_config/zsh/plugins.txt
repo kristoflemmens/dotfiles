@@ -1,0 +1,15 @@
+# zsh plugins, loaded by antidote from ~/.zshrc (after compinit). One bundle
+# per line: a GitHub repo, `repo path:<subdir>` or a local directory. An
+# overlay adds its own list in ~/.config/dotfiles-overlay/zsh/plugins.txt.
+# Clones live in ~/Library/Caches/antidote; update them with `antidote update`.
+
+# oh-my-zsh alias sets, without the framework.
+ohmyzsh/ohmyzsh path:lib/git.zsh
+ohmyzsh/ohmyzsh path:plugins/git
+ohmyzsh/ohmyzsh path:plugins/kubectl
+ohmyzsh/ohmyzsh path:plugins/brew
+ohmyzsh/ohmyzsh path:plugins/eza
+
+zsh-users/zsh-autosuggestions
+# Deferred (after the prompt), so it wraps every widget, overlay ones too.
+zsh-users/zsh-syntax-highlighting kind:defer

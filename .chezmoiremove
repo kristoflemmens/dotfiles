@@ -7,3 +7,5 @@
 # machine that still has own plugins in ~/.oh-my-zsh/custom, migrate them
 # first (see the work overlay's README) and remove it by hand.
 .config/oh-my-zsh-custom
+# The oh-my-zsh alias-set external; antidote clones oh-my-zsh itself now.
+.config/zsh/ohmyzsh

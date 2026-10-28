@@ -1,6 +1,6 @@
-# Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins come
-# from Homebrew (updated by `brew upgrade`); the git/kubectl/brew/eza alias
-# sets come from oh-my-zsh as plain files (.chezmoiexternals/common.yaml).
+# Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins
+# (incl. the oh-my-zsh git/kubectl/brew/eza alias sets) are loaded by antidote
+# from ~/.config/zsh/plugins.txt.
 
 # GNU tools first in interactive shells (what oh-my-zsh's gnu-utils did);
 # scripts keep the macOS versions.
@@ -46,23 +46,27 @@ unset stale
 zstyle ':completion:*' menu select
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
+# --- Plugins (antidote; list in ~/.config/zsh/plugins.txt) ---
+# The bundle is regenerated only when a plugin list changes.
+source "$HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh"
+plugin_lists=(~/.config/zsh/plugins.txt ~/.config/dotfiles-overlay/zsh/plugins.txt(N))
+plugin_bundle="$ZSH_CACHE_DIR/plugins.zsh"
+for f in $plugin_lists; do
+  if [[ ! -s $plugin_bundle || $f -nt $plugin_bundle ]]; then
+    cat $plugin_lists | antidote bundle >| "$plugin_bundle"
+    break
+  fi
+done
+source "$plugin_bundle"
+unset plugin_lists plugin_bundle f
+
 # --- Aliases ---
-ohmyzsh="$HOME/.config/zsh/ohmyzsh"
-if [[ -d $ohmyzsh ]]; then
-  source "$ohmyzsh/lib/git.zsh"
-  for p in git kubectl brew eza; do source "$ohmyzsh/plugins/$p/$p.plugin.zsh"; done
-fi
-unset ohmyzsh p
 alias l='ls -lah'
 alias cat='bat --paging=never'
 alias watch='watch '
 # grg/fnd are optional wrappers in ~/.local/bin; only alias when present.
 (( $+commands[grg] )) && alias grep='grg'
 (( $+commands[fnd] )) && alias find='fnd'
-
-# Extra plugins (e.g. from an overlay): every <name>/<name>.plugin.zsh here.
-for p in ~/.config/zsh/plugins/*/*.plugin.zsh(N); do source "$p"; done
-unset p
 
 # --- Tools ---
 eval "$(zoxide init zsh)"
@@ -72,7 +76,3 @@ eval "$(starship init zsh)"
 [[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh
 
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
-
-# Last: autosuggestions, then syntax highlighting (it must wrap all widgets).
-source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

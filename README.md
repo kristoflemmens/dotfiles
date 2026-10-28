@@ -19,11 +19,11 @@ the Reolink log-pruning agent and a few VS Code preferences. Change it with `che
   comments there). Prompt: Starship (`~/.config/starship.toml`, Tokyo Night
   preset plus kube context, command duration and herdr pane). `z` (zoxide)
   for jumping between directories.
-- zsh plugins (autosuggestions, syntax highlighting, completions) from Homebrew.
-  The oh-my-zsh alias sets for git, kubectl, brew and eza come in as plain
-  files via `.chezmoiexternals/common.yaml` (one file per scope; overlays can
-  add their own), refreshed weekly by `chezmoi apply`. Extra plugins: drop a
-  `<name>/<name>.plugin.zsh` into `~/.config/zsh/plugins/`.
+- zsh plugins via antidote, listed in `~/.config/zsh/plugins.txt` (oh-my-zsh
+  alias sets for git, kubectl, brew and eza without the framework,
+  autosuggestions, syntax highlighting); an overlay adds
+  `~/.config/dotfiles-overlay/zsh/plugins.txt`. `antidote update` updates the
+  clones. Completions from Homebrew (`zsh-completions`).
 - Git: `.gitconfig` (delta side-by-side as pager, Tokyo Night theme from `~/.config/bat/themes`), global ignore in `~/.config/git/ignore`, commit signing via
   1Password with `~/.ssh/allowed_signers` for verification, `~/.git-template`
   with a prek/pre-commit hook
@@ -64,7 +64,7 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `allowed_signers` | appended to `~/.ssh/allowed_signers` |
 | `vscode-settings.jsonc` | appended to VS Code `settings.json` |
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files |
-| `~/.config/zsh/plugins/<name>/` (outside this folder) | sourced by `.zshrc` as `<name>.plugin.zsh` |
+| `zsh/plugins.txt` | extra antidote bundles, appended to `~/.config/zsh/plugins.txt` |
 | `~/.local/share/chezmoi-*/Brewfile` | declared packages for `bin/sync-brewfile.sh` |
 
 Because the base templates read overlay files, apply the overlay **first** and

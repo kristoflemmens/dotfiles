@@ -70,8 +70,9 @@ The user settled these; build on them:
   (colour overrides in `~/.claude/claude-statusbar.json`; `cs` has no themes).
 - git and `chezmoi diff` page through delta, side-by-side.
 - Shell: no oh-my-zsh, no Powerlevel10k. Starship prompt (tokyo-night preset
-  + kube, duration, herdr), plugins from Homebrew, only the oh-my-zsh alias
-  sets for git/kubectl/brew/eza, zoxide instead of wd bookmarks.
+  + kube, duration, herdr), plugins via antidote (`~/.config/zsh/plugins.txt`,
+  overlays append their own list), only the oh-my-zsh alias sets for
+  git/kubectl/brew/eza, zoxide instead of wd bookmarks.
 - Personal Mac: Node from Homebrew, no mise, no Java. Runtimes for work live
   in the work overlay.
 - Docker: `colima` docker context; `DOCKER_HOST` is set only by the work overlay

@@ -1,6 +1,8 @@
 tap "anomalyco/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "homeport/tap", trusted: true
+# Plugin manager for zsh
+brew "antidote"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -83,12 +85,8 @@ brew "watch"
 brew "yq"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Fish shell like fast/unobtrusive autosuggestions for zsh
-brew "zsh-autosuggestions"
 # Additional completion definitions for zsh
 brew "zsh-completions"
-# Fish shell like syntax highlighting for zsh
-brew "zsh-syntax-highlighting"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode", trusted: true
 # Terraform
