@@ -1,6 +1,10 @@
-# oh-my-zsh and third-party zsh plugins, refreshed weekly by `chezmoi apply`
-# (or immediately with `chezmoi apply --refresh-externals`). Own plugins
-# live in dot_config/oh-my-zsh-custom/plugins/ and are tracked directly.
+# Externals for every machine: oh-my-zsh and third-party zsh plugins,
+# refreshed weekly by `chezmoi apply` (or now with --refresh-externals).
+#
+# Machine-specific externals go in their own file next to this one, e.g.
+# personal.toml.tmpl gated on the personal flag, or in an overlay repo's
+# own .chezmoiexternals/. Own (non-git) plugins live in
+# dot_config/oh-my-zsh-custom/plugins/ and are tracked directly.
 
 [".oh-my-zsh"]
     type = "git-repo"
