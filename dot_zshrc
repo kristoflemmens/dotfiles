@@ -59,9 +59,6 @@ unset plugin_lists plugin_bundle f
 alias l='ls -lah'
 alias cat='bat --paging=never'
 alias watch='watch '
-# grg/fnd are optional wrappers in ~/.local/bin; only alias when present.
-(( $+commands[grg] )) && alias grep='grg'
-(( $+commands[fnd] )) && alias find='fnd'
 
 # --- Tools ---
 eval "$(zoxide init zsh)"
