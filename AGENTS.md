@@ -21,10 +21,9 @@ layout, bootstrap and the drift agents; read it before structural changes.
   or when a shared config file needs a package to work (say so). Ad-hoc
   installs are recorded automatically by `bin/sync-brewfile.sh` into
   `Brewfile.personal` (personal Mac) or the overlay's `Brewfile`.
-- Composed files are templates: VS Code `settings.json.tmpl`, `dot_warprc.tmpl`,
+- Composed files are templates: VS Code `settings.json.tmpl` and
   `allowed_signers.tmpl`. Change them by editing the `.tmpl` source; `chezmoi
   add`/`re-add` would flatten the template into the machine's rendered output.
-
 - chezmoi's own files are YAML (the user prefers it over TOML), e.g.
   `.chezmoiexternals/*.yaml`. Tool config stays in the tool's own format
   (Starship and mise TOML): converting it would break `chezmoi edit`/`add`/
@@ -68,6 +67,9 @@ The user settled these; build on them:
 - Theme: Tokyo Night in Ghostty, VS Code (Catppuccin icons) and claude-statusbar
   (colour overrides in `~/.claude/claude-statusbar.json`; `cs` has no themes).
 - git and `chezmoi diff` page through delta, side-by-side.
+- Shell: no oh-my-zsh, no Powerlevel10k. Starship prompt (tokyo-night preset
+  + kube, duration, herdr), plugins from Homebrew, only the oh-my-zsh alias
+  sets for git/kubectl/brew/eza, zoxide instead of wd bookmarks.
 - Personal Mac: Node from Homebrew, no mise, no Java. Runtimes for work live
   in the work overlay.
 - Docker: `colima` docker context; `DOCKER_HOST` is set only by the work overlay

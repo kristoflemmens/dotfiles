@@ -1,78 +1,78 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins come
+# from Homebrew (updated by `brew upgrade`); the git/kubectl/brew/eza alias
+# sets come from oh-my-zsh as plain files (.chezmoiexternals/common.yaml).
+
+# GNU tools first in interactive shells (what oh-my-zsh's gnu-utils did);
+# scripts keep the macOS versions.
+path=("$HOMEBREW_PREFIX"/opt/{coreutils,findutils,gnu-sed,gnu-tar,grep}/libexec/gnubin(N) $path)
+
+# --- History ---
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history hist_expire_dups_first hist_ignore_dups \
+  hist_ignore_space hist_verify share_history
+alias history='fc -li 1'
+
+# --- Navigation and editing ---
+setopt auto_cd auto_pushd pushd_ignore_dups pushd_minus interactive_comments
+bindkey -e
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search '^[OA' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search '^[OB' down-line-or-beginning-search
+bindkey '^[[H' beginning-of-line '^[[F' end-of-line
+bindkey '^[[1;3D' backward-word '^[[1;3C' forward-word   # option-arrows
+bindkey '^[[1;5D' backward-word '^[[1;5C' forward-word   # ctrl-arrows
+bindkey '^[[3~' delete-char
+
+# --- Completion ---
+export ZSH_CACHE_DIR="$HOME/.cache/zsh"   # used by the kubectl alias plugin
+[[ -d $ZSH_CACHE_DIR/completions ]] || mkdir -p "$ZSH_CACHE_DIR/completions"
+fpath=("$ZSH_CACHE_DIR/completions" "$HOMEBREW_PREFIX/share/zsh-completions"
+  "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
+autoload -Uz compinit
+# -u: Homebrew leaves /opt/homebrew/share group-writable, which compaudit
+# flags; on this single-user Mac that's fine (oh-my-zsh's ZSH_DISABLE_COMPFIX).
+# Rebuild the dump at most once a day; otherwise reuse it (-C).
+stale=("$ZSH_CACHE_DIR"/zcompdump(N.mh+24))
+if (( $#stale )) || [[ ! -f $ZSH_CACHE_DIR/zcompdump ]]; then
+  compinit -u -d "$ZSH_CACHE_DIR/zcompdump"
+else
+  compinit -u -C -d "$ZSH_CACHE_DIR/zcompdump"
 fi
+unset stale
+zstyle ':completion:*' menu select
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
-# oh-my-zsh and third-party plugins are installed by chezmoi
-# (.chezmoiexternals/common.yaml). Own plugins live in ~/.config/oh-my-zsh-custom.
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_CUSTOM="$HOME/.config/oh-my-zsh-custom"
-
-# Skip oh-my-zsh's compaudit permission-scan of every directory in $fpath on
-# every shell startup. This was measured to be ~90% of total .zshrc load time
-# (compinit -> compaudit + compdump). Safe here: this is a single-user
-# machine and $fpath only contains Homebrew/oh-my-zsh paths we trust.
-ZSH_DISABLE_COMPFIX="true"
-
-# Prompt comes from powerlevel10k below; updates come from chezmoi externals.
-ZSH_THEME=""
-zstyle ':omz:update' mode disabled
-
-CASE_SENSITIVE="true"
-HIST_STAMPS="yyyy-mm-dd"
-
-plugins=(
-        1password
-        alias-finder
-        bkt
-        brew
-        eza
-        gh
-        git
-        git-auto-fetch
-        gnu-utils
-        helm
-        herdr
-        kubectl
-        macos
-        prek
-        terraform
-        vscode
-        wd
-        web-search
-        zsh-autosuggestions
-        zsh-bat
-        zsh-syntax-highlighting
-        )
-
-# Overlay hook for extra plugins, appended before oh-my-zsh loads.
-[[ -f ~/.config/dotfiles-overlay/zsh/plugins.zsh ]] && source ~/.config/dotfiles-overlay/zsh/plugins.zsh
-
-# Drop plugins that aren't installed on this machine instead of letting
-# oh-my-zsh print a warning on every shell start.
-() {
-  local p
-  local -a installed
-  for p in $plugins; do
-    [[ -d $ZSH_CUSTOM/plugins/$p || -d $ZSH/plugins/$p ]] && installed+=($p)
-  done
-  plugins=($installed)
-}
-
-fpath=("$ZSH_CUSTOM/plugins/zsh-completions/src" "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
-source "$ZSH/oh-my-zsh.sh"
-
+# --- Aliases ---
+ohmyzsh="$HOME/.config/zsh/ohmyzsh"
+if [[ -d $ohmyzsh ]]; then
+  source "$ohmyzsh/lib/git.zsh"
+  for p in git kubectl brew eza; do source "$ohmyzsh/plugins/$p/$p.plugin.zsh"; done
+fi
+unset ohmyzsh p
+alias l='ls -lah'
+alias cat='bat --paging=never'
 alias watch='watch '
 # grg/fnd are optional wrappers in ~/.local/bin; only alias when present.
 (( $+commands[grg] )) && alias grep='grg'
 (( $+commands[fnd] )) && alias find='fnd'
 
-source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
+# Extra plugins (e.g. from an overlay): every <name>/<name>.plugin.zsh here.
+for p in ~/.config/zsh/plugins/*/*.plugin.zsh(N); do source "$p"; done
+unset p
+
+# --- Tools ---
+eval "$(zoxide init zsh)"
+eval "$(starship init zsh)"
+
+# Optional overlay hook (e.g. a private work overlay).
 [[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
 [[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
+
+# Last: autosuggestions, then syntax highlighting (it must wrap all widgets).
+source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"

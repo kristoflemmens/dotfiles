@@ -1,43 +1,31 @@
-# Externals for every machine: oh-my-zsh and third-party zsh plugins,
-# refreshed weekly by `chezmoi apply` (or now with --refresh-externals).
+# Externals for every machine, refreshed weekly by `chezmoi apply` (or now
+# with --refresh-externals).
+#
+# The oh-my-zsh alias sets that get used (git, kubectl, brew, eza) as plain
+# files, without the framework; sourced by ~/.zshrc. zsh plugins themselves
+# come from Homebrew.
 #
 # Machine-specific externals go in their own file next to this one, e.g.
-# personal.yaml.tmpl gated on the personal flag, or in an overlay repo's
-# own .chezmoiexternals/. Own (non-git) plugins live in
-# dot_config/oh-my-zsh-custom/plugins/ and are tracked directly.
-# Files here are always parsed as templates: keep double braces out of comments.
+# personal.yaml.tmpl gated on the personal flag, or in an overlay repo's own
+# .chezmoiexternals/. Files here are always parsed as templates: keep double
+# braces out of comments.
 
-.oh-my-zsh:
-  type: git-repo
-  url: https://github.com/ohmyzsh/ohmyzsh.git
+.config/zsh/ohmyzsh:
+  type: archive
+  url: https://github.com/ohmyzsh/ohmyzsh/archive/refs/heads/master.tar.gz
+  stripComponents: 1
+  exact: true
   refreshPeriod: 168h
-  clone: {args: ["--depth", "1"]}
-  pull: {args: ["--ff-only"]}
-
-.config/oh-my-zsh-custom/plugins/zsh-autosuggestions:
-  type: git-repo
-  url: https://github.com/zsh-users/zsh-autosuggestions.git
-  refreshPeriod: 168h
-  clone: {args: ["--depth", "1"]}
-  pull: {args: ["--ff-only"]}
-
-.config/oh-my-zsh-custom/plugins/zsh-syntax-highlighting:
-  type: git-repo
-  url: https://github.com/zsh-users/zsh-syntax-highlighting.git
-  refreshPeriod: 168h
-  clone: {args: ["--depth", "1"]}
-  pull: {args: ["--ff-only"]}
-
-.config/oh-my-zsh-custom/plugins/zsh-completions:
-  type: git-repo
-  url: https://github.com/zsh-users/zsh-completions.git
-  refreshPeriod: 168h
-  clone: {args: ["--depth", "1"]}
-  pull: {args: ["--ff-only"]}
-
-.config/oh-my-zsh-custom/plugins/zsh-bat:
-  type: git-repo
-  url: https://github.com/fdellwing/zsh-bat.git
-  refreshPeriod: 168h
-  clone: {args: ["--depth", "1"]}
-  pull: {args: ["--ff-only"]}
+  # Parent directories must be listed too, or their contents are skipped.
+  include:
+    - "*/lib"
+    - "*/lib/git.zsh"
+    - "*/plugins"
+    - "*/plugins/git"
+    - "*/plugins/git/**"
+    - "*/plugins/kubectl"
+    - "*/plugins/kubectl/**"
+    - "*/plugins/brew"
+    - "*/plugins/brew/**"
+    - "*/plugins/eza"
+    - "*/plugins/eza/**"
