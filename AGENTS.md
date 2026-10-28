@@ -24,11 +24,10 @@ layout, bootstrap and the drift agents; read it before structural changes.
 - Composed files are templates: VS Code `settings.json.tmpl` and
   `allowed_signers.tmpl`. Change them by editing the `.tmpl` source; `chezmoi
   add`/`re-add` would flatten the template into the machine's rendered output.
-- Config the user maintains is YAML, never TOML. chezmoi's own files are
-  `.yaml` (e.g. `.chezmoiexternals/*.yaml`). For a tool that only reads TOML,
-  keep the content in `<name>.yaml` next to a `<name>.toml.tmpl` containing
-  `include "<path>.yaml" | fromYaml | toToml`, and list the YAML target in
-  `.chezmoiignore`. Example: `dot_config/starship.yaml`.
+- chezmoi's own files are YAML (the user prefers it over TOML), e.g.
+  `.chezmoiexternals/*.yaml`. Tool config stays in the tool's own format
+  (Starship and mise TOML): converting it would break `chezmoi edit`/`add`/
+  `re-add` and tools that write their own config (`mise use`).
 
 ## Template gotchas
 

@@ -16,10 +16,8 @@ the Reolink log-pruning agent and a few VS Code preferences. Change it with `che
 
 - Shell: zsh without a framework. `.zshenv`, `.zprofile`, `.zshrc`,
   `~/.config/zsh/path.zsh` (PATH setup shared by `.zshenv` and `.zprofile`, see
-  comments there). Prompt: Starship (Tokyo Night preset plus kube context,
-  command duration and herdr pane), maintained as YAML in
-  `dot_config/starship.yaml` and rendered to `~/.config/starship.toml` because
-  Starship only reads TOML. `z` (zoxide)
+  comments there). Prompt: Starship (`~/.config/starship.toml`, Tokyo Night
+  preset plus kube context, command duration and herdr pane). `z` (zoxide)
   for jumping between directories.
 - zsh plugins (autosuggestions, syntax highlighting, completions) from Homebrew.
   The oh-my-zsh alias sets for git, kubectl, brew and eza come in as plain
