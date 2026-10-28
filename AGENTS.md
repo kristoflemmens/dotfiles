@@ -21,6 +21,8 @@ layout, bootstrap and the drift agents; read it before structural changes.
   or when a shared config file needs a package to work (say so). Ad-hoc
   installs are recorded automatically by `bin/sync-brewfile.sh` into
   `Brewfile.personal` (personal Mac) or the overlay's `Brewfile`.
+  Deleting an entry is how the user uninstalls: sync holds it back and
+  `bin/brew-cleanup.sh` (on `chezmoi apply`) removes it.
 - Composed files are templates: VS Code `settings.json.tmpl`, `dot_warprc.tmpl`,
   `allowed_signers.tmpl`. Change them by editing the `.tmpl` source; `chezmoi
   add`/`re-add` would flatten the template into the machine's rendered output.
