@@ -9,6 +9,9 @@ ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/kubectl
 ohmyzsh/ohmyzsh path:plugins/brew
 ohmyzsh/ohmyzsh path:plugins/eza
+# GNU coreutils/findutils/sed/tar/grep/time/make under their plain names, for
+# commands typed here only (hash, not PATH): scripts keep the macOS versions.
+ohmyzsh/ohmyzsh path:plugins/gnu-utils
 
 zsh-users/zsh-autosuggestions
 # Deferred (after the prompt), so it wraps every widget, overlay ones too.

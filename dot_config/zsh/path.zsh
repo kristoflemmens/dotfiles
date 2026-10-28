@@ -25,4 +25,5 @@ path=(
 )
 
 [[ -z ${MANPATH-} ]] || export MANPATH=":${MANPATH#:}"
-export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}"
+[[ :${INFOPATH-}: == *:$HOMEBREW_PREFIX/share/info:* ]] ||
+  export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}"

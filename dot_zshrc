@@ -1,10 +1,6 @@
 # Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins
-# (incl. the oh-my-zsh git/kubectl/brew/eza alias sets) are loaded by antidote
+# (incl. the oh-my-zsh git/kubectl/brew/eza alias sets and gnu-utils) are loaded by antidote
 # from ~/.config/zsh/plugins.txt.
-
-# GNU tools first in interactive shells (what oh-my-zsh's gnu-utils did);
-# scripts keep the macOS versions.
-path=("$HOMEBREW_PREFIX"/opt/{coreutils,findutils,gnu-sed,gnu-tar,grep}/libexec/gnubin(N) $path)
 
 # --- History ---
 HISTFILE=~/.zsh_history
