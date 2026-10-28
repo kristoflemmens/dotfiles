@@ -62,5 +62,3 @@ alias watch='watch '
 
 # Optional overlay hook (e.g. a private work overlay).
 [[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh
-
-[[ "$TERM_PROGRAM" == "vscode" ]] && . "$(code --locate-shell-integration-path zsh)"
