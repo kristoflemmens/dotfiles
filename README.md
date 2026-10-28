@@ -10,21 +10,25 @@ config comes from a private overlay repo (see
 `chezmoi init` asks once whether this is a **personal Mac** and stores the
 answer in the generated `~/.config/chezmoi/chezmoi.yaml` (from
 `.chezmoi.yaml.tmpl`). It only switches personal extras on: `Brewfile.personal`,
-the Reolink log-pruning agent, a few VS Code preferences and `.warprc`
-bookmarks. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
+the Reolink log-pruning agent and a few VS Code preferences. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
 
 ## What's in here
 
-- Shell: `.zshenv`, `.zprofile`, `.zshrc`, `.p10k.zsh`, `~/.config/zsh/path.zsh`
-  (PATH setup shared by `.zshenv` and `.zprofile`, see comments there)
-- oh-my-zsh and third-party zsh plugins via `.chezmoiexternals/common.toml` (one file per scope; overlays can add their own) (refreshed
-  weekly by `chezmoi apply`). Own plugins go in `dot_config/oh-my-zsh-custom/plugins/`
-  (`ZSH_CUSTOM`). Plugins listed in `.zshrc` that aren't installed are skipped.
+- Shell: zsh without a framework. `.zshenv`, `.zprofile`, `.zshrc`,
+  `~/.config/zsh/path.zsh` (PATH setup shared by `.zshenv` and `.zprofile`, see
+  comments there). Prompt: Starship (`~/.config/starship.toml`, Tokyo Night
+  preset plus kube context, command duration and herdr pane). `z` (zoxide)
+  for jumping between directories.
+- zsh plugins (autosuggestions, syntax highlighting, completions) from Homebrew.
+  The oh-my-zsh alias sets for git, kubectl, brew and eza come in as plain
+  files via `.chezmoiexternals/common.toml` (one file per scope; overlays can
+  add their own), refreshed weekly by `chezmoi apply`. Extra plugins: drop a
+  `<name>/<name>.plugin.zsh` into `~/.config/zsh/plugins/`.
 - Git: `.gitconfig` (delta side-by-side as pager, Tokyo Night theme from `~/.config/bat/themes`), global ignore in `~/.config/git/ignore`, commit signing via
   1Password with `~/.ssh/allowed_signers` for verification, `~/.git-template`
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
-- VS Code user settings, Ghostty, k9s, gh, colima template, `.warprc`
+- VS Code user settings, Ghostty, k9s, gh, colima template
 - `Brewfile` (shared, curated by hand) + `Brewfile.personal` (personal Macs, maintained by `bin/sync-brewfile.sh`)
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
@@ -40,7 +44,7 @@ xcode-select --install
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply kristoflemmens
 ```
 
-Homebrew, all CLI tools/casks, runtimes, dotfiles, oh-my-zsh and macOS defaults
+Homebrew, all CLI tools/casks, dotfiles, shell plugins and macOS defaults
 are set up automatically.
 
 ### Overlays (e.g. a work Mac)
@@ -59,8 +63,8 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `gitconfig` | `[include]` in `.gitconfig` (e.g. includeIf identities) |
 | `allowed_signers` | appended to `~/.ssh/allowed_signers` |
 | `vscode-settings.jsonc` | appended to VS Code `settings.json` |
-| `warprc` | appended to `~/.warprc` |
-| `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh`, `zsh/plugins.zsh` | sourced by the zsh files |
+| `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files |
+| `~/.config/zsh/plugins/<name>/` (outside this folder) | sourced by `.zshrc` as `<name>.plugin.zsh` |
 | `~/.local/share/chezmoi-*/Brewfile` | declared packages for `bin/sync-brewfile.sh` |
 
 Because the base templates read overlay files, apply the overlay **first** and
@@ -99,7 +103,7 @@ Resolving drift:
   or discard and force a re-apply (below).
 - **Dotfiles:** `chezmoi add <path>` to keep the live change, or
   `chezmoi apply <path>` to restore the declared one. Files composed from
-  overlay fragments (VS Code settings, `.warprc`, `allowed_signers`) must be
+  overlay fragments (VS Code settings, `allowed_signers`) must be
   edited in the right repo, never with `chezmoi re-add`.
 
 ### Forcing a run_onchange script

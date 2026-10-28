@@ -63,8 +63,6 @@ brew "make"
 brew "pam-reattach"
 # Shell command parallelization utility
 brew "parallel"
-# Theme for zsh
-brew "powerlevel10k"
 # Fast Git hook manager written in Rust, drop-in alternative to pre-commit
 brew "prek"
 # Search tool like grep and The Silver Searcher
@@ -73,6 +71,8 @@ brew "ripgrep"
 brew "shellcheck"
 # Autoformat shell script source code
 brew "shfmt"
+# Cross-shell prompt for astronauts
+brew "starship"
 # Tool to generate documentation from Terraform modules
 brew "terraform-docs"
 # Update version constraints in your Terraform configurations
@@ -83,6 +83,14 @@ brew "uv"
 brew "watch"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
+# Fish shell like fast/unobtrusive autosuggestions for zsh
+brew "zsh-autosuggestions"
+# Additional completion definitions for zsh
+brew "zsh-completions"
+# Fish shell like syntax highlighting for zsh
+brew "zsh-syntax-highlighting"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode", trusted: true
 # Terraform
