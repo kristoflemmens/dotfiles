@@ -25,6 +25,11 @@ layout, bootstrap and the drift agents; read it before structural changes.
   `allowed_signers.tmpl`. Change them by editing the `.tmpl` source; `chezmoi
   add`/`re-add` would flatten the template into the machine's rendered output.
 
+- chezmoi's own files are YAML (the user prefers it over TOML), e.g.
+  `.chezmoiexternals/*.yaml`. Tool config stays in the tool's own format
+  (Starship and mise TOML): converting it would break `chezmoi edit`/`add`/
+  `re-add` and tools that write their own config (`mise use`).
+
 ## Template gotchas
 
 - Everything in `.chezmoiexternals/` is parsed as a template, even without

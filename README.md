@@ -17,7 +17,7 @@ bookmarks. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
 
 - Shell: `.zshenv`, `.zprofile`, `.zshrc`, `.p10k.zsh`, `~/.config/zsh/path.zsh`
   (PATH setup shared by `.zshenv` and `.zprofile`, see comments there)
-- oh-my-zsh and third-party zsh plugins via `.chezmoiexternals/common.toml` (one file per scope; overlays can add their own) (refreshed
+- oh-my-zsh and third-party zsh plugins via `.chezmoiexternals/common.yaml` (one file per scope; overlays can add their own) (refreshed
   weekly by `chezmoi apply`). Own plugins go in `dot_config/oh-my-zsh-custom/plugins/`
   (`ZSH_CUSTOM`). Plugins listed in `.zshrc` that aren't installed are skipped.
 - Git: `.gitconfig` (delta side-by-side as pager, Tokyo Night theme from `~/.config/bat/themes`), global ignore in `~/.config/git/ignore`, commit signing via
