@@ -85,8 +85,6 @@ brew "watch"
 brew "yq"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# Additional completion definitions for zsh
-brew "zsh-completions"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode", trusted: true
 # Terraform

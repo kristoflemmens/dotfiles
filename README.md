@@ -23,7 +23,7 @@ the Reolink log-pruning agent and a few VS Code preferences. Change it with `che
   alias sets for git, kubectl, brew and eza without the framework,
   autosuggestions, syntax highlighting); an overlay adds
   `~/.config/dotfiles-overlay/zsh/plugins.txt`. `antidote update` updates the
-  clones. Completions from Homebrew (`zsh-completions`).
+  clones. Completions: zsh's own plus what Homebrew packages install.
 - Git: `.gitconfig` (delta side-by-side as pager, Tokyo Night theme from `~/.config/bat/themes`), global ignore in `~/.config/git/ignore`, commit signing via
   1Password with `~/.ssh/allowed_signers` for verification, `~/.git-template`
   with a prek/pre-commit hook

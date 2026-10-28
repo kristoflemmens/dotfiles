@@ -30,8 +30,7 @@ bindkey '^[[3~' delete-char
 # --- Completion ---
 export ZSH_CACHE_DIR="$HOME/.cache/zsh"   # used by the kubectl alias plugin
 [[ -d $ZSH_CACHE_DIR/completions ]] || mkdir -p "$ZSH_CACHE_DIR/completions"
-fpath=("$ZSH_CACHE_DIR/completions" "$HOMEBREW_PREFIX/share/zsh-completions"
-  "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
+fpath=("$ZSH_CACHE_DIR/completions" "$HOMEBREW_PREFIX/share/zsh/site-functions" $fpath)
 autoload -Uz compinit
 # -u: Homebrew leaves /opt/homebrew/share group-writable, which compaudit
 # flags; on this single-user Mac that's fine (oh-my-zsh's ZSH_DISABLE_COMPFIX).
