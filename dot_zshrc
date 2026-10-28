@@ -1,6 +1,6 @@
-# Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins
-# (incl. the oh-my-zsh git/kubectl/brew/eza alias sets and gnu-utils) are loaded by antidote
-# from ~/.config/zsh/plugins.txt.
+# Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins,
+# zoxide and the Starship prompt are loaded by antidote from
+# ~/.config/zsh/plugins.txt.
 
 # --- History ---
 HISTFILE=~/.zsh_history
@@ -59,10 +59,6 @@ unset plugin_lists plugin_bundle f
 alias l='ls -lah'
 alias cat='bat --paging=never'
 alias watch='watch '
-
-# --- Tools ---
-eval "$(zoxide init zsh)"
-eval "$(starship init zsh)"
 
 # Optional overlay hook (e.g. a private work overlay).
 [[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh
