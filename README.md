@@ -23,7 +23,7 @@ the Reolink log-pruning agent and a few VS Code preferences. Change it with `che
   for jumping between directories.
 - zsh plugins (autosuggestions, syntax highlighting, completions) from Homebrew.
   The oh-my-zsh alias sets for git, kubectl, brew and eza come in as plain
-  files via `.chezmoiexternals/common.toml` (one file per scope; overlays can
+  files via `.chezmoiexternals/common.yaml` (one file per scope; overlays can
   add their own), refreshed weekly by `chezmoi apply`. Extra plugins: drop a
   `<name>/<name>.plugin.zsh` into `~/.config/zsh/plugins/`.
 - Git: `.gitconfig` (delta side-by-side as pager, Tokyo Night theme from `~/.config/bat/themes`), global ignore in `~/.config/git/ignore`, commit signing via

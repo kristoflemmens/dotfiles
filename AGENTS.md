@@ -22,10 +22,13 @@ layout, bootstrap and the drift agents; read it before structural changes.
   installs are recorded automatically by `bin/sync-brewfile.sh` into
   `Brewfile.personal` (personal Mac) or the overlay's `Brewfile`.
 - Composed files are templates: VS Code `settings.json.tmpl` and
-  `allowed_signers.tmpl`. The Starship config is edited in
-  `dot_config/starship.yaml` (the user prefers YAML over TOML);
-  `starship.toml.tmpl` converts it. Change them by editing the `.tmpl` source; `chezmoi
+  `allowed_signers.tmpl`. Change them by editing the `.tmpl` source; `chezmoi
   add`/`re-add` would flatten the template into the machine's rendered output.
+- Config the user maintains is YAML, never TOML. chezmoi's own files are
+  `.yaml` (e.g. `.chezmoiexternals/*.yaml`). For a tool that only reads TOML,
+  keep the content in `<name>.yaml` next to a `<name>.toml.tmpl` containing
+  `include "<path>.yaml" | fromYaml | toToml`, and list the YAML target in
+  `.chezmoiignore`. Example: `dot_config/starship.yaml`.
 
 ## Template gotchas
 

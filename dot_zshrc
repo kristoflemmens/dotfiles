@@ -1,6 +1,6 @@
 # Interactive zsh without a framework. PATH is set in ~/.zshenv; plugins come
 # from Homebrew (updated by `brew upgrade`); the git/kubectl/brew/eza alias
-# sets come from oh-my-zsh as plain files (.chezmoiexternals/common.toml).
+# sets come from oh-my-zsh as plain files (.chezmoiexternals/common.yaml).
 
 # GNU tools first in interactive shells (what oh-my-zsh's gnu-utils did);
 # scripts keep the macOS versions.
