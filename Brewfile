@@ -105,6 +105,8 @@ cask "appcleaner"
 cask "claude-code@latest"
 # Menu bar app for tracking agentic coding limits and usage
 cask "codexbar"
+# Fira Code with Nerd Font icons (Ghostty, VS Code, Starship)
+cask "font-fira-code-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser
