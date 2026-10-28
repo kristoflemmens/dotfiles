@@ -3,3 +3,4 @@
 .worktrees
 opencode.jsonc
 tui.jsonc
+.claude/worktrees

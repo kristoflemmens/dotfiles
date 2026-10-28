@@ -35,8 +35,6 @@ brew "gnu-sed"
 brew "gnu-tar"
 # GNU implementation of time utility
 brew "gnu-time"
-# Open source programming language to build simple/reliable/efficient software
-brew "go"
 # GNU grep, egrep and fgrep
 brew "grep"
 # Kubernetes package manager
@@ -99,22 +97,14 @@ cask "appcleaner"
 cask "claude-code@latest"
 # Menu bar app for tracking agentic coding limits and usage
 cask "codexbar"
-# Server and cloud storage browser
-cask "cyberduck"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser
 cask "google-chrome"
-# Client for the Google Drive storage service
-cask "google-drive"
 # Set up your HP printer
 cask "hp-easy-start"
 # JetBrains tools manager
 cask "jetbrains-toolbox"
-# Password manager app
-cask "keepassxc"
-# GUI replacement for the Java command-line utilities keytool and jarsigner
-cask "keystore-explorer"
 # Clipboard manager
 cask "maccy"
 # Tool to control external monitor brightness & volume
@@ -123,14 +113,11 @@ cask "monitorcontrol"
 cask "openlogi"
 # Move and resize windows using keyboard shortcuts or snap areas
 cask "rectangle"
-# Unpacks archive files
-cask "the-unarchiver"
 # Open-source code editor
 cask "visual-studio-code"
 vscode "catppuccin.catppuccin-vsc-icons"
 vscode "chrisdias.vscode-opennewinstance"
 vscode "codezombiech.gitignore"
-vscode "eamodio.gitlens"
 vscode "enkia.tokyo-night"
 vscode "esbenp.prettier-vscode"
 vscode "hashicorp.terraform"
@@ -155,7 +142,6 @@ vscode "ms-toolsai.jupyter-renderers"
 vscode "ms-toolsai.vscode-jupyter-cell-tags"
 vscode "ms-toolsai.vscode-jupyter-slideshow"
 vscode "redhat.vscode-yaml"
-vscode "techer.open-in-browser"
 vscode "tim-koehler.helm-intellisense"
 vscode "timonwong.shellcheck"
 vscode "tylerharris.terraform-link-docs"
