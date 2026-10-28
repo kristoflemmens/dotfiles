@@ -14,6 +14,9 @@
 # - in the machine's own file but no longer installed -> removed from it
 # The shared Brewfile is curated by hand and never written: shared entries
 # that aren't installed are only reported (`chezmoi apply` installs them).
+# - deleted from a Brewfile since the last run but still installed -> an
+#   uninstall request, not an ad-hoc install: kept out of the machine's own
+#   file until bin/brew-cleanup.sh (on `chezmoi apply`) removes or keeps it
 #
 # Nothing is committed. Review with `chezmoi git diff` (or `chezcegeka git
 # diff` for the overlay) and commit, or move entries to the shared Brewfile.
@@ -26,12 +29,8 @@
 set -euo pipefail
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-personal="$(chezmoi --source "$SOURCE_DIR" execute-template '{{ .personal }}')"
-
-overlay_brewfiles=()
-for f in "${HOME}"/.local/share/chezmoi-*/Brewfile; do
-  [ -f "$f" ] && overlay_brewfiles+=("$f")
-done
+# shellcheck source=bin/lib/brewfiles.sh
+. "${SOURCE_DIR}/bin/lib/brewfiles.sh"
 
 if [ "$personal" = "true" ]; then
   target="${SOURCE_DIR}/Brewfile.personal"
@@ -40,10 +39,6 @@ elif [ "${#overlay_brewfiles[@]}" -gt 0 ]; then
 else
   target=""
 fi
-
-declared_files=("${SOURCE_DIR}/Brewfile")
-[ "$personal" = "true" ] && declared_files+=("${SOURCE_DIR}/Brewfile.personal")
-declared_files+=(${overlay_brewfiles[@]+"${overlay_brewfiles[@]}"})
 
 # Normalise Brewfile lines to `type "name"` so options/comments don't matter.
 keys() {
@@ -56,14 +51,32 @@ tmp_declared="$(mktemp)"
 tmp_add="$(mktemp)"
 tmp_remove="$(mktemp)"
 tmp_target="$(mktemp)"
-trap 'rm -f "$tmp_dump" "$tmp_live" "$tmp_declared" "$tmp_add" "$tmp_remove" "$tmp_target"' EXIT
+tmp_pending="$(mktemp)"
+trap 'rm -f "$tmp_dump" "$tmp_live" "$tmp_declared" "$tmp_add" "$tmp_remove" "$tmp_target" "$tmp_pending"' EXIT
 
 brew bundle dump --force --file="$tmp_dump"
 keys "$tmp_dump" > "$tmp_live"
 keys "${declared_files[@]}" > "$tmp_declared"
 
-comm -23 "$tmp_live" "$tmp_declared" > "$tmp_add"
+# Uninstall requests: deleted since the last run (or still pending), still
+# installed, not declared again.
+declared_last="${brew_removed%/*}/brewfile-declared"
+mkdir -p "${brew_removed%/*}"
+touch "$brew_removed"
+{ [ -f "$declared_last" ] && comm -23 "$declared_last" "$tmp_declared"; cat "$brew_removed"; } |
+  sort -u | comm -12 - "$tmp_live" | comm -23 - "$tmp_declared" > "$tmp_pending"
+cp "$tmp_pending" "$brew_removed"
+cp "$tmp_declared" "$declared_last"
+
+comm -23 "$tmp_live" "$tmp_declared" | comm -23 - "$brew_removed" > "$tmp_add"
 shared_missing="$(comm -13 "$tmp_live" <(keys "${SOURCE_DIR}/Brewfile"))"
+
+report_removed() {
+  if [ -s "$brew_removed" ]; then
+    echo "Deleted from a Brewfile but still installed (chezmoi apply offers to uninstall them):"
+    sed 's/^/  /' "$brew_removed"
+  fi
+}
 
 report_shared_missing() {
   if [ -n "$shared_missing" ]; then
@@ -79,6 +92,7 @@ if [ -z "$target" ]; then
     echo "Installed but declared nowhere:"
     sed 's/^/  /' "$tmp_add"
   fi
+  report_removed
   report_shared_missing
   exit 0
 fi
@@ -124,6 +138,7 @@ if [ -s "$tmp_remove" ]; then
   echo "Removed (no longer installed):"
   sed 's/^/  /' "$tmp_remove"
 fi
+report_removed
 report_shared_missing
 
 if [ "$changed" -eq 0 ]; then

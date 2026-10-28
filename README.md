@@ -29,7 +29,7 @@ bookmarks. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
   - `run_once_before_01` install Homebrew
-  - `run_onchange_before_02` `brew bundle install` for `Brewfile` (+ `Brewfile.personal` on personal Macs)
+  - `run_onchange_before_02` `brew bundle install` for `Brewfile` (+ `Brewfile.personal` on personal Macs), then `bin/brew-cleanup.sh` offers to uninstall what no Brewfile declares any more
   - `run_onchange_after_02` apply `macos-defaults.tsv`
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
 
@@ -83,7 +83,8 @@ committed automatically.
 
 | Script | What it does |
 |---|---|
-| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: `Brewfile.personal` on a personal Mac, otherwise the overlay's `Brewfile` (or only reports, without either). New installs are appended, uninstalled entries removed. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
+| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: `Brewfile.personal` on a personal Mac, otherwise the overlay's `Brewfile` (or only reports, without either). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
+| `bin/brew-cleanup.sh` | Uninstalls what no Brewfile of this machine declares (shared + personal + overlays) after brew asks; run by `run_onchange_before_02`, or by hand. Without a terminal it only lists. |
 | `bin/sync-macos-defaults.sh` | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report). |
 | `bin/prune-app-logs.sh` | *Personal Macs only.* Deletes Reolink desktop client SDK logs older than 24h (~3 GB/day, no setting in the app). |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
