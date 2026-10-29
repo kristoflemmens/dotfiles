@@ -20,6 +20,9 @@ the Reolink log-pruning agent and a few VS Code preferences. Change it with `che
   preset plus kube context, command duration and herdr pane). `cd` jumps
   through zoxide (`cd homelab`; `cdi` picks with fzf, `wd` is an alias). fzf: ctrl-r searches history,
   ctrl-t inserts a file, `**<tab>` completes paths, processes and hosts.
+- Replacements under the classic name: `cat` (bat), `top` (btop), `df` (duf),
+  `dig` (doggo; `+trace` and other dig-only options run the real dig). Under
+  their own name: `fd`, `rg`, `dust` (du), `tldr` (short examples per command).
 - zsh plugins via antidote, listed in `~/.config/zsh/plugins.txt` (oh-my-zsh
   alias sets for git, kubectl, brew and eza without the framework,
   autosuggestions, syntax highlighting); an overlay adds

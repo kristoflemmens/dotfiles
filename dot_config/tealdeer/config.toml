@@ -1,0 +1,4 @@
+# tldr pages: download on first use and refresh weekly.
+[updates]
+auto_update = true
+auto_update_interval_hours = 168
