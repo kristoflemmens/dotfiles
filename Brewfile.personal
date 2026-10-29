@@ -7,6 +7,8 @@ tap "avivsinai/tap"
 brew "actionlint"
 # Bash Automated Testing System
 brew "bats-core"
+# Home for the Cluster Management API work, a subproject of sig-cluster-lifecycle
+brew "clusterctl"
 # Reference implementation of the Development Containers specification
 brew "devcontainer"
 # Open source programming language to build simple/reliable/efficient software
