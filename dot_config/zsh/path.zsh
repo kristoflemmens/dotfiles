@@ -4,24 +4,25 @@
 # in front of everything .zshenv added. `typeset -U` keeps the first
 # occurrence, so re-prepending restores our order.
 #
-# Static equivalent of `brew shellenv` and `go env GOPATH`: no subprocesses,
-# because .zshenv runs for every zsh invocation.
+# Static equivalent of `brew shellenv`: no subprocesses, because .zshenv runs
+# for every zsh invocation. Tool dirs that only some machines have carry
+# (N): they're added only when they exist (e.g. ~/go/bin once Go installs
+# something), so no per-machine config is needed.
 
 typeset -U PATH path
 
 export HOMEBREW_PREFIX=/opt/homebrew
 export HOMEBREW_CELLAR=/opt/homebrew/Cellar
 export HOMEBREW_REPOSITORY=/opt/homebrew
-export GOPATH="${GOPATH:-$HOME/go}"
 
 path=(
   "$HOME/.local/bin"
-  "${KREW_ROOT:-$HOME/.krew}/bin"
-  "$GOPATH/bin"
+  "${KREW_ROOT:-$HOME/.krew}"/bin(N)
+  "${GOPATH:-$HOME/go}"/bin(N)
   "$HOMEBREW_PREFIX/bin"
   "$HOMEBREW_PREFIX/sbin"
   $path
-  "$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
+  "$HOME/Library/Application Support/JetBrains/Toolbox"/scripts(N)
 )
 
 [[ -z ${MANPATH-} ]] || export MANPATH=":${MANPATH#:}"
