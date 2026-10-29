@@ -112,6 +112,10 @@ The user settled these; build on them:
   touches the terminal while exiting) and man pages.
 - Plugin settings (zstyles) are local files listed in `plugins.txt` right
   before their plugin (`eza.zsh`).
+- Neovim (being learnt as a VS Code replacement): config is the user's own
+  kickstart.nvim fork in `~/.config/nvim` (repo kristoflemmens/kickstart.nvim,
+  not managed by chezmoi), Tokyo Night. VS Code runs vscode-neovim on that
+  same config; `init.lua` stops after options/keymaps when `vim.g.vscode`.
 - A modern replacement takes over the classic name only where the typed
   habit keeps working: `cat`=bat, `top`=btop, `df`=duf (drops `-h`), `dig`=doggo
   (real dig for `+options` doggo lacks). fd, ripgrep, dust and tldr keep their
