@@ -26,6 +26,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template
+- Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
+  (`.chezmoiexternals/nvim.yaml`) and never pulled; commit and push in the fork
 - `Brewfile` (shared, curated by hand); each overlay adds its own, maintained by `bin/sync-brewfile.sh`
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:

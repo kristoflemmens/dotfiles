@@ -1,0 +1,14 @@
+# Neovim config: the user's own kickstart.nvim fork, cloned when missing and
+# never pulled (it's a working copy: edit, commit and push there). chezmoi
+# runs `git pull` on an existing repo the first time it sees it and on `-R`;
+# --dry-run keeps that from touching the branch or the working tree.
+# Cloned over HTTPS (works before 1Password and SSH are set up), pushed over
+# SSH. Files here are always parsed as templates: keep double braces out of
+# comments.
+.config/nvim:
+  type: git-repo
+  url: https://github.com/kristoflemmens/kickstart.nvim.git
+  clone:
+    args: ["--config", "remote.origin.pushurl=git@github.com:kristoflemmens/kickstart.nvim.git"]
+  pull:
+    args: ["--dry-run"]

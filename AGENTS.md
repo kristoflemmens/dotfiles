@@ -113,8 +113,10 @@ The user settled these; build on them:
 - Plugin settings (zstyles) are local files listed in `plugins.txt` right
   before their plugin (`eza.zsh`).
 - Neovim (being learnt as a VS Code replacement): config is the user's own
-  kickstart.nvim fork in `~/.config/nvim` (repo kristoflemmens/kickstart.nvim,
-  not managed by chezmoi), Tokyo Night. VS Code runs vscode-neovim on that
+  kickstart.nvim fork in `~/.config/nvim` (repo kristoflemmens/kickstart.nvim),
+  Tokyo Night. chezmoi only clones it where missing
+  (`.chezmoiexternals/nvim.yaml`, pull is a `--dry-run`); edits are committed
+  in the fork itself. VS Code runs vscode-neovim on that
   same config; `init.lua` stops after options/keymaps when `vim.g.vscode`.
 - A modern replacement takes over the classic name only where the typed
   habit keeps working: `cat`=bat, `top`=btop, `df`=duf (drops `-h`), `dig`=doggo
