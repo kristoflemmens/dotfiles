@@ -1,6 +1,8 @@
 tap "anomalyco/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "homeport/tap", trusted: true
+# Plugin manager for zsh
+brew "antidote"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
@@ -61,8 +63,6 @@ brew "make"
 brew "pam-reattach"
 # Shell command parallelization utility
 brew "parallel"
-# Theme for zsh
-brew "powerlevel10k"
 # Fast Git hook manager written in Rust, drop-in alternative to pre-commit
 brew "prek"
 # Search tool like grep and The Silver Searcher
@@ -71,6 +71,8 @@ brew "ripgrep"
 brew "shellcheck"
 # Autoformat shell script source code
 brew "shfmt"
+# Cross-shell prompt for astronauts
+brew "starship"
 # Tool to generate documentation from Terraform modules
 brew "terraform-docs"
 # Update version constraints in your Terraform configurations
@@ -81,6 +83,8 @@ brew "uv"
 brew "watch"
 # Process YAML, JSON, XML, CSV and properties documents from the CLI
 brew "yq"
+# Shell extension to navigate your filesystem faster
+brew "zoxide"
 # The AI coding agent built for the terminal.
 brew "anomalyco/tap/opencode", trusted: true
 # Terraform
@@ -97,6 +101,8 @@ cask "appcleaner"
 cask "claude-code@latest"
 # Menu bar app for tracking agentic coding limits and usage
 cask "codexbar"
+# Fira Code with Nerd Font icons (Ghostty, VS Code, Starship)
+cask "font-fira-code-nerd-font"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
 # Web browser

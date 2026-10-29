@@ -1,2 +1,11 @@
 # Replaced by ~/.config/git/ignore (git's XDG default, no core.excludesfile needed).
 .gitignore
+# Replaced by Starship (~/.config/starship.toml) and zoxide.
+.p10k.zsh
+.warprc
+# Externals of the oh-my-zsh setup. ~/.oh-my-zsh itself is left alone: on a
+# machine that still has own plugins in ~/.oh-my-zsh/custom, migrate them
+# first (see the work overlay's README) and remove it by hand.
+.config/oh-my-zsh-custom
+# The oh-my-zsh alias-set external; antidote clones oh-my-zsh itself now.
+.config/zsh/ohmyzsh

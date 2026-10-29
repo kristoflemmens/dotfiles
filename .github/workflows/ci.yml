@@ -15,11 +15,14 @@ jobs:
         with:
           fetch-depth: 0
       - name: shellcheck
-        run: shellcheck bin/*.sh dot_git-template/hooks/executable_pre-commit
+        # -x: follow `source`d files (bin/lib/) like a local `shellcheck -x`.
+        run: shellcheck -x bin/*.sh bin/lib/*.sh dot_git-template/hooks/executable_pre-commit
       - name: zsh syntax
         run: |
           sudo apt-get install -y zsh >/dev/null
-          zsh -n dot_zshrc dot_zshenv dot_zprofile dot_config/zsh/path.zsh
+          # One file per call: `zsh -n a b` only checks a (b is an argument).
+          git ls-files -z -- dot_zshrc dot_zshenv dot_zprofile '*.zsh' |
+            xargs -0 -n1 zsh -n
       - name: gitleaks
         uses: gitleaks/gitleaks-action@v2
         env:
