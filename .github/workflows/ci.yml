@@ -64,6 +64,7 @@ jobs:
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --force --exclude=externals,scripts
       - name: start zsh
         run: |
+          zsh -il -c true   # first start: antidote clones the plugins (and says so on stderr)
           rc=0
           zsh -il -c 'whence -w gst z _help_pager && [[ $STARSHIP_SHELL == zsh ]]' 2>stderr.txt || rc=$?
           cat stderr.txt
