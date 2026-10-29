@@ -41,7 +41,12 @@
 # --- Keyboard ---
 |NSGlobalDomain|KeyRepeat|int|2
 |NSGlobalDomain|InitialKeyRepeat|int|15
-|NSGlobalDomain|ApplePressAndHoldEnabled|bool|true
+# VS Code (vscode-neovim) and Ghostty (Neovim): holding j/k repeats instead of
+# opening the accent menu.
+# Only per app: an explicit global ApplePressAndHoldEnabled overrides it, and
+# without one macOS keeps the accent menu everywhere else.
+|com.microsoft.VSCode|ApplePressAndHoldEnabled|bool|false
+|com.mitchellh.ghostty|ApplePressAndHoldEnabled|bool|false
 |NSGlobalDomain|NSAutomaticCapitalizationEnabled|bool|false
 |NSGlobalDomain|NSAutomaticSpellingCorrectionEnabled|bool|false
 |NSGlobalDomain|NSAutomaticQuoteSubstitutionEnabled|bool|false
