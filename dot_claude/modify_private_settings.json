@@ -1,0 +1,10 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Lays the shared settings (.chezmoitemplates/claude-settings.jsonc) and
+       then the overlay's fragment over the current file. Lists are replaced,
+       objects merged; a key removed here stays in the file until deleted. */ -}}
+{{- $settings := dict -}}
+{{- if .chezmoi.stdin }}{{ $settings = .chezmoi.stdin | fromJsonc }}{{ end -}}
+{{- $settings = mergeOverwrite $settings (includeTemplate "claude-settings.jsonc" . | fromJsonc) -}}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/claude-settings.jsonc" -}}
+{{- if stat $overlay }}{{ $settings = mergeOverwrite $settings (include $overlay | fromJsonc) }}{{ end -}}
+{{ toPrettyJson "  " $settings }}

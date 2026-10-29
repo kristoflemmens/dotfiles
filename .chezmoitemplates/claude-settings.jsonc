@@ -1,0 +1,21 @@
+// Claude Code settings every Mac gets. dot_claude/modify_private_settings.json
+// lays these over ~/.claude/settings.json, then the overlay's
+// ~/.config/dotfiles-overlay/claude-settings.jsonc; keys set here win, keys
+// Claude Code or an installer wrote (model, hooks, plugins) stay.
+{
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "{{ .chezmoi.homeDir }}/.local/bin/cs render",
+    "refreshInterval": 1
+  },
+  "tui": "fullscreen",
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "promptSuggestionEnabled": false,
+  "switchModelsOnFlag": false,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
+}
