@@ -51,6 +51,7 @@ else
 fi
 unset stale
 zstyle ':completion:*' menu select
+zstyle ':completion:*' cache-path "$ZSH_CACHE_DIR/zcompcache"   # default: ~/.zcompcache
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # --- Plugins (antidote; list in ~/.config/zsh/plugins.txt) ---
