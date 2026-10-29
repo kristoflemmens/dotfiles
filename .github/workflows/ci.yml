@@ -64,7 +64,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: install shell tools
-        run: brew install --quiet chezmoi antidote starship zoxide eza bat
+        # The image ships a stale package index (it once installed an older Starship
+        # that warned about newer config keys); refresh it so versions match the Macs.
+        run: brew update --quiet && brew install --quiet chezmoi antidote starship zoxide eza bat
       - name: apply
         # The runner's home is throwaway; scripts (brew bundle, defaults) are skipped.
         run: |
