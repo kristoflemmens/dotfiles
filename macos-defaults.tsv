@@ -42,6 +42,8 @@
 |NSGlobalDomain|KeyRepeat|int|2
 |NSGlobalDomain|InitialKeyRepeat|int|15
 |NSGlobalDomain|ApplePressAndHoldEnabled|bool|true
+# VS Code (vscode-neovim): holding j/k repeats instead of opening the accent menu.
+|com.microsoft.VSCode|ApplePressAndHoldEnabled|bool|false
 |NSGlobalDomain|NSAutomaticCapitalizationEnabled|bool|false
 |NSGlobalDomain|NSAutomaticSpellingCorrectionEnabled|bool|false
 |NSGlobalDomain|NSAutomaticQuoteSubstitutionEnabled|bool|false
