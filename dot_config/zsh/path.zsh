@@ -18,6 +18,7 @@ export HOMEBREW_REPOSITORY=/opt/homebrew
 path=(
   "$HOME/.local/bin"
   "${KREW_ROOT:-$HOME/.krew}"/bin(N)
+  "${CARGO_HOME:-$HOME/.cargo}"/bin(N)
   "$HOMEBREW_PREFIX/bin"
   "$HOMEBREW_PREFIX/sbin"
   $path

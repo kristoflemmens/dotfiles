@@ -7,6 +7,14 @@ else
   export EDITOR='code --new-window --wait'
 fi
 
+# Rust under the XDG dirs (rustup and cargo only read these variables). A
+# machine that still has ~/.rustup or ~/.cargo keeps using those.
+[[ -e ~/.rustup ]] || export RUSTUP_HOME="$HOME/.local/share/rustup"
+[[ -e ~/.cargo ]] || export CARGO_HOME="$HOME/.local/share/cargo"
+# History files out of ~ (less; Python 3.13+).
+export LESSHISTFILE="$HOME/.local/state/lesshst"
+export PYTHON_HISTORY="$HOME/.local/state/python_history"
+
 source ~/.config/zsh/path.zsh
 
 # Optional overlay hook (e.g. a private work overlay).
