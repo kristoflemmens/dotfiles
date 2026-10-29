@@ -76,7 +76,7 @@ jobs:
         run: |
           zsh -il -c true   # first start: antidote clones the plugins (and says so on stderr)
           rc=0
-          zsh -il -c 'whence -w gst z _help_pager && [[ $STARSHIP_SHELL == zsh ]]' 2>stderr.txt || rc=$?
+          zsh -il -c 'whence -w gst cdi _help_pager && [[ $STARSHIP_SHELL == zsh ]]' 2>stderr.txt || rc=$?
           cat stderr.txt
           # Plugins and the prompt must load, and startup must be silent.
           [[ $rc == 0 && ! -s stderr.txt ]]

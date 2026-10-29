@@ -74,7 +74,7 @@ The user settled these; build on them:
 - Shell: no oh-my-zsh, no Powerlevel10k. Starship prompt (tokyo-night preset
   + kube, duration, herdr), plugins via antidote (`~/.config/zsh/plugins.txt`,
   overlays append their own list), only the oh-my-zsh alias sets for
-  git/kubectl/brew/eza, zoxide instead of wd bookmarks.
+  git/kubectl/brew/eza, zoxide as `cd` instead of wd bookmarks (`wd` aliases `cd`).
 - Personal Mac: Node from Homebrew, no mise, no Java. Runtimes for work live
   in the work overlay.
 - Docker: `colima` docker context; `DOCKER_HOST` is set only by the work overlay

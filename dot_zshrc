@@ -71,6 +71,7 @@ unset plugin_lists plugin_bundle f
 alias l='ls -lah'
 alias cat='bat'   # pages only when output exceeds the screen and goes to the terminal
 alias watch='watch '
+alias wd='cd'     # old wd bookmark habit; cd jumps through zoxide
 # Pager options for less (bat, delta and man use it too): pass colours through.
 export LESS='-R'
 # Highlight with bat: `<cmd> --help` (global alias, only what's typed here)
