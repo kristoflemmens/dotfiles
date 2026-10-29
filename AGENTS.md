@@ -80,3 +80,24 @@ The user settled these; build on them:
 - SSH `WarnWeakCrypto no` applies only to RFC 1918 hosts.
 - LaunchAgents only report or write into the machine's own files; a
   `personal: true` entry in `.chezmoidata.yaml` limits one to personal Macs.
+- Font: FiraCode Nerd Font Mono (Ghostty, VS Code); its cask is in the shared
+  Brewfile because those configs name it.
+- GNU tools only for typed commands (oh-my-zsh's gnu-utils hashes them); no
+  gnubin in PATH, so scripts keep the macOS versions. Scripts that need GNU
+  call it explicitly (`gsed`).
+- XDG selectively, never by setting the XDG variables globally (that moves
+  zoxide/k9s/helm data out of ~/Library). Go uses its own env file (GOBIN
+  ~/.local/bin, GOPATH ~/.local/share/go); Rust RUSTUP_HOME/CARGO_HOME under
+  ~/.local/share (old ~/.rustup/~/.cargo win where they exist); less and
+  Python history in ~/.local/state. `.ssh`, `.docker`, `.kube`, `.gradle`,
+  `.m2`, `.colima`, `.claude` stay put.
+- PATH entries for tools not every Mac has carry the `(N)` qualifier in
+  `path.zsh` (added only when the dir exists) instead of a per-machine
+  template.
+- Rust on the personal Mac via rustup (projects pin toolchains in
+  `rust-toolchain.toml`); no default toolchain.
+- bat pages `cat`, `--help` (the global alias buffers output first: `claude`
+  touches the terminal while exiting) and man pages.
+- Plugin settings (zstyles) are local files listed in `plugins.txt` right
+  before their plugin (`eza.zsh`).
+- `grg`/`fnd` aliases are work-only (overlay `zshrc.zsh`).
