@@ -15,10 +15,12 @@ ohmyzsh/ohmyzsh path:plugins/eza
 # commands typed here only (hash, not PATH): scripts keep the macOS versions.
 ohmyzsh/ohmyzsh path:plugins/gnu-utils
 
-# zoxide (as `cd`, see zoxide.zsh) and the Starship prompt: `<tool> init
+# zoxide (as `cd`, see zoxide.zsh), fzf (ctrl-r history, ctrl-t files,
+# `**<tab>` completion; files via fd) and the Starship prompt: `<tool> init
 # zsh`, skipped with a warning when the tool is missing.
 $HOME/.config/zsh/zoxide.zsh
 ohmyzsh/ohmyzsh path:plugins/zoxide
+ohmyzsh/ohmyzsh path:plugins/fzf
 ohmyzsh/ohmyzsh path:plugins/starship
 
 zsh-users/zsh-autosuggestions
