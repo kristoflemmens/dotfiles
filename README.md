@@ -60,7 +60,8 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 |---|---|
 | `gitconfig` | `[include]` in `.gitconfig` (e.g. includeIf identities) |
 | `allowed_signers` | appended to `~/.ssh/allowed_signers` |
-| `vscode-settings.jsonc` | appended to VS Code `settings.json` |
+| `vscode-settings.jsonc` | VS Code `settings.json`: bare keys, merged over the shared ones |
+| `claude-settings.jsonc` | `~/.claude/settings.json`: a JSON object merged over the shared ones |
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files |
 | `zsh/plugins.txt` | extra antidote bundles, appended to `~/.config/zsh/plugins.txt` |
 | `~/.local/share/chezmoi-*/Brewfile` | declared packages for `bin/sync-brewfile.sh` |

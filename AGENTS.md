@@ -25,9 +25,14 @@ layout, bootstrap and the drift agents; read it before structural changes.
   overlay's `Brewfile`.
   Deleting an entry is how the user uninstalls: sync holds it back and
   `bin/brew-cleanup.sh` (on `chezmoi apply`) removes it.
-- Composed files are templates: VS Code `settings.json.tmpl` and
-  `allowed_signers.tmpl`. Change them by editing the `.tmpl` source; `chezmoi
-  add`/`re-add` would flatten the template into the machine's rendered output.
+- Settings files apps also write themselves are merged, not owned: VS Code
+  and Claude Code `settings.json` come from `modify_` templates that lay
+  `.chezmoitemplates/{vscode,claude}-settings.jsonc` and then the overlay's
+  fragment over the live file. Change a shared setting in the
+  `.chezmoitemplates` file; what the app writes stays and isn't drift. A key
+  removed from the source stays in the live file until deleted there.
+- `allowed_signers.tmpl` is composed with the overlay's fragment: edit the
+  `.tmpl`; `chezmoi add`/`re-add` would flatten it.
 - chezmoi's own files are YAML (the user prefers it over TOML), e.g.
   `.chezmoiexternals/*.yaml`. Tool config stays in the tool's own format
   (Starship and mise TOML): converting it would break `chezmoi edit`/`add`/
