@@ -7,6 +7,8 @@ brew "antidote"
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Resource monitor. C++ version and continuation of bashtop and bpytop
+brew "btop"
 # Manage your dotfiles across multiple diverse machines, securely
 brew "chezmoi"
 # Container runtimes on MacOS (and Linux) with minimal setup
@@ -19,6 +21,12 @@ brew "docker"
 brew "docker-buildx"
 # Isolated development environments using Docker
 brew "docker-compose"
+# Command-line DNS Client for Humans
+brew "doggo"
+# Disk Usage/Free Utility - a better 'df' alternative
+brew "duf"
+# More intuitive version of du in rust
+brew "dust"
 # Modern, maintained replacement for ls
 brew "eza"
 # Simple, fast and user-friendly alternative to find
@@ -75,6 +83,8 @@ brew "shellcheck"
 brew "shfmt"
 # Cross-shell prompt for astronauts
 brew "starship"
+# Very fast implementation of tldr in Rust
+brew "tealdeer"
 # Tool to generate documentation from Terraform modules
 brew "terraform-docs"
 # Update version constraints in your Terraform configurations
