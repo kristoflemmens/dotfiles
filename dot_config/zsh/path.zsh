@@ -6,8 +6,8 @@
 #
 # Static equivalent of `brew shellenv`: no subprocesses, because .zshenv runs
 # for every zsh invocation. Tool dirs that only some machines have carry
-# (N): they're added only when they exist (e.g. ~/go/bin once Go installs
-# something), so no per-machine config is needed.
+# (N): they're added only when they exist, so no per-machine config is
+# needed. Go installs into ~/.local/bin (GOBIN in Go's own env file).
 
 typeset -U PATH path
 
@@ -18,7 +18,6 @@ export HOMEBREW_REPOSITORY=/opt/homebrew
 path=(
   "$HOME/.local/bin"
   "${KREW_ROOT:-$HOME/.krew}"/bin(N)
-  "${GOPATH:-$HOME/go}"/bin(N)
   "$HOMEBREW_PREFIX/bin"
   "$HOMEBREW_PREFIX/sbin"
   $path
