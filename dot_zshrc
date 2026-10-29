@@ -8,7 +8,7 @@ HISTSIZE=50000
 SAVEHIST=10000
 setopt extended_history hist_expire_dups_first hist_ignore_dups \
   hist_ignore_space hist_verify share_history
-alias history='fc -li 1'
+alias history='fc -l -t "%Y/%m/%d %H:%M:%S" 1'   # all entries, with date and time
 
 # --- Navigation and editing ---
 setopt auto_cd auto_pushd pushd_ignore_dups pushd_minus interactive_comments
