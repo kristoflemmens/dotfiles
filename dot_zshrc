@@ -57,12 +57,20 @@ unset plugin_lists plugin_bundle f
 
 # --- Aliases ---
 alias l='ls -lah'
-alias cat='bat --paging=never'
+alias cat='bat'   # pages only when output exceeds the screen and goes to the terminal
 alias watch='watch '
-# Highlight with bat: `<cmd> --help` (global alias, only what's typed here;
-# no pager, so it lands in the terminal's scrollback as before) and man pages
-# (col -bx strips man's overstrike bold).
-alias -g -- --help='--help 2>&1 | bat --language=help --style=plain --paging=never'
+# Pager options for less (bat, delta and man use it too): pass colours through.
+export LESS='-R'
+# Highlight with bat: `<cmd> --help` (global alias, only what's typed here)
+# and man pages (col -bx strips man's overstrike bold). The help pager waits
+# for the command to finish: some (`claude`) still touch the terminal while
+# exiting, which leaves less deaf to arrow keys and scrolling.
+_help_pager() {
+  local text
+  text=$(cat)
+  print -r -- "$text" | bat --language=help --style=plain
+}
+alias -g -- --help='--help 2>&1 | _help_pager'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain'"
 
 # Optional overlay hook (e.g. a private work overlay).
