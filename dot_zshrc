@@ -102,5 +102,24 @@ _help_pager() {
 alias -g -- --help='--help 2>&1 | _help_pager'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain'"
 
+# --- Dotfiles ---
+# Every overlay (own config in ~/.config/chezmoi-*/) first, then this repo:
+# its templates include fragments the overlays install.
+dotfiles-apply() {
+  local config
+  for config in ~/.config/chezmoi-*/chezmoi.yaml(N); do
+    chezmoi --config "$config" apply || return
+  done
+  chezmoi apply "$@"
+}
+dotfiles-update() {
+  local config
+  for config in ~/.config/chezmoi-*/chezmoi.yaml(N); do
+    chezmoi --config "$config" git pull -- --rebase || return
+  done
+  chezmoi git pull -- --rebase || return
+  dotfiles-apply "$@"
+}
+
 # Optional overlay hook (e.g. a private work overlay).
 [[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh

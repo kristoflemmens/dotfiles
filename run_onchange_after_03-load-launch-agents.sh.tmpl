@@ -1,16 +1,20 @@
 #!/bin/bash
-set -eufo pipefail
+set -euo pipefail
+# (Re)loads every com.kristoflemmens.dotfiles.* LaunchAgent: this repo's
+# (.chezmoidata.yaml) and any an overlay installs (overlays apply first).
 # plist template hash: {{ include ".chezmoitemplates/launchagent.plist" | sha256sum }}
-# agents: {{ range .launchAgents }}{{ if or (not (get . "personal")) $.personal }}{{ .name }} {{ end }}{{ end }}
+# agents: {{ range .launchAgents }}{{ .name }} {{ end }}
+{{- range glob (joinPath .chezmoi.homeDir "Library/LaunchAgents/com.kristoflemmens.dotfiles.*.plist") }}
+# {{ base . }} hash: {{ include . | sha256sum }}
+{{- end }}
 
 mkdir -p "${HOME}/.local/share/chezmoi-logs"
 domain="gui/$(id -u)"
 
-{{ range .launchAgents -}}
-{{ if or (not (get . "personal")) $.personal -}}
-label="com.kristoflemmens.dotfiles.{{ .name }}"
-echo "==> (Re)loading LaunchAgent ${label}..."
-launchctl bootout "${domain}/${label}" >/dev/null 2>&1 || true
-launchctl bootstrap "${domain}" "${HOME}/Library/LaunchAgents/${label}.plist"
-{{ end -}}
-{{ end -}}
+for plist in "${HOME}"/Library/LaunchAgents/com.kristoflemmens.dotfiles.*.plist; do
+  [ -f "$plist" ] || continue
+  label="$(basename "$plist" .plist)"
+  echo "==> (Re)loading LaunchAgent ${label}..."
+  launchctl bootout "${domain}/${label}" >/dev/null 2>&1 || true
+  launchctl bootstrap "${domain}" "$plist"
+done

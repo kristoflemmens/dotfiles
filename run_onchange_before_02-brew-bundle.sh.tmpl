@@ -1,9 +1,6 @@
 #!/bin/bash
 set -eufo pipefail
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
-{{- if .personal }}
-# Brewfile.personal hash: {{ include "Brewfile.personal" | sha256sum }}
-{{- end }}
 {{- /* Overlay Brewfiles, so the cleanup below reruns when one changes. */}}
 {{- range glob (joinPath .chezmoi.homeDir ".local/share/chezmoi-*/Brewfile") }}
 # {{ . }} hash: {{ include . | sha256sum }}
@@ -15,11 +12,6 @@ brew=/opt/homebrew/bin/brew
 
 echo "==> Installing packages from Brewfile..."
 "$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile"
-{{- if .personal }}
-
-echo "==> Installing personal packages from Brewfile.personal..."
-"$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile.personal"
-{{- end }}
 
 # Overlays install their own Brewfile before this runs (apply the overlay
 # first); this removes what no Brewfile declares any more.

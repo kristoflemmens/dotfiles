@@ -3,13 +3,12 @@
 # so an ad-hoc `brew install X` / `brew uninstall Y` ends up in chezmoi
 # instead of silently drifting.
 #
-# Declared = Brewfile (shared) + Brewfile.personal (on personal Macs) + the
-# Brewfile of every overlay source (~/.local/share/chezmoi-*/Brewfile).
+# Declared = Brewfile (shared) + the Brewfile of every overlay source
+# (~/.local/share/chezmoi-*/Brewfile).
 #
-# Writes go to exactly one file, the machine's own:
-#   personal Mac          -> Brewfile.personal
-#   otherwise, overlay    -> the overlay's Brewfile (e.g. the work overlay)
-#   otherwise             -> nothing is written, drift is only reported
+# Writes go to exactly one file, the machine's own: its overlay's Brewfile
+# (personal or work). Without an overlay nothing is written, drift is only
+# reported.
 # - installed but declared nowhere   -> appended to the machine's own file
 # - in the machine's own file but no longer installed -> removed from it
 # The shared Brewfile is curated by hand and never written: shared entries
@@ -18,8 +17,8 @@
 #   uninstall request, not an ad-hoc install: kept out of the machine's own
 #   file until bin/brew-cleanup.sh (on `chezmoi apply`) removes or keeps it
 #
-# Nothing is committed. Review with `chezmoi git diff` (or `chezcegeka git
-# diff` for the overlay) and commit, or move entries to the shared Brewfile.
+# Nothing is committed. Review with `chezmoi --config <overlay config> git
+# diff` and commit, or move entries to the shared Brewfile.
 #
 # Runs automatically via a LaunchAgent (login + every 4 hours). Logs to
 # ~/.local/share/chezmoi-logs/sync-brewfile.log.
@@ -32,9 +31,7 @@ SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=bin/lib/brewfiles.sh
 . "${SOURCE_DIR}/bin/lib/brewfiles.sh"
 
-if [ "$personal" = "true" ]; then
-  target="${SOURCE_DIR}/Brewfile.personal"
-elif [ "${#overlay_brewfiles[@]}" -gt 0 ]; then
+if [ "${#overlay_brewfiles[@]}" -gt 0 ]; then
   target="${overlay_brewfiles[0]}"
 else
   target=""
@@ -87,7 +84,7 @@ report_shared_missing() {
 }
 
 if [ -z "$target" ]; then
-  echo "==> Not a personal Mac and no overlay Brewfile: reporting only."
+  echo "==> No overlay Brewfile: reporting only."
   if [ -s "$tmp_add" ]; then
     echo "Installed but declared nowhere:"
     sed 's/^/  /' "$tmp_add"
