@@ -15,7 +15,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: shellcheck
-        run: shellcheck bin/*.sh dot_git-template/hooks/executable_pre-commit
+        # -x: follow `source`d files (bin/lib/) like a local `shellcheck -x`.
+        run: shellcheck -x bin/*.sh bin/lib/*.sh dot_git-template/hooks/executable_pre-commit
       - name: zsh syntax
         run: |
           sudo apt-get install -y zsh >/dev/null
