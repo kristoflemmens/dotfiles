@@ -48,6 +48,14 @@ jobs:
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --verbose --exclude=externals \
             --destination "$RUNNER_TEMP/home" > /dev/null
 
+  tests:
+    # macOS so bin/ scripts run under its /bin/bash 3.2, as on the Macs.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install --quiet bats-core
+      - run: bats tests/
+
   zsh-startup:
     # Starts a real interactive login shell with the applied dotfiles and
     # plugins: `zsh -n` misses runtime errors (a stray command, a plugin that

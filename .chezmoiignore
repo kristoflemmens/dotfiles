@@ -5,6 +5,7 @@ Brewfile
 Brewfile.*
 macos-defaults.tsv
 bin
+tests
 .github
 {{- range .launchAgents }}{{ if and (get . "personal") (not $.personal) }}
 Library/LaunchAgents/com.kristoflemmens.dotfiles.{{ .name }}.plist

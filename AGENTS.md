@@ -47,6 +47,8 @@ Done means all of these hold:
    <empty dir>` in a throwaway `HOME` (see `.github/workflows/ci.yml`).
 2. `shellcheck bin/*.sh` is clean; `bin/` scripts run under macOS
    `/bin/bash` 3.2, so expand possibly-empty arrays as `${a[@]+"${a[@]}"}`.
+   A change to the Brewfile sync logic comes with a case in `tests/` (bats,
+   stubbed brew), and `bats tests/` passes.
 3. On the machine: `chezmoi diff` shows only the intended change, then
    `chezmoi apply` and `chezmoi status` is empty.
 4. CI on the pushed commit is green.
@@ -88,7 +90,7 @@ The user settled these; build on them:
 - XDG selectively, never by setting the XDG variables globally (that moves
   zoxide/k9s/helm data out of ~/Library). Go uses its own env file (GOBIN
   ~/.local/bin, GOPATH ~/.local/share/go); Rust RUSTUP_HOME/CARGO_HOME under
-  ~/.local/share (old ~/.rustup/~/.cargo win where they exist); less and
+  ~/.local/share (old ~/.rustup/~/.cargo win where they exist); zsh, less and
   Python history in ~/.local/state. `.ssh`, `.docker`, `.kube`, `.gradle`,
   `.m2`, `.colima`, `.claude` stay put.
 - PATH entries for tools not every Mac has carry the `(N)` qualifier in

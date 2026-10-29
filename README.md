@@ -93,6 +93,8 @@ committed automatically.
 | `bin/prune-app-logs.sh` | *Personal Macs only.* Deletes Reolink desktop client SDK logs older than 24h (~3 GB/day, no setting in the app). |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
 
+`tests/` holds bats tests for the Brewfile sync (brew stubbed): `bats tests/`.
+
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
 don't block it.
 
