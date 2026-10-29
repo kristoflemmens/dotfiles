@@ -103,7 +103,6 @@ The user settled these; build on them:
   touches the terminal while exiting) and man pages.
 - Plugin settings (zstyles) are local files listed in `plugins.txt` right
   before their plugin (`eza.zsh`).
-- `grg`/`fnd` aliases are work-only (overlay `zshrc.zsh`).
 - A modern replacement takes over the classic name only where the typed
   habit keeps working: `cat`=bat, `top`=btop, `df`=duf (drops `-h`), `dig`=doggo
   (real dig for `+options` doggo lacks). fd, ripgrep, dust and tldr keep their
