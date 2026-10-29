@@ -47,6 +47,8 @@ Done means all of these hold:
    <empty dir>` in a throwaway `HOME` (see `.github/workflows/ci.yml`).
 2. `shellcheck bin/*.sh` is clean; `bin/` scripts run under macOS
    `/bin/bash` 3.2, so expand possibly-empty arrays as `${a[@]+"${a[@]}"}`.
+   A change to the Brewfile sync logic comes with a case in `tests/` (bats,
+   stubbed brew), and `bats tests/` passes.
 3. On the machine: `chezmoi diff` shows only the intended change, then
    `chezmoi apply` and `chezmoi status` is empty.
 4. CI on the pushed commit is green.
