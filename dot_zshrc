@@ -67,7 +67,7 @@ export LESS='-R'
 # exiting, which leaves less deaf to arrow keys and scrolling.
 _help_pager() {
   local text
-  text=$(cat)
+  text=$(command cat)   # the real cat, not the bat alias
   print -r -- "$text" | bat --language=help --style=plain
 }
 alias -g -- --help='--help 2>&1 | _help_pager'
