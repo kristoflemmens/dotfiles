@@ -47,3 +47,25 @@ jobs:
           chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=${{ matrix.personal }}"
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --verbose --exclude=externals \
             --destination "$RUNNER_TEMP/home" > /dev/null
+
+  zsh-startup:
+    # Starts a real interactive login shell with the applied dotfiles and
+    # plugins: `zsh -n` misses runtime errors (a stray command, a plugin that
+    # no longer loads), which would otherwise show up in every new terminal.
+    runs-on: macos-latest   # arm64, Homebrew in /opt/homebrew like path.zsh expects
+    steps:
+      - uses: actions/checkout@v4
+      - name: install shell tools
+        run: brew install --quiet chezmoi antidote starship zoxide eza bat
+      - name: apply
+        # The runner's home is throwaway; scripts (brew bundle, defaults) are skipped.
+        run: |
+          chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=false"
+          chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --force --exclude=externals,scripts
+      - name: start zsh
+        run: |
+          rc=0
+          zsh -il -c 'whence -w gst z _help_pager && [[ $STARSHIP_SHELL == zsh ]]' 2>stderr.txt || rc=$?
+          cat stderr.txt
+          # Plugins and the prompt must load, and startup must be silent.
+          [[ $rc == 0 && ! -s stderr.txt ]]
