@@ -133,6 +133,7 @@ cask "openlogi"
 cask "rectangle"
 # Open-source code editor
 cask "visual-studio-code"
+vscode "asvetliakov.vscode-neovim"
 vscode "catppuccin.catppuccin-vsc-icons"
 vscode "chrisdias.vscode-opennewinstance"
 vscode "codezombiech.gitignore"

@@ -119,6 +119,10 @@
     "editor.defaultFormatter": "redhat.vscode-yaml"
   },
   "explorer.confirmDragAndDrop": false,
+  // vscode-neovim in its own extension host, so typing never waits on other extensions.
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
   "claudeCode.preferredLocation": "panel",
   "chat.viewSessions.orientation": "stacked",
   "scm.repositories.selectionMode": "single",
