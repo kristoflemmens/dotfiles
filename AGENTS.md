@@ -88,7 +88,7 @@ The user settled these; build on them:
 - XDG selectively, never by setting the XDG variables globally (that moves
   zoxide/k9s/helm data out of ~/Library). Go uses its own env file (GOBIN
   ~/.local/bin, GOPATH ~/.local/share/go); Rust RUSTUP_HOME/CARGO_HOME under
-  ~/.local/share (old ~/.rustup/~/.cargo win where they exist); less and
+  ~/.local/share (old ~/.rustup/~/.cargo win where they exist); zsh, less and
   Python history in ~/.local/state. `.ssh`, `.docker`, `.kube`, `.gradle`,
   `.m2`, `.colima`, `.claude` stay put.
 - PATH entries for tools not every Mac has carry the `(N)` qualifier in
