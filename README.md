@@ -1,16 +1,9 @@
 # dotfiles
 
 Personal macOS dotfiles and machine bootstrap, managed with [chezmoi](https://www.chezmoi.io/).
-Public and generic: nothing employer- or client-specific lives here. Work
-config comes from a private overlay repo (see
-[Overlays](#overlays-eg-a-work-mac)).
-
-## Personal or not
-
-`chezmoi init` asks once whether this is a **personal Mac** and stores the
-answer in the generated `~/.config/chezmoi/chezmoi.yaml` (from
-`.chezmoi.yaml.tmpl`). It only switches personal extras on: `Brewfile.personal`,
-the Reolink log-pruning agent and a few VS Code preferences. Change it with `chezmoi init --promptBool "Personal Mac=false"`.
+Public and generic: nothing machine-, employer- or client-specific lives
+here. That comes from a private overlay repo per Mac, personal or work (see
+[Overlays](#overlays)).
 
 ## What's in here
 
@@ -33,11 +26,11 @@ the Reolink log-pruning agent and a few VS Code preferences. Change it with `che
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template
-- `Brewfile` (shared, curated by hand) + `Brewfile.personal` (personal Macs, maintained by `bin/sync-brewfile.sh`)
+- `Brewfile` (shared, curated by hand); each overlay adds its own, maintained by `bin/sync-brewfile.sh`
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
   - `run_once_before_01` install Homebrew
-  - `run_onchange_before_02` `brew bundle install` for `Brewfile` (+ `Brewfile.personal` on personal Macs), then `bin/brew-cleanup.sh` offers to uninstall what no Brewfile declares any more
+  - `run_onchange_before_02` `brew bundle install` for `Brewfile` (overlays install their own first), then `bin/brew-cleanup.sh` offers to uninstall what no Brewfile declares any more
   - `run_onchange_after_02` apply `macos-defaults.tsv`
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
 
@@ -51,10 +44,11 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply kristoflemmens
 Homebrew, all CLI tools/casks, dotfiles, shell plugins and macOS defaults
 are set up automatically.
 
-### Overlays (e.g. a work Mac)
+### Overlays
 
-Machine-specific config that doesn't belong in a public repo (a work identity,
-employer tools, client settings) lives in a separate private repo, applied as
+Machine-specific config that doesn't belong in a public repo (personal
+packages and hosts, a work identity, employer tools, client settings) lives in
+a separate private repo per Mac, applied as
 an independent chezmoi source **with its own config and state** after the base
 bootstrap (by then 1Password, gh and SSH work, so cloning a private repo is no
 chicken-and-egg problem). See that repo's README.
@@ -72,7 +66,7 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `~/.local/share/chezmoi-*/Brewfile` | declared packages for `bin/sync-brewfile.sh` |
 
 Because the base templates read overlay files, apply the overlay **first** and
-the base second when both changed (`dotfiles-apply` in the overlay does this).
+the base second when both changed (`dotfiles-apply` does this for every overlay; `dotfiles-update` pulls them all first).
 
 ## Day to day
 
@@ -85,16 +79,15 @@ chezmoi update          # git pull + apply
 
 ## Drift detection
 
-LaunchAgents (listed in `.chezmoidata.yaml`; `personal: true` limits one to personal Macs) run at login and every 4 hours (logs in
+LaunchAgents (listed in `.chezmoidata.yaml`, plus any `com.kristoflemmens.dotfiles.*` agent an overlay installs) run at login and every 4 hours (logs in
 `~/.local/share/chezmoi-logs/`, macOS notification on changes). Nothing is ever
 committed automatically.
 
 | Script | What it does |
 |---|---|
-| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: `Brewfile.personal` on a personal Mac, otherwise the overlay's `Brewfile` (or only reports, without either). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
-| `bin/brew-cleanup.sh` | Uninstalls what no Brewfile of this machine declares (shared + personal + overlays) after brew asks; run by `run_onchange_before_02`, or by hand. Without a terminal it only lists. |
+| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: the overlay's `Brewfile` (or only reports, without an overlay). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
+| `bin/brew-cleanup.sh` | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `run_onchange_before_02`, or by hand. Without a terminal it only lists. |
 | `bin/sync-macos-defaults.sh` | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report). |
-| `bin/prune-app-logs.sh` | *Personal Macs only.* Deletes Reolink desktop client SDK logs older than 24h (~3 GB/day, no setting in the app). |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
 
 `tests/` holds bats tests for the Brewfile sync (brew stubbed): `bats tests/`.

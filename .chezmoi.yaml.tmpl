@@ -1,11 +1,6 @@
 {{- /* Generates ~/.config/chezmoi/chezmoi.yaml on `chezmoi init`.
-       Asked once and remembered; override with
-       `chezmoi init --promptBool "Personal Mac=false"`.
-       Work-specific config never lives here: it comes from a private
-       overlay repo (see README). */ -}}
-{{- $personal := promptBoolOnce . "personal" "Personal Mac" -}}
-data:
-  personal: {{ $personal }}
+       No questions: what differs per Mac comes from a private overlay repo
+       (see README). */ -}}
 diff:
   pager: delta
   exclude:

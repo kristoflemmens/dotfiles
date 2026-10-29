@@ -1,9 +1,8 @@
 # LaunchAgents installed from bin/. Each runs at login and every 4 hours;
 # see the README ("Drift detection") for what each one reports or writes.
-# `personal: true` limits an agent to personal Macs.
+# An overlay can bring its own agent (a com.kristoflemmens.dotfiles.<name>
+# plist); run_onchange_after_03 loads those too.
 launchAgents:
   - name: check-dotfiles-drift
   - name: sync-brewfile
   - name: sync-macos-defaults
-  - name: prune-app-logs
-    personal: true

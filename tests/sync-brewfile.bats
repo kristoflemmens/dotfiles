@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
-# bin/sync-brewfile.sh against fixture Brewfiles. brew, chezmoi and osascript
-# are stubs: `brew bundle dump` writes $BATS_TEST_TMPDIR/live (what is
-# "installed"), chezmoi answers the personal flag from $PERSONAL.
+# bin/sync-brewfile.sh against fixture Brewfiles. brew and osascript are
+# stubs: `brew bundle dump` writes $BATS_TEST_TMPDIR/live (what is
+# "installed"). The machine's own Brewfile is an overlay's ($own).
 
 setup() {
   src="$BATS_TEST_TMPDIR/src"
@@ -14,32 +14,32 @@ setup() {
 #!/bin/bash
 for a; do case $a in --file=*) cp "$BATS_TEST_TMPDIR/live" "${a#--file=}";; esac; done
 STUB
-  printf '#!/bin/bash\necho "$PERSONAL"\n' > "$BATS_TEST_TMPDIR/stubs/chezmoi"
   printf '#!/bin/bash\n' > "$BATS_TEST_TMPDIR/stubs/osascript"
   chmod +x "$BATS_TEST_TMPDIR"/stubs/*
   export PATH="$BATS_TEST_TMPDIR/stubs:$PATH"
 
-  export PERSONAL=true
   printf 'brew "git"\n' > "$src/Brewfile"
-  : > "$src/Brewfile.personal"
+  own="$HOME/.local/share/chezmoi-personal/Brewfile"
+  mkdir -p "${own%/*}"
+  : > "$own"
 }
 
 installed() { printf '%s\n' "$@" > "$BATS_TEST_TMPDIR/live"; }
 sync() { run "$src/bin/sync-brewfile.sh"; [ "$status" -eq 0 ]; }
 pending() { cat "$HOME/.local/state/dotfiles/brewfile-removed"; }
 
-@test "an ad-hoc install is appended to Brewfile.personal with its description" {
+@test "an ad-hoc install is appended to the overlay Brewfile with its description" {
   installed 'brew "git"' '# Friendly cat' 'brew "bat"'
   sync
-  [ "$(cat "$src/Brewfile.personal")" = $'# Friendly cat\nbrew "bat"' ]
+  [ "$(cat "$own")" = $'# Friendly cat\nbrew "bat"' ]
   [ "$(cat "$src/Brewfile")" = 'brew "git"' ]
 }
 
-@test "an uninstalled entry leaves Brewfile.personal together with its comment" {
-  printf '# Friendly cat\nbrew "bat"\n# Search\nbrew "ripgrep"\n' > "$src/Brewfile.personal"
+@test "an uninstalled entry leaves the overlay Brewfile together with its comment" {
+  printf '# Friendly cat\nbrew "bat"\n# Search\nbrew "ripgrep"\n' > "$own"
   installed 'brew "git"' 'brew "ripgrep"'
   sync
-  [ "$(cat "$src/Brewfile.personal")" = $'# Search\nbrew "ripgrep"' ]
+  [ "$(cat "$own")" = $'# Search\nbrew "ripgrep"' ]
 }
 
 @test "the shared Brewfile is only reported, never written" {
@@ -56,7 +56,7 @@ pending() { cat "$HOME/.local/state/dotfiles/brewfile-removed"; }
   sync
   printf 'brew "git"\n' > "$src/Brewfile"
   sync
-  [ ! -s "$src/Brewfile.personal" ]
+  [ ! -s "$own" ]
   [ "$(pending)" = 'brew "jq"' ]
   # Still pending on the next run, until it is uninstalled.
   sync
@@ -72,7 +72,7 @@ pending() { cat "$HOME/.local/state/dotfiles/brewfile-removed"; }
   sync
   printf 'brew "git"\n' > "$src/Brewfile"
   sync
-  printf 'brew "jq"\n' > "$src/Brewfile.personal"
+  printf 'brew "jq"\n' > "$own"
   sync
   [ ! -s "$HOME/.local/state/dotfiles/brewfile-removed" ]
 }
@@ -85,24 +85,13 @@ pending() { cat "$HOME/.local/state/dotfiles/brewfile-removed"; }
   sync
   rm "$HOME/.local/state/dotfiles/brewfile-removed"   # what brew-cleanup.sh does
   sync
-  [ "$(cat "$src/Brewfile.personal")" = 'brew "jq"' ]
+  [ "$(cat "$own")" = 'brew "jq"' ]
 }
 
-@test "on a work Mac the overlay Brewfile is written" {
-  export PERSONAL=false
-  mkdir -p "$HOME/.local/share/chezmoi-work"
-  : > "$HOME/.local/share/chezmoi-work/Brewfile"
-  printf 'brew "mise"\n' > "$src/Brewfile.personal"   # not this machine's
-  installed 'brew "git"' 'brew "bat"'
-  sync
-  [ "$(cat "$HOME/.local/share/chezmoi-work/Brewfile")" = 'brew "bat"' ]
-  [ "$(cat "$src/Brewfile.personal")" = 'brew "mise"' ]
-}
-
-@test "without a personal flag or overlay, drift is only reported" {
-  export PERSONAL=false
+@test "without an overlay, drift is only reported" {
+  rm -r "$HOME/.local/share/chezmoi-personal"
   installed 'brew "git"' 'brew "bat"'
   sync
   [[ $output == *'reporting only'*'brew "bat"'* ]]
-  [ ! -s "$src/Brewfile.personal" ]
+  [ ! -e "$own" ]
 }

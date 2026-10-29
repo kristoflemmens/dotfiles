@@ -29,13 +29,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   render:
-    # Renders every template and script for personal and non-personal Macs without touching a
-    # real home directory, so a broken template fails here instead of on
-    # `chezmoi apply`.
+    # Renders every template and script without touching a real home
+    # directory, so a broken template fails here instead of on `chezmoi apply`.
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        personal: [true, false]
     steps:
       - uses: actions/checkout@v4
       - name: install chezmoi
@@ -44,7 +40,7 @@ jobs:
         run: |
           export PATH="$HOME/.local/bin:$PATH"
           mkdir -p "$RUNNER_TEMP/home"
-          chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=${{ matrix.personal }}"
+          chezmoi init --source "$GITHUB_WORKSPACE"
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --verbose --exclude=externals \
             --destination "$RUNNER_TEMP/home" > /dev/null
 
@@ -70,7 +66,7 @@ jobs:
       - name: apply
         # The runner's home is throwaway; scripts (brew bundle, defaults) are skipped.
         run: |
-          chezmoi init --source "$GITHUB_WORKSPACE" --promptBool "Personal Mac=false"
+          chezmoi init --source "$GITHUB_WORKSPACE"
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --force --exclude=externals,scripts
       - name: start zsh
         run: |

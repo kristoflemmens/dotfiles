@@ -1,6 +1,6 @@
 #!/bin/bash
 # Uninstalls what no Brewfile of this machine declares any more (an entry
-# deleted from Brewfile, Brewfile.personal or an overlay Brewfile).
+# deleted from the shared Brewfile or an overlay Brewfile).
 # `brew bundle install` only adds; bin/sync-brewfile.sh holds deleted entries
 # back as uninstall requests until this runs.
 #

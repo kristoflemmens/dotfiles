@@ -1,26 +1,28 @@
 # AGENTS.md
 
-chezmoi source for Kristof's macOS dotfiles. Public repo: anything employer-
-or client-specific belongs in a private overlay repo (the work one is
-`kristoflemmens/dotfiles-cegeka`, with its own AGENTS.md). README.md describes
+chezmoi source for Kristof's macOS dotfiles. Public repo: anything machine-,
+employer- or client-specific belongs in a private overlay repo
+(`kristoflemmens/dotfiles-personal` and `kristoflemmens/dotfiles-cegeka`, each
+with its own AGENTS.md). README.md describes
 layout, bootstrap and the drift agents; read it before structural changes.
 
 ## Model
 
-- One machine flag: `.personal` (bool, asked once by `.chezmoi.yaml.tmpl`).
-  It only switches personal extras on. There is no work profile: work config
-  reaches this repo solely through the generic overlay files under
-  `~/.config/dotfiles-overlay/` that templates include when present.
-- Overlays are separate chezmoi sources with their own config and state. When
-  both changed, apply the overlay first, then this repo (templates here read
-  files the overlay installs).
+- A Mac is this repo plus one overlay (personal or work). No flags or
+  profiles here: an overlay reaches this repo solely through the generic
+  files under `~/.config/dotfiles-overlay/` that templates include when
+  present, its `Brewfile`, and its own `com.kristoflemmens.dotfiles.*`
+  LaunchAgents (loaded by `run_onchange_after_03`).
+- Overlays are separate chezmoi sources with their own config and state
+  (`~/.config/chezmoi-<name>/`). Apply the overlay first, then this repo
+  (`dotfiles-apply`): templates here read files the overlay installs.
 
 ## Ownership
 
 - `Brewfile` (shared) is curated by hand by the user: edit it only when asked,
   or when a shared config file needs a package to work (say so). Ad-hoc
-  installs are recorded automatically by `bin/sync-brewfile.sh` into
-  `Brewfile.personal` (personal Mac) or the overlay's `Brewfile`.
+  installs are recorded automatically by `bin/sync-brewfile.sh` into the
+  overlay's `Brewfile`.
   Deleting an entry is how the user uninstalls: sync holds it back and
   `bin/brew-cleanup.sh` (on `chezmoi apply`) removes it.
 - Composed files are templates: VS Code `settings.json.tmpl` and
@@ -42,13 +44,15 @@ layout, bootstrap and the drift agents; read it before structural changes.
 ## Verifying a change
 
 Done means all of these hold:
-1. Both flag values render: `chezmoi init --promptBool "Personal Mac=<true|false>"`
-   then `chezmoi apply --no-pager --dry-run --exclude=externals --destination
-   <empty dir>` in a throwaway `HOME` (see `.github/workflows/ci.yml`).
+1. Templates render without an overlay: `chezmoi apply --no-pager --dry-run
+   --exclude=externals --destination <empty dir>` in a throwaway `HOME` (see
+   `.github/workflows/ci.yml`).
 2. `shellcheck bin/*.sh` is clean; `bin/` scripts run under macOS
    `/bin/bash` 3.2, so expand possibly-empty arrays as `${a[@]+"${a[@]}"}`.
    A change to the Brewfile sync logic comes with a case in `tests/` (bats,
    stubbed brew), and `bats tests/` passes.
+   CI job names are required checks in the `main` ruleset: renaming a job
+   means updating the ruleset.
 3. On the machine: `chezmoi diff` shows only the intended change, then
    `chezmoi apply` and `chezmoi status` is empty.
 4. CI on the pushed commit is green.
@@ -81,8 +85,8 @@ The user settled these; build on them:
 - Docker: `colima` docker context; `DOCKER_HOST` is set only by the work overlay
   (Testcontainers needs it).
 - SSH `WarnWeakCrypto no` applies only to RFC 1918 hosts.
-- LaunchAgents only report or write into the machine's own files; a
-  `personal: true` entry in `.chezmoidata.yaml` limits one to personal Macs.
+- LaunchAgents only report or write into the machine's own files. One that
+  only some Macs need lives in that Mac's overlay.
 - Font: FiraCode Nerd Font Mono (Ghostty, VS Code); its cask is in the shared
   Brewfile because those configs name it.
 - GNU tools only for typed commands (oh-my-zsh's gnu-utils hashes them); no
