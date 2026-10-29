@@ -69,6 +69,8 @@ brew "kubectx"
 brew "lazygit"
 # Utility for directing compilation
 brew "make"
+# Ambitious Vim-fork focused on extensibility and agility (vscode-neovim needs it)
+brew "neovim"
 # PAM module for reattaching to the user's GUI (Aqua) session
 brew "pam-reattach"
 # Shell command parallelization utility
@@ -89,6 +91,8 @@ brew "tealdeer"
 brew "terraform-docs"
 # Update version constraints in your Terraform configurations
 brew "tfupdate"
+# Parser generator tool (nvim-treesitter builds parsers with it)
+brew "tree-sitter-cli"
 # Extremely fast Python package installer and resolver, written in Rust
 brew "uv"
 # Executes a program periodically, showing output fullscreen
