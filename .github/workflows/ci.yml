@@ -68,6 +68,9 @@ jobs:
         run: |
           chezmoi init --source "$GITHUB_WORKSPACE"
           chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --force --exclude=externals,scripts
+      - name: render macOS scripts
+        # The render job runs on Linux, where .chezmoiignore skips these.
+        run: chezmoi apply --source "$GITHUB_WORKSPACE" --no-pager --dry-run --include=scripts > /dev/null
       - name: start zsh
         run: |
           zsh -il -c true   # first start: antidote clones the plugins (and says so on stderr)
@@ -76,4 +79,29 @@ jobs:
           script -q /dev/null sh -c 'zsh -il -c "whence -w gst cdi fzf-history-widget _help_pager && [[ \$STARSHIP_SHELL == zsh ]]" 2>stderr.txt' || rc=$?
           cat stderr.txt
           # Plugins and the prompt must load, and startup must be silent.
+          [[ $rc == 0 && ! -s stderr.txt ]]
+
+  zsh-startup-linux:
+    # The same check on Linux, with Homebrew in /home/linuxbrew like path.zsh expects.
+    runs-on: ubuntu-latest
+    env:
+      BREW: /home/linuxbrew/.linuxbrew/bin
+    steps:
+      - uses: actions/checkout@v4
+      - name: install shell tools
+        run: |
+          sudo apt-get install -y zsh >/dev/null
+          "$BREW/brew" update --quiet
+          "$BREW/brew" install --quiet chezmoi antidote starship zoxide fzf fd eza bat
+      - name: apply
+        run: |
+          "$BREW/chezmoi" init --source "$GITHUB_WORKSPACE"
+          "$BREW/chezmoi" apply --source "$GITHUB_WORKSPACE" --no-pager --force --exclude=externals,scripts
+      - name: start zsh
+        shell: bash
+        run: |
+          zsh -il -c true   # first start: antidote clones the plugins (and says so on stderr)
+          rc=0
+          script -qec 'zsh -il -c "whence -w gst cdi fzf-history-widget _help_pager && [[ \$STARSHIP_SHELL == zsh ]]" 2>stderr.txt' /dev/null || rc=$?
+          cat stderr.txt
           [[ $rc == 0 && ! -s stderr.txt ]]

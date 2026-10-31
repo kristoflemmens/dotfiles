@@ -3,4 +3,4 @@ set -eufo pipefail
 # Rebuild bat's theme cache (also used by delta) when a custom theme changes.
 # tokyonight_night.tmTheme hash: {{ include "dot_config/bat/themes/tokyonight_night.tmTheme" | sha256sum }}
 
-/opt/homebrew/bin/bat cache --build
+{{ if eq .chezmoi.os "darwin" }}/opt/homebrew{{ else }}/home/linuxbrew/.linuxbrew{{ end }}/bin/bat cache --build

@@ -6,6 +6,19 @@ employer- or client-specific belongs in a private overlay repo
 with its own AGENTS.md). README.md describes
 layout, bootstrap and the drift agents; read it before structural changes.
 
+## Linux servers
+
+The repo also bootstraps a Debian server, with no overlay. macOS is the main
+target; Linux gets the shell, git and editor config:
+
+- Everything macOS-only sits behind an OS check: `.chezmoi.os` in templates
+  and `.chezmoiignore` (`Library`, `.colima`, the macOS scripts), `$OSTYPE` in
+  zsh files. A Mac's rendered output must not change because of Linux work.
+- Packages come from `Brewfile.linux` (curated by hand, no drift sync, no
+  cleanup), Homebrew from `run_once_before_01-install-linuxbrew.sh`, which
+  needs passwordless sudo.
+- No commit signing and no VS Code on Linux: 1Password isn't there.
+
 ## Model
 
 - A Mac is this repo plus one overlay (personal or work). No flags or
