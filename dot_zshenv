@@ -1,7 +1,7 @@
 export KUBECTL_EXTERNAL_DIFF="dyff between --omit-header --set-exit-code"
 
 # Preferred editor for local and remote sessions
-if [[ -n $SSH_CONNECTION ]]; then
+if [[ -n $SSH_CONNECTION || $OSTYPE != darwin* ]]; then
   export EDITOR='vim'
 else
   export EDITOR='code --new-window --wait'
