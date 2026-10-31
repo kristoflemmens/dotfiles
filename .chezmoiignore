@@ -7,4 +7,16 @@ macos-defaults.tsv
 bin
 tests
 .github
-
+{{ if eq .chezmoi.os "darwin" }}
+01-install-linuxbrew.sh
+02-brew-bundle-linux.sh
+{{ else }}
+.colima
+.colima/**
+Library
+Library/**
+01-install-homebrew.sh
+02-brew-bundle.sh
+02-macos-defaults.sh
+03-load-launch-agents.sh
+{{ end }}

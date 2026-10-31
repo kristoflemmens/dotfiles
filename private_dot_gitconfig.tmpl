@@ -2,7 +2,9 @@
 	defaultBranch = main
 	templateDir = ~/.git-template
 [core]
+{{- if eq .chezmoi.os "darwin" }}
 	editor = "code --new-window --wait"
+{{- end }}
 	autocrlf = input
 	pager = delta
 [alias]
@@ -11,6 +13,7 @@
 	remotes = "remote -v"
 	worktrees = "worktree list -vv"
 	prune-branches = "!f(){ tmp=$(mktemp) && git worktree list --porcelain | awk '/^branch /{sub(\"^refs/heads/\", \"\", $2); print $2}' | sort -u > \"$tmp\" && git remote prune origin && git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads/ | awk '$2 ~ /gone/ { print $1 }' | grep -vxFf \"$tmp\" | xargs -r -n 1 git branch -d; rm -f \"$tmp\"; }; f"
+{{- if eq .chezmoi.os "darwin" }}
 [merge]
 	tool = "code"
 [mergetool "code"]
@@ -22,6 +25,7 @@
 [difftool "code"]
 	cmd = "code -n -w --diff $LOCAL $REMOTE"
 	trustExitCode = true
+{{- end }}
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -68,10 +72,14 @@
 [gpg]
 	format = ssh
 [gpg "ssh"]
+{{- if eq .chezmoi.os "darwin" }}
 	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+{{- end }}
 	allowedSignersFile = ~/.ssh/allowed_signers
+{{- if eq .chezmoi.os "darwin" }}
 [commit]
 	gpgsign = true
+{{- end }}
 [include]
 	# Optional overlay hook: if an overlay repo creates this file, git loads
 	# additional (includeIf) rules from it, e.g. work identities and keys.

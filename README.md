@@ -46,6 +46,20 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply kristoflemmens
 Homebrew, all CLI tools/casks, dotfiles, shell plugins and macOS defaults
 are set up automatically.
 
+## Bootstrap a Linux server
+
+On Debian, as a user with passwordless sudo and zsh as login shell:
+
+```sh
+sudo apt-get install -y zsh build-essential procps curl file git
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin init --apply kristoflemmens
+```
+
+This installs Homebrew in `/home/linuxbrew`, the tools from `Brewfile.linux` and
+the shell, git and editor config. Everything macOS-only is skipped (see
+`.chezmoiignore`), and commits aren't signed. There is no overlay and no drift
+detection: `chezmoi update` by hand.
+
 ### Overlays
 
 Machine-specific config that doesn't belong in a public repo (personal

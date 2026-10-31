@@ -11,9 +11,15 @@
 
 typeset -U PATH path
 
-export HOMEBREW_PREFIX=/opt/homebrew
-export HOMEBREW_CELLAR=/opt/homebrew/Cellar
-export HOMEBREW_REPOSITORY=/opt/homebrew
+if [[ $OSTYPE == darwin* ]]; then
+  export HOMEBREW_PREFIX=/opt/homebrew
+  export HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  export HOMEBREW_REPOSITORY=/opt/homebrew
+else
+  export HOMEBREW_PREFIX=/home/linuxbrew/.linuxbrew
+  export HOMEBREW_CELLAR=/home/linuxbrew/.linuxbrew/Cellar
+  export HOMEBREW_REPOSITORY=/home/linuxbrew/.linuxbrew/Homebrew
+fi
 
 path=(
   "$HOME/.local/bin"
