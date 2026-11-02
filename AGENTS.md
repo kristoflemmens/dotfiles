@@ -31,6 +31,9 @@ layout, bootstrap and the drift agents; read it before structural changes.
   fragment over the live file. Change a shared setting in the
   `.chezmoitemplates` file; what the app writes stays and isn't drift. A key
   removed from the source stays in the live file until deleted there.
+  OpenLogi's `config.toml` works the same way
+  (`.chezmoitemplates/openlogi-settings.toml`); its mouse settings are keyed
+  by model (`identity.codename`), not by the `unit:` ID of one device.
 - `allowed_signers.tmpl` is composed with the overlay's fragment: edit the
   `.tmpl`; `chezmoi add`/`re-add` would flatten it.
 - chezmoi's own files are YAML (the user prefers it over TOML), e.g.

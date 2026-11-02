@@ -1,0 +1,44 @@
+# OpenLogi preferences, laid over ~/.config/openlogi/config.toml by
+# dot_config/openlogi/modify_private_config.toml. OpenLogi writes the rest of
+# that file itself (schema, detected devices, receivers), which stays as is.
+
+[app_settings]
+launch_at_login = true
+check_for_updates = true
+auto_install_updates = true
+show_in_menu_bar = true
+capture_mouse_events = true
+smooth_scroll = true
+vertical_scroll_sensitivity = 14
+thumbwheel_sensitivity = 14
+app_icon = "openlogi"
+auto_download_assets = true
+asset_source = "automatic"
+appearance = "system"
+ui_scale = "normal"
+device_view_mode = "grid"
+theme_light = "Catppuccin Latte"
+theme_dark = "Catppuccin Mocha"
+mouse_profile_target = "pointer"
+
+# Per model (the device's identity.codename), so they apply to every unit of
+# that model OpenLogi has detected, on any Mac.
+[models."Wireless Mouse MX Master 3"]
+invert_scroll = true
+dpi = 4000
+scroll_resolution = "high"
+
+[models."Wireless Mouse MX Master 3".bindings]
+DpiToggle = "CycleDpiPresets"
+
+[models."Wireless Mouse MX Master 3".bindings.GestureButton]
+Up = "None"
+Down = "None"
+Left = "PreviousDesktop"
+Right = "NextDesktop"
+Click = "MissionControl"
+
+[models."Wireless Mouse MX Master 3".smartshift]
+mode = "free"
+auto_disengage = 10
+tunable_torque = 0
