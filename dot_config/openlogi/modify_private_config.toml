@@ -1,0 +1,16 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Lays .chezmoitemplates/openlogi-settings.toml over the current file:
+       app_settings, then each detected device whose model has preferences
+       there. Objects merged, lists replaced; what OpenLogi writes itself
+       stays. Before OpenLogi's first run there is no file yet: start one
+       with only the app settings, OpenLogi adds the devices. */ -}}
+{{- $config := dict -}}
+{{- if .chezmoi.stdin }}{{ $config = .chezmoi.stdin | fromToml }}{{ end -}}
+{{- $want := includeTemplate "openlogi-settings.toml" . | fromToml -}}
+{{- if not (hasKey $config "schema_version") }}{{ $_ := set $config "schema_version" 7 }}{{ end -}}
+{{- $_ := set $config "app_settings" (mergeOverwrite (get $config "app_settings" | default (dict)) $want.app_settings) -}}
+{{- range $id, $device := get $config "devices" | default (dict) -}}
+{{-   $model := dig "identity" "codename" "" $device -}}
+{{-   if hasKey $want.models $model }}{{ $_ := mergeOverwrite $device (index $want.models $model) }}{{ end -}}
+{{- end -}}
+{{ toToml $config }}

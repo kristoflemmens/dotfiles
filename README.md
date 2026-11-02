@@ -25,7 +25,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   1Password with `~/.ssh/allowed_signers` for verification, `~/.git-template`
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
-- VS Code user settings, Ghostty, k9s, gh, colima template
+- VS Code user settings, Ghostty, k9s, gh, colima template, OpenLogi (app
+  settings and per-model mouse settings, merged into its config.toml)
 - Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
   (`.chezmoiexternals/nvim.yaml`) and never pulled; commit and push in the fork
 - `Brewfile` (shared, curated by hand); each overlay adds its own, maintained by `bin/sync-brewfile.sh`
