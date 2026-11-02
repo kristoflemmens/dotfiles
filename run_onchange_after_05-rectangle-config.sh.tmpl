@@ -1,0 +1,12 @@
+#!/bin/bash
+set -eufo pipefail
+# Stage Rectangle's settings for import when RectangleConfig.json changes.
+# Rectangle imports the file on its next launch (after asking) and renames it,
+# so chezmoi can't own it: this script puts a fresh copy in place instead.
+# RectangleConfig.json hash: {{ include "RectangleConfig.json" | sha256sum }}
+
+dir="$HOME/Library/Application Support/Rectangle"
+mkdir -p "$dir"
+# A real file, not world-writable: Rectangle refuses symlinks and 0666 files.
+install -m 600 "{{ .chezmoi.sourceDir }}/RectangleConfig.json" "$dir/RectangleConfig.json"
+echo "==> Rectangle settings staged: quit and reopen Rectangle, then confirm \"Apply Rectangle configuration?\"."
