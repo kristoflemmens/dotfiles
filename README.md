@@ -27,6 +27,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template, OpenLogi (app
   settings and per-model mouse settings, merged into its config.toml)
+- Rectangle: `RectangleConfig.json` (an export from Rectangle's settings),
+  staged for Rectangle's own import by `run_onchange_after_05`
 - Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
   (`.chezmoiexternals/nvim.yaml`) and never pulled; commit and push in the fork
 - `Brewfile` (shared, curated by hand); each overlay adds its own, maintained by `bin/sync-brewfile.sh`
@@ -36,6 +38,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   - `run_onchange_before_02` `brew bundle install` for `Brewfile` (overlays install their own first), then `bin/brew-cleanup.sh` offers to uninstall what no Brewfile declares any more
   - `run_onchange_after_02` apply `macos-defaults.tsv`
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
+  - `run_onchange_after_05` put `RectangleConfig.json` where Rectangle imports it
+    on its next launch (after asking); re-export over the file to change it
 
 ## Bootstrap a new Mac
 
