@@ -25,7 +25,7 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   1Password with `~/.ssh/allowed_signers` for verification, `~/.git-template`
   with a prek/pre-commit hook
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
-- lazygit: diffs through delta (settings from `.gitconfig`), and `e` from
+- lazygit (`~/.config/lazygit`, also on macOS): diffs through delta (settings from `.gitconfig`), and `e` from
   lazygit.nvim opens the file in the surrounding Neovim (`nvim-remote`)
 - VS Code user settings, Ghostty, k9s, gh, colima template, OpenLogi (app
   settings and per-model mouse settings, merged into its config.toml)

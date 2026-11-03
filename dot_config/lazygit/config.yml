@@ -1,5 +1,5 @@
-# lazygit reads ~/Library/Application Support/lazygit/ on macOS; state.yml
-# next to it is lazygit's own and isn't managed.
+# Linux reads this path by default; on macOS LG_CONFIG_FILE (.zshenv) points
+# here. lazygit's state.yml stays in its default dir and isn't managed.
 git:
   diffRenderers:
     # Side-by-side, line numbers and Tokyo Night come from [delta] in
