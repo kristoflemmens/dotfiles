@@ -1,0 +1,33 @@
+#!/bin/bash
+set -euo pipefail
+# Install the Herdr plugins listed in .chezmoidata.yaml (herdrPlugins) at
+# their pinned commit; a plugin at another commit is reinstalled. Plugins not
+# listed are left alone. Runs when the list changes.
+# {{ .herdrPlugins | toJson }}
+
+if ! command -v herdr >/dev/null; then
+  echo "herdr not installed (Brewfile): skipping its plugins" >&2
+  exit 0
+fi
+installed=$(herdr plugin list 2>/dev/null || true)
+plugins_json="$HOME/.config/herdr/plugins.json"
+
+plugin() { # repo id ref bin
+  local repo=$1 id=$2 ref=$3 bin=$4
+  if ! grep -qF "[github:$repo@$ref]" <<<"$installed"; then
+    if grep -qE "^- $id " <<<"$installed"; then
+      herdr plugin uninstall "$id" --yes
+    fi
+    herdr plugin install "$repo" --ref "$ref" --yes ||
+      { echo "herdr: installing $repo failed" >&2; return 0; }
+  fi
+  if [ -n "$bin" ]; then
+    root=$(jq -r --arg id "$id" '.[] | select(.plugin_id == $id) | .plugin_root' "$plugins_json")
+    mkdir -p "$HOME/.local/bin"
+    ln -sfn "$root/$bin" "$HOME/.local/bin/$(basename "$bin")"
+  fi
+}
+
+{{ range .herdrPlugins -}}
+plugin {{ .repo | quote }} {{ .id | quote }} {{ .ref | quote }} {{ get . "bin" | default "" | quote }}
+{{ end -}}

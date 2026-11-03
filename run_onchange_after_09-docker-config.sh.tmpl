@@ -1,0 +1,22 @@
+#!/bin/bash
+set -euo pipefail
+# Set the Docker CLI keys below in ~/.docker/config.json and leave the rest
+# (auths, written by docker login / az acr login) alone. A script rather than
+# a modify_ template: Docker rewrites the file in its own key order, which
+# would show up as drift after every login. Runs when the keys change.
+desired='{
+  "currentContext": "colima",
+  "cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"],
+  "aliases": {"builder": "buildx"}
+}'
+
+if ! command -v jq >/dev/null; then
+  echo "jq not installed (Brewfile): skipping Docker config" >&2
+  exit 0
+fi
+config="$HOME/.docker/config.json"
+mkdir -p "$(dirname "$config")"
+[ -s "$config" ] || echo '{}' >"$config"
+tmp=$(mktemp)
+jq --tab --argjson d "$desired" '. * $d' "$config" >"$tmp"
+if cmp -s "$tmp" "$config"; then rm "$tmp"; else mv "$tmp" "$config"; chmod 600 "$config"; fi

@@ -27,6 +27,11 @@ here. That comes from a private overlay repo per Mac, personal or work (see
 - SSH client config (1Password agent, colima + `~/.ssh/config.d/*.conf` includes)
 - VS Code user settings, Ghostty, k9s, gh, colima template, OpenLogi (app
   settings and per-model mouse settings, merged into its config.toml)
+- Herdr: `~/.config/herdr/config.toml`, plus its plugins (`herdrPlugins` in
+  `.chezmoidata.yaml`, pinned to a commit) installed by `run_onchange_after_08`
+- Docker CLI: `run_onchange_after_09` sets the `colima` context, Homebrew's
+  cli-plugins dir and the `builder` alias in `~/.docker/config.json`, leaving
+  the logins (`auths`) alone
 - Rectangle: `RectangleConfig.json` (an export from Rectangle's settings),
   staged for Rectangle's own import by `run_onchange_after_05`
 - Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
@@ -44,6 +49,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
     on its next launch (after asking); re-export over the file to change it
   - `run_onchange_after_06` `apm install --global` when a skill list changes, then links the skills for Claude Code
   - `run_onchange_after_07` links the skills in `~/.agents/skills/` into `~/.claude/skills/` when that set changes
+  - `run_onchange_after_08` installs the Herdr plugins in `.chezmoidata.yaml` at their pinned commit (reinstalls one at another commit) and links a plugin's CLI into `~/.local/bin` when it has a `bin`
+  - `run_onchange_after_09` merges the Docker CLI keys into `~/.docker/config.json` with jq (a script, not a `modify_` template: Docker rewrites the file in its own key order on every login, which would read as drift)
 
 ## Agent skills
 

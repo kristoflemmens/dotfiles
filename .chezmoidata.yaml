@@ -6,3 +6,15 @@ launchAgents:
   - name: check-dotfiles-drift
   - name: sync-brewfile
   - name: sync-macos-defaults
+
+# Herdr plugins installed from GitHub by run_onchange_after_08, pinned to a
+# commit. `bin` (optional) is linked into ~/.local/bin under its file name,
+# for plugins that don't link their own CLI (reviewr does).
+herdrPlugins:
+  - repo: eliasstravik/herdr-projects
+    id: herdr-projects
+    ref: 578060e514082e60bbc94e682be678574e5d440d
+    bin: target/release/herdr-projects
+  - repo: persiyanov/herdr-reviewr
+    id: persiyanov.reviewr
+    ref: 3ffca7b4dd4ba99171649e9fbdc22e0144ed0e36
