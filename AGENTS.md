@@ -119,7 +119,8 @@ The user settled these; build on them:
   kickstart.nvim fork in `~/.config/nvim` (repo kristoflemmens/kickstart.nvim),
   Tokyo Night. chezmoi only clones it where missing
   (`.chezmoiexternals/nvim.yaml`, pull is a `--dry-run`); edits are committed
-  in the fork itself. VS Code runs vscode-neovim on that
+  in the fork itself. `dotfiles-update` fast-forwards it, but only when the
+  working tree is clean and the branch hasn't diverged. VS Code runs vscode-neovim on that
   same config; `init.lua` stops after options/keymaps when `vim.g.vscode`.
 - Agent skills live in `~/.agents/skills/` (shared by all agents), linked
   into `~/.claude/skills/` per skill, never by linking the whole directory
