@@ -1,0 +1,11 @@
+# lazygit reads ~/Library/Application Support/lazygit/ on macOS; state.yml
+# next to it is lazygit's own and isn't managed.
+git:
+  diffRenderers:
+    # Side-by-side, line numbers and Tokyo Night come from [delta] in
+    # ~/.gitconfig. Line numbers are links: click one to edit that line.
+    - command: delta --{{colorScheme}} --paging=never --hyperlinks --hyperlinks-file-link-format="lazygit-edit://{path}:{line}"
+os:
+  # From lazygit.nvim (<leader>gg in Neovim), `e` opens the file in that
+  # Neovim instead of a nested one; outside Neovim it starts nvim.
+  editPreset: nvim-remote
