@@ -119,7 +119,20 @@ dotfiles-update() {
     chezmoi --config "$config" git pull -- --rebase || return
   done
   chezmoi git pull -- --rebase || return
+  _dotfiles-pull-nvim
   dotfiles-apply "$@"
+}
+# The kickstart.nvim fork is a working copy chezmoi never pulls
+# (.chezmoiexternals/nvim.yaml): fast-forward it only when that can't lose
+# work, else say why and leave it.
+_dotfiles-pull-nvim() {
+  local nvim=~/.config/nvim
+  [[ -d $nvim/.git ]] || return 0
+  if [[ -n $(git -C $nvim status --porcelain) ]]; then
+    print -u2 "dotfiles-update: ~/.config/nvim has local changes, not pulled"
+  elif ! git -C $nvim pull --ff-only --quiet; then
+    print -u2 "dotfiles-update: ~/.config/nvim can't fast-forward, not pulled"
+  fi
 }
 
 # Optional overlay hook (e.g. a private work overlay).
