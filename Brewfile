@@ -1,4 +1,3 @@
-tap "anomalyco/tap", trusted: true
 tap "hashicorp/tap", trusted: true
 tap "homeport/tap", trusted: true
 # Plugin manager for zsh
@@ -101,8 +100,6 @@ brew "watch"
 brew "yq"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
-# The AI coding agent built for the terminal.
-brew "anomalyco/tap/opencode", trusted: true
 # Terraform
 brew "hashicorp/tap/terraform", trusted: true
 # δyƒƒ /ˈdʏf/ - A diff tool for YAML files, and sometimes JSON
