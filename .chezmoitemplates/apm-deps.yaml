@@ -5,4 +5,32 @@
 # uninstalled on the next apply. Examples:
 #   - owner/repo                       every skill in the repo
 #   - owner/repo/skills/some-skill#v1.0.0
-apm: []
+apm:
+  # mattpocock/skills
+  - mattpocock/skills/skills/engineering/ask-matt#v1.3.2
+  - mattpocock/skills/skills/engineering/code-review#v1.3.2
+  - mattpocock/skills/skills/engineering/codebase-design#v1.3.2
+  - mattpocock/skills/skills/engineering/diagnosing-bugs#v1.3.2
+  - mattpocock/skills/skills/engineering/domain-modeling#v1.3.2
+  - mattpocock/skills/skills/engineering/grill-with-docs#v1.3.2
+  - mattpocock/skills/skills/engineering/implement#v1.3.2
+  - mattpocock/skills/skills/engineering/improve-codebase-architecture#v1.3.2
+  - mattpocock/skills/skills/engineering/prototype#v1.3.2
+  - mattpocock/skills/skills/engineering/research#v1.3.2
+  - mattpocock/skills/skills/engineering/setup-matt-pocock-skills#v1.3.2
+  - mattpocock/skills/skills/engineering/tdd#v1.3.2
+  - mattpocock/skills/skills/engineering/to-spec#v1.3.2
+  - mattpocock/skills/skills/engineering/to-tickets#v1.3.2
+  - mattpocock/skills/skills/engineering/triage#v1.3.2
+  - mattpocock/skills/skills/engineering/wayfinder#v1.3.2
+  - mattpocock/skills/skills/engineering/wizard#v1.3.2
+  - mattpocock/skills/skills/productivity/grill-me#v1.3.2
+  - mattpocock/skills/skills/productivity/grilling#v1.3.2
+  - mattpocock/skills/skills/productivity/handoff#v1.3.2
+  - mattpocock/skills/skills/productivity/teach#v1.3.2
+  - mattpocock/skills/skills/productivity/to-questionnaire#v1.3.2
+  - mattpocock/skills/skills/productivity/wait-what#v1.3.2
+  - mattpocock/skills/skills/productivity/writing-for-agents#v1.3.2
+  # others
+  - vercel-labs/skills/skills/find-skills#v1.7.6
+  - herdrdev/herdr/skills/herdr#v0.9.5
