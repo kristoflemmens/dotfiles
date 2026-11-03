@@ -11,7 +11,11 @@ HISTFILE=~/.local/state/zsh/history
 if [[ -f ~/.zsh_history ]]; then
   if [[ -e $HISTFILE ]]; then
     command cat ~/.zsh_history >> $HISTFILE
-    mv ~/.zsh_history ~/.Trash/zsh_history-$(date +%Y%m%d%H%M%S)
+    if [[ $OSTYPE == darwin* ]]; then
+      mv ~/.zsh_history ~/.Trash/zsh_history-$(date +%Y%m%d%H%M%S)
+    else
+      command rm ~/.zsh_history
+    fi
   else
     mv ~/.zsh_history $HISTFILE
   fi

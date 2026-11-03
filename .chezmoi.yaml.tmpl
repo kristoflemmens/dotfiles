@@ -5,6 +5,7 @@ diff:
   pager: delta
   exclude:
     - scripts
+{{- if eq .chezmoi.os "darwin" }}
 edit:
   command: code
   args:
@@ -16,3 +17,4 @@ merge:
     - -c
     # Raw string: the inner .Target/.Source placeholders are evaluated at merge time, not at init.
     - {{ `cp {{ .Target | quote }} {{ printf "%s.base" .Target | quote }} && code --new-window --wait --merge {{ .Destination | quote }} {{ .Target | quote }} {{ printf "%s.base" .Target | quote }} {{ .Source | quote }}` | quote }}
+{{- end }}

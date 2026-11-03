@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eufo pipefail
+# Brewfile.linux hash: {{ include "Brewfile.linux" | sha256sum }}
+
+echo "==> Installing packages from Brewfile.linux..."
+/home/linuxbrew/.linuxbrew/bin/brew bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile.linux"
