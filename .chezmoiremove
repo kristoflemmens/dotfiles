@@ -1,5 +1,7 @@
 # Replaced by ~/.config/git/ignore (git's XDG default, no core.excludesfile needed).
 .gitignore
+# Moved to ~/.config/lazygit/config.yml (LG_CONFIG_FILE in .zshenv).
+Library/Application Support/lazygit/config.yml
 # Replaced by Starship (~/.config/starship.toml) and zoxide.
 .p10k.zsh
 .warprc
