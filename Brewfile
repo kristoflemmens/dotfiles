@@ -3,6 +3,8 @@ tap "hashicorp/tap", trusted: true
 tap "homeport/tap", trusted: true
 # Plugin manager for zsh
 brew "antidote"
+# Dependency manager for AI agent configuration (agent skills, run_onchange_after_06)
+brew "apm"
 # Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
