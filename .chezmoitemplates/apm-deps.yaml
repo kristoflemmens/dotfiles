@@ -1,0 +1,8 @@
+# Third-party agent skills for every Mac, installed by APM into
+# ~/.agents/skills/ (user scope, target agent-skills). Work- or machine-only
+# skills go in the overlay's ~/.config/dotfiles-overlay/apm-deps.yaml.
+# Pin each entry to a tag or commit (#v1.2.0, #<sha>); a removed entry is
+# uninstalled on the next apply. Examples:
+#   - owner/repo                       every skill in the repo
+#   - owner/repo/skills/some-skill#v1.0.0
+apm: []

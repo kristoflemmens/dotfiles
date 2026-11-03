@@ -1,0 +1,18 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* APM's user manifest (~/.apm/apm.yml). The dependency list and targets
+       are owned here: .chezmoitemplates/apm-deps.yaml plus the overlay's
+       apm-deps.yaml. Everything else APM writes (mcp, scripts, ...) stays.
+       An `apm install -g <pkg>` therefore shows up as drift: move the
+       package into one of the apm-deps.yaml files. */ -}}
+{{- $m := dict -}}
+{{- if .chezmoi.stdin }}{{ $m = .chezmoi.stdin | fromYaml | default dict }}{{ end -}}
+{{- $apm := get (includeTemplate "apm-deps.yaml" . | fromYaml) "apm" | default list -}}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/apm-deps.yaml" -}}
+{{- if stat $overlay }}{{ $apm = concat $apm (get (include $overlay | fromYaml | default dict) "apm" | default list) }}{{ end -}}
+{{- $deps := get $m "dependencies" | default dict -}}
+{{- $_ := set $deps "apm" $apm -}}
+{{- $_ := set $m "dependencies" $deps -}}
+{{- $_ := set $m "targets" (list "agent-skills") -}}
+{{- if not (hasKey $m "name") }}{{ $_ := set $m "name" "user" }}{{ end -}}
+{{- if not (hasKey $m "version") }}{{ $_ := set $m "version" "1.0.0" }}{{ end -}}
+{{ toYaml $m }}

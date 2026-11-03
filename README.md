@@ -31,6 +31,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   staged for Rectangle's own import by `run_onchange_after_05`
 - Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
   (`.chezmoiexternals/nvim.yaml`) and never pulled; commit and push in the fork
+- Agent skills, shared by every agent in `~/.agents/skills/` (see
+  [Agent skills](#agent-skills))
 - `Brewfile` (shared, curated by hand); each overlay adds its own, maintained by `bin/sync-brewfile.sh`
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
@@ -40,6 +42,27 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
   - `run_onchange_after_05` put `RectangleConfig.json` where Rectangle imports it
     on its next launch (after asking); re-export over the file to change it
+  - `run_onchange_after_06` `apm install --global` when a skill list changes, then links the skills for Claude Code
+  - `run_onchange_after_07` links the skills in `~/.agents/skills/` into `~/.claude/skills/` when that set changes
+
+## Agent skills
+
+Every skill lives once in `~/.agents/skills/<name>/`, the location the agents
+share. Claude Code only reads `~/.claude/skills/`, so `bin/link-claude-skills.sh`
+links each skill there (`~/.claude/skills/synced/`, which Claude itself
+manages, is left alone).
+
+- **Own skills:** in a chezmoi source under `dot_agents/skills/<name>/`, here
+  for every Mac, in an overlay for one Mac.
+- **Third-party skills:** installed by [APM](https://microsoft.github.io/apm/)
+  at user scope (`~/.apm/apm.yml`, target `agent-skills`). The list for every
+  Mac is `.chezmoitemplates/apm-deps.yaml`; an overlay adds its own in
+  `~/.config/dotfiles-overlay/apm-deps.yaml`. `dot_apm/modify_apm.yml` owns
+  the dependencies and targets in the manifest and leaves the rest to APM.
+  Pin each entry (`owner/repo/skills/name#v1.0.0` or `#<sha>`). To add a skill,
+  add it to a list and apply; an `apm install -g <pkg>` shows up as drift
+  until it's in a list. A removed entry is uninstalled on the next apply.
+  `apm outdated` / `apm update` find newer versions; bump the pin in the list.
 
 ## Bootstrap a new Mac
 
@@ -63,15 +86,16 @@ chicken-and-egg problem). See that repo's README.
 This repo never refers to a specific overlay. It reads these optional files
 when they exist, all under `~/.config/dotfiles-overlay/`:
 
-| Overlay file | Used by |
-|---|---|
-| `gitconfig` | `[include]` in `.gitconfig` (e.g. includeIf identities) |
-| `allowed_signers` | appended to `~/.ssh/allowed_signers` |
-| `vscode-settings.jsonc` | VS Code `settings.json`: bare keys, merged over the shared ones |
-| `claude-settings.jsonc` | `~/.claude/settings.json`: a JSON object merged over the shared ones |
-| `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files |
-| `zsh/plugins.txt` | extra antidote bundles, appended to `~/.config/zsh/plugins.txt` |
-| `~/.local/share/chezmoi-*/Brewfile` | declared packages for `bin/sync-brewfile.sh` |
+| Overlay file                                          | Used by                                                                                  |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `gitconfig`                                           | `[include]` in `.gitconfig` (e.g. includeIf identities)                                  |
+| `allowed_signers`                                     | appended to `~/.ssh/allowed_signers`                                                     |
+| `vscode-settings.jsonc`                               | VS Code `settings.json`: bare keys, merged over the shared ones                          |
+| `claude-settings.jsonc`                               | `~/.claude/settings.json`: a JSON object merged over the shared ones                     |
+| `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files                                                                 |
+| `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
+| `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |
+| `~/.local/share/chezmoi-*/Brewfile`                   | declared packages for `bin/sync-brewfile.sh`                                             |
 
 Because the base templates read overlay files, apply the overlay **first** and
 the base second when both changed (`dotfiles-apply` does this for every overlay; `dotfiles-update` pulls them all first).
@@ -91,12 +115,12 @@ LaunchAgents (listed in `.chezmoidata.yaml`, plus any `com.kristoflemmens.dotfil
 `~/.local/share/chezmoi-logs/`, macOS notification on changes). Nothing is ever
 committed automatically.
 
-| Script | What it does |
-|---|---|
-| `bin/sync-brewfile.sh` | Writes Homebrew drift into **this machine's own Brewfile**: the overlay's `Brewfile` (or only reports, without an overlay). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
-| `bin/brew-cleanup.sh` | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `run_onchange_before_02`, or by hand. Without a terminal it only lists. |
-| `bin/sync-macos-defaults.sh` | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report). |
-| `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes. |
+| Script                        | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bin/sync-brewfile.sh`        | Writes Homebrew drift into **this machine's own Brewfile**: the overlay's `Brewfile` (or only reports, without an overlay). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
+| `bin/brew-cleanup.sh`         | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `run_onchange_before_02`, or by hand. Without a terminal it only lists.                                                                                                                                                                                                                                                                            |
+| `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
+| `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes.                                                                                                                                                                                                                                                                                                                                     |
 
 `tests/` holds bats tests for the Brewfile sync (brew stubbed): `bats tests/`.
 

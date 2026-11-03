@@ -121,6 +121,12 @@ The user settled these; build on them:
   (`.chezmoiexternals/nvim.yaml`, pull is a `--dry-run`); edits are committed
   in the fork itself. VS Code runs vscode-neovim on that
   same config; `init.lua` stops after options/keymaps when `vim.g.vscode`.
+- Agent skills live in `~/.agents/skills/` (shared by all agents), linked
+  into `~/.claude/skills/` per skill, never by linking the whole directory
+  (`synced/` there is Claude's own). Own skills come from `dot_agents/skills/`
+  in a chezmoi source; third-party skills from APM at user scope, pinned, listed
+  in `.chezmoitemplates/apm-deps.yaml` or the overlay's `apm-deps.yaml`. The
+  APM lockfile isn't managed (APM rewrites it); the pins make it reproducible.
 - A modern replacement takes over the classic name only where the typed
   habit keeps working: `cat`=bat, `top`=btop, `df`=duf (drops `-h`), `dig`=doggo
   (real dig for `+options` doggo lacks). fd, ripgrep, dust and tldr keep their
