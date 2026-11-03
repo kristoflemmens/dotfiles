@@ -32,5 +32,4 @@ apm:
   - mattpocock/skills/skills/productivity/wait-what#v1.3.2
   - mattpocock/skills/skills/productivity/writing-for-agents#v1.3.2
   # others
-  - vercel-labs/skills/skills/find-skills#v1.7.6
   - herdrdev/herdr/skills/herdr#v0.9.5
