@@ -1,0 +1,29 @@
+#!/bin/bash
+set -eufo pipefail
+# Sets the Docker CLI keys below in ~/.docker/config.json, then the overlay's
+# (~/.config/dotfiles-overlay/docker-config.json, a JSON object: its
+# credHelpers), and leaves every other key alone: auths from docker login,
+# and whatever Docker writes. A script rather than a modify_ template:
+# Docker rewrites the file in its own key order, which would show up as drift.
+# Objects are merged, lists replaced; a key removed here stays in the file
+# until deleted there. Runs when the merged keys change.
+{{- /* colima and docker-buildx are in the shared Brewfile. */}}
+{{- $docker := dict
+      "currentContext" "colima"
+      "cliPluginsExtraDirs" (list "/opt/homebrew/lib/docker/cli-plugins")
+      "aliases" (dict "builder" "buildx") -}}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/docker-config.json" -}}
+{{- if stat $overlay }}{{ $docker = mergeOverwrite $docker (include $overlay | fromJson) }}{{ end }}
+
+desired=$(cat <<'JSON'
+{{ toPrettyJson "  " $docker | trim }}
+JSON
+)
+
+config="$HOME/.docker/config.json"
+mkdir -p "$(dirname "$config")"
+[ -s "$config" ] || echo '{}' >"$config"
+tmp=$(mktemp)
+# jq comes from the shared Brewfile, installed by run_onchange_before_02.
+/opt/homebrew/bin/jq --tab --argjson d "$desired" '. * $d' "$config" >"$tmp"
+if cmp -s "$tmp" "$config"; then rm "$tmp"; else mv "$tmp" "$config"; chmod 600 "$config"; fi
