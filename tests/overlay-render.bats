@@ -68,3 +68,14 @@ script() { # rendered run_ script, by name pattern
   [[ $output == *'"fixture.example.com": "fixture"'* ]]
   [[ $output == *'"currentContext": "colima"'* ]]
 }
+
+@test "herdr config: shared preferences over what herdr wrote itself (macOS)" {
+  [[ $OSTYPE == darwin* ]] || skip "herdr config is macOS-only"
+  grep -q 'name = "tokyo-night"' "$HOME/.config/herdr/config.toml"
+  printf '[keys]\nprefix = "ctrl+a"\n[theme]\nname = "dracula"\n' > "$HOME/.config/herdr/config.toml"
+  cm apply --force "$HOME/.config/herdr/config.toml"
+  grep -q 'prefix = "ctrl+a"' "$HOME/.config/herdr/config.toml"
+  grep -q 'name = "tokyo-night"' "$HOME/.config/herdr/config.toml"
+  grep -q 'agent_panel_sort = "fixture"' "$HOME/.config/herdr/config.toml"
+  grep -q 'status_indicators = "symbols"' "$HOME/.config/herdr/config.toml"
+}

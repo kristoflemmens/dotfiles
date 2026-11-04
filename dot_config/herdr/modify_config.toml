@@ -1,0 +1,11 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* Lays .chezmoitemplates/herdr-settings.toml, then the overlay's
+       ~/.config/dotfiles-overlay/herdr-settings.toml, over the current file
+       (tables merged, the later value wins); keys herdr writes itself
+       stay. Before herdr's first run there is no file yet. */ -}}
+{{- $config := dict -}}
+{{- if .chezmoi.stdin }}{{ $config = .chezmoi.stdin | fromToml }}{{ end -}}
+{{- $config = mergeOverwrite $config (includeTemplate "herdr-settings.toml" . | fromToml) -}}
+{{- $fragment := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/herdr-settings.toml" -}}
+{{- if stat $fragment }}{{ $config = mergeOverwrite $config (include $fragment | fromToml) }}{{ end -}}
+{{ toToml $config }}

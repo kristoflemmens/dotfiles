@@ -28,7 +28,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
 - lazygit (`~/.config/lazygit`, also on macOS): diffs through delta (settings from `.gitconfig`), and `e` from
   lazygit.nvim opens the file in the surrounding Neovim (`nvim-remote`)
 - VS Code user settings, Ghostty, k9s, gh, colima template, OpenLogi (app
-  settings and per-model mouse settings, merged into its config.toml)
+  settings and per-model mouse settings, merged into its config.toml), herdr
+  (preferences merged into its config.toml)
 - Rectangle: `RectangleConfig.json` (an export from Rectangle's settings),
   staged for Rectangle's own import by `run_onchange_after_05`
 - Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
@@ -115,6 +116,7 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `allowed_signers`                                     | appended to `~/.ssh/allowed_signers`                                                     |
 | `vscode-settings.jsonc`                               | VS Code `settings.json`: a JSONC object merged over the shared ones                      |
 | `claude-settings.jsonc`                               | `~/.claude/settings.json`: a JSONC object merged over the shared ones                    |
+| `herdr-settings.toml`                                 | `~/.config/herdr/config.toml`: TOML tables merged over the shared ones                   |
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files                                                                 |
 | `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
 | `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |
