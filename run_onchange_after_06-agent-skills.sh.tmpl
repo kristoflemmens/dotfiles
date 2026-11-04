@@ -1,0 +1,24 @@
+#!/bin/bash
+set -euo pipefail
+# Agent skills: install the third-party ones in ~/.apm/apm.yml into
+# ~/.agents/skills/ (and remove those no longer listed), then link every
+# skill there into ~/.claude/skills/ (bin/link-claude-skills.sh).
+# Runs when a skill list or the set of own skills in any source changes.
+# Overlays are applied first, and this repo's own skills before its after-
+# scripts, so a skill added in this apply is linked in this apply.
+# shared apm-deps.yaml hash: {{ includeTemplate "apm-deps.yaml" . | sha256sum }}
+{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/apm-deps.yaml" }}
+# overlay apm-deps.yaml hash: {{ if stat $overlay }}{{ include $overlay | sha256sum }}{{ end }}
+# own skills: {{ range glob (joinPath .chezmoi.sourceDir "dot_agents/skills/*") }}{{ base . }} {{ end }}
+{{- /* Same overlays as bin/lib/overlays.sh: a config per overlay, its sourceDir. */}}
+{{- range glob (joinPath .chezmoi.homeDir ".config/chezmoi-*/chezmoi.yaml") }}
+{{-   $skills := joinPath (get (include . | fromYaml) "sourceDir" | default "") "dot_agents/skills/*" }}
+# {{ base (dir .) }} skills: {{ range glob $skills }}{{ base . }} {{ end }}
+{{- end }}
+
+if command -v apm >/dev/null; then
+  apm install --global
+else
+  echo "apm not installed (Brewfile): skipping the third-party skills" >&2
+fi
+"{{ .chezmoi.sourceDir }}/bin/link-claude-skills.sh"
