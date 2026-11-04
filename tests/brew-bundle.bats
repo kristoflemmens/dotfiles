@@ -57,3 +57,12 @@ install brew "broken" ' ]
   [ "$status" -eq 0 ]
   [ "$(grep -c '^install' "$log")" -eq 1 ]
 }
+
+@test "cleanup without a terminal only lists and keeps the uninstall requests" {
+  mkdir -p "$HOME/.local/state/dotfiles"
+  echo 'brew "jq"' > "$HOME/.local/state/dotfiles/brewfile-removed"
+  run "$src/bin/brew-cleanup.sh" < /dev/null
+  [ "$status" -eq 0 ]
+  [[ $output == *'No terminal: nothing uninstalled'* ]]
+  [ -s "$HOME/.local/state/dotfiles/brewfile-removed" ]
+}

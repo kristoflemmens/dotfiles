@@ -73,7 +73,9 @@ target; Linux gets the shell, git and editor config:
 Done means all of these hold:
 1. Templates render without an overlay: `chezmoi apply --no-pager --dry-run
    --exclude=externals --destination <empty dir>` in a throwaway `HOME` (see
-   `.github/workflows/ci.yml`).
+   `.github/workflows/ci.yml`), and with one: `tests/overlay-render.bats`. A
+   new fragment gets a file in `tests/fixtures/dotfiles-overlay/` and a case
+   there.
 2. `shellcheck bin/*.sh` is clean; `bin/` scripts run under macOS
    `/bin/bash` 3.2, so expand possibly-empty arrays as `${a[@]+"${a[@]}"}`.
    A change to a `bin/` script's logic comes with a case in `tests/` (bats,

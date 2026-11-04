@@ -151,7 +151,7 @@ committed automatically.
 | `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay (`bin/lib/overlays.sh`). Never writes.                                                                                                                                                                                                                                                                                                                                                            |
 
-`tests/` holds bats tests for the Brewfile scripts and `dotfiles` (brew and chezmoi stubbed) and for the drift check and skill links (throwaway HOME): `bats tests/`.
+`tests/` holds bats tests (`bats tests/`, all in a throwaway HOME): the `bin/` scripts, with brew, chezmoi and defaults stubbed (`tests/helpers.bash`), the drift check with the real chezmoi, and `overlay-render.bats`, which renders this repo with the overlay fixture in `tests/fixtures/dotfiles-overlay/` so every template branch that reads an overlay runs.
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
 don't block it.
