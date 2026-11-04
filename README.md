@@ -39,7 +39,7 @@ here. That comes from a private overlay repo per Mac, personal or work (see
 - `macos-defaults.tsv` — Dock, Finder, trackpad, keyboard defaults
 - Scripts run by `chezmoi apply`:
   - `run_once_before_01` install Homebrew
-  - `run_onchange_before_02` `brew bundle install` for `Brewfile` (overlays install their own first), then `bin/brew-cleanup.sh` offers to uninstall what no Brewfile declares any more
+  - `run_onchange_before_02` `bin/brew-bundle.sh`: `brew bundle install` for the shared `Brewfile`, then for each overlay's, then `bin/brew-cleanup.sh` offers to uninstall what no Brewfile declares any more. Overlays have no brew script of their own
   - `run_onchange_after_02` apply `macos-defaults.tsv`
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
   - `run_onchange_after_05` put `RectangleConfig.json` where Rectangle imports it
@@ -111,7 +111,7 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files                                                                 |
 | `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
 | `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |
-| `~/.local/share/chezmoi-*/Brewfile`                   | declared packages for `bin/sync-brewfile.sh`                                             |
+| `~/.local/share/chezmoi-*/Brewfile`                   | installed by `bin/brew-bundle.sh` after the shared one; ad-hoc installs land here        |
 
 Because the base templates read overlay files, apply the overlay **first** and
 the base second when both changed (`dotfiles-apply` does this for every overlay; `dotfiles-update` pulls them all first).
@@ -134,11 +134,11 @@ committed automatically.
 | Script                        | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bin/sync-brewfile.sh`        | Writes Homebrew drift into **this machine's own Brewfile**: the overlay's `Brewfile` (or only reports, without an overlay). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
-| `bin/brew-cleanup.sh`         | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `run_onchange_before_02`, or by hand. Without a terminal it only lists.                                                                                                                                                                                                                                                                            |
+| `bin/brew-cleanup.sh`         | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `bin/brew-bundle.sh`, or by hand. Without a terminal it only lists.                                                                                                                                                                                                                                                                            |
 | `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes.                                                                                                                                                                                                                                                                                                                                     |
 
-`tests/` holds bats tests for the Brewfile sync (brew stubbed): `bats tests/`.
+`tests/` holds bats tests for the Brewfile scripts (brew stubbed): `bats tests/`.
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
 don't block it.

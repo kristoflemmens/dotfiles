@@ -1,18 +1,12 @@
 #!/bin/bash
 set -eufo pipefail
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
-{{- /* Overlay Brewfiles, so the cleanup below reruns when one changes. */}}
+{{- /* Overlay Brewfiles: this script installs them too, so it reruns when one changes. */}}
 {{- range glob (joinPath .chezmoi.homeDir ".local/share/chezmoi-*/Brewfile") }}
 # {{ . }} hash: {{ include . | sha256sum }}
 {{- end }}
 
-# Each script runs in its own process, so the PATH from 01-install-homebrew
-# is not inherited: always call brew by absolute path.
-brew=/opt/homebrew/bin/brew
-
-echo "==> Installing packages from Brewfile..."
-"$brew" bundle install --file="{{ .chezmoi.sourceDir }}/Brewfile"
-
-# Overlays install their own Brewfile before this runs (apply the overlay
-# first); this removes what no Brewfile declares any more.
-"{{ .chezmoi.sourceDir }}/bin/brew-cleanup.sh"
+# Shared Brewfile, then every overlay's, then the cleanup. Apply the overlay
+# first (dotfiles-apply): its own files, such as the SSH agent config a
+# private tap needs, are then already in place.
+"{{ .chezmoi.sourceDir }}/bin/brew-bundle.sh"
