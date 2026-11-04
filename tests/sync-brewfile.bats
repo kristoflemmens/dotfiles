@@ -16,7 +16,7 @@ for a; do case $a in --file=*) cp "$BATS_TEST_TMPDIR/live" "${a#--file=}";; esac
 STUB
   printf '#!/bin/bash\n' > "$BATS_TEST_TMPDIR/stubs/osascript"
   chmod +x "$BATS_TEST_TMPDIR"/stubs/*
-  export PATH="$BATS_TEST_TMPDIR/stubs:$PATH"
+  export PATH="$BATS_TEST_TMPDIR/stubs:$PATH" BREW="$BATS_TEST_TMPDIR/stubs/brew"
 
   printf 'brew "git"\n' > "$src/Brewfile"
   own="$HOME/.local/share/chezmoi-personal/Brewfile"

@@ -31,11 +31,7 @@ SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=bin/lib/brewfiles.sh
 . "${SOURCE_DIR}/bin/lib/brewfiles.sh"
 
-if [ "${#overlay_brewfiles[@]}" -gt 0 ]; then
-  target="${overlay_brewfiles[0]}"
-else
-  target=""
-fi
+target="$own_brewfile"
 
 # Normalise Brewfile lines to `type "name"` so options/comments don't matter.
 keys() {
@@ -51,7 +47,7 @@ tmp_target="$(mktemp)"
 tmp_pending="$(mktemp)"
 trap 'rm -f "$tmp_dump" "$tmp_live" "$tmp_declared" "$tmp_add" "$tmp_remove" "$tmp_target" "$tmp_pending"' EXIT
 
-brew bundle dump --force --file="$tmp_dump"
+"$BREW" bundle dump --force --file="$tmp_dump"
 keys "$tmp_dump" > "$tmp_live"
 keys "${declared_files[@]}" > "$tmp_declared"
 
