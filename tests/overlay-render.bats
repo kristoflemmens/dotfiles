@@ -79,3 +79,10 @@ script() { # rendered run_ script, by name pattern
   grep -q 'agent_panel_sort = "fixture"' "$HOME/.config/herdr/config.toml"
   grep -q 'status_indicators = "symbols"' "$HOME/.config/herdr/config.toml"
 }
+
+@test "herdr integrations script reruns when herdr or an agent changes" {
+  command -v herdr >/dev/null || skip "herdr not installed"
+  run script herdr-integrations
+  [[ $output == *'# herdr: '* ]]
+  [[ $output == *'# claude: '* && $output == *'# opencode: '* ]]
+}

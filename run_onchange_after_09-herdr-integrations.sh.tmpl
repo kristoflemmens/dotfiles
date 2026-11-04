@@ -1,0 +1,20 @@
+#!/bin/bash
+# Lets herdr install its integration (hooks/plugin that report agent state)
+# for every coding agent this machine has. herdr owns those files and
+# rewrites them on install, so they aren't kept in chezmoi. Which agents
+# exist is up to the Brewfiles (an overlay can bring its own).
+# Reruns when herdr is updated or an agent appears.
+{{- if lookPath "herdr" }}
+# herdr: {{ output "herdr" "--version" | trim }}
+{{- range list "claude" "opencode" }}
+# {{ . }}: {{ lookPath . }}
+{{- end }}
+{{- end }}
+set -euo pipefail
+
+command -v herdr >/dev/null || exit 0
+for agent in claude opencode; do
+  command -v "$agent" >/dev/null || continue
+  echo "==> herdr integration for ${agent}..."
+  herdr integration install "$agent"
+done
