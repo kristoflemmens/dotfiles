@@ -93,3 +93,13 @@ pending() { cat "$HOME/.local/state/dotfiles/brewfile-removed"; }
   [[ $output == *'reporting only'*'brew "bat"'* ]]
   [ ! -e "$own" ]
 }
+
+@test "an entry that moved to the shared Brewfile leaves the overlay Brewfile" {
+  printf 'brew "git"\nbrew "bats-core"\n' > "$src/Brewfile"
+  printf '# Testing\nbrew "bats-core"\n# Friendly cat\nbrew "bat"\n' > "$own"
+  installed 'brew "git"' 'brew "bats-core"' 'brew "bat"'
+  sync
+  [ "$(cat "$own")" = $'# Friendly cat\nbrew "bat"' ]
+  [[ $output == *'in the shared Brewfile now'*'brew "bats-core"'* ]]
+  [ ! -s "$HOME/.local/state/dotfiles/brewfile-removed" ]
+}

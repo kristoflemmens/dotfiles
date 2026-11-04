@@ -11,6 +11,8 @@
 # reported.
 # - installed but declared nowhere   -> appended to the machine's own file
 # - in the machine's own file but no longer installed -> removed from it
+# - in the machine's own file and in the shared one -> removed from it
+#   (the entry moved to the shared Brewfile)
 # The shared Brewfile is curated by hand and never written: shared entries
 # that aren't installed are only reported (`chezmoi apply` installs them).
 # - deleted from a Brewfile since the last run but still installed -> an
@@ -45,7 +47,8 @@ tmp_add="$(mktemp)"
 tmp_remove="$(mktemp)"
 tmp_target="$(mktemp)"
 tmp_pending="$(mktemp)"
-trap 'rm -f "$tmp_dump" "$tmp_live" "$tmp_declared" "$tmp_add" "$tmp_remove" "$tmp_target" "$tmp_pending"' EXIT
+tmp_shared="$(mktemp)"
+trap 'rm -f "$tmp_dump" "$tmp_live" "$tmp_declared" "$tmp_add" "$tmp_remove" "$tmp_target" "$tmp_pending" "$tmp_shared"' EXIT
 
 "$BREW" bundle dump --force --file="$tmp_dump"
 keys "$tmp_dump" > "$tmp_live"
@@ -91,6 +94,9 @@ if [ -z "$target" ]; then
 fi
 
 comm -12 <(comm -13 "$tmp_live" "$tmp_declared") <(keys "$target") > "$tmp_remove"
+# Entries that moved to the shared Brewfile are duplicates here.
+comm -12 <(keys "$target") <(keys "${SOURCE_DIR}/Brewfile") > "$tmp_shared"
+sort -u "$tmp_remove" "$tmp_shared" -o "$tmp_remove"
 
 # Rewrite the target: drop removed entries (with the description comment
 # brew puts above them), then append new entries as `brew bundle dump`
@@ -127,9 +133,13 @@ if [ -s "$tmp_add" ]; then
   echo "Added (installed but declared nowhere):"
   sed 's/^/  /' "$tmp_add"
 fi
-if [ -s "$tmp_remove" ]; then
+if [ -s "$tmp_shared" ]; then
+  echo "Removed (in the shared Brewfile now):"
+  sed 's/^/  /' "$tmp_shared"
+fi
+if comm -23 "$tmp_remove" "$tmp_shared" | grep -q .; then
   echo "Removed (no longer installed):"
-  sed 's/^/  /' "$tmp_remove"
+  comm -23 "$tmp_remove" "$tmp_shared" | sed 's/^/  /'
 fi
 report_removed
 report_shared_missing
