@@ -28,7 +28,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
 - lazygit (`~/.config/lazygit`, also on macOS): diffs through delta (settings from `.gitconfig`), and `e` from
   lazygit.nvim opens the file in the surrounding Neovim (`nvim-remote`)
 - VS Code user settings, Ghostty, k9s, gh, colima template, OpenLogi (app
-  settings and per-model mouse settings, merged into its config.toml)
+  settings and per-model mouse settings, merged into its config.toml), herdr
+  (preferences merged into its config.toml)
 - Rectangle: `RectangleConfig.json` (an export from Rectangle's settings),
   staged for Rectangle's own import by `run_onchange_after_05`
 - Neovim: `~/.config/nvim` is cloned from the kickstart.nvim fork when missing
