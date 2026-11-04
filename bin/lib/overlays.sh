@@ -3,7 +3,7 @@
 # config in ~/.config/chezmoi-<name>/chezmoi.yaml; its source dir is what
 # that config says (`chezmoi source-path`), wherever it lives. Sets, in the
 # same order (by name):
-#   overlay_names    personal, cegeka, ...
+#   overlay_names    the <name> of each config, e.g. personal
 #   overlay_configs  their config files
 #   overlay_sources  their source dirs
 # DOTFILES_CHEZMOI is the chezmoi to call (tests point it at a stub). In a

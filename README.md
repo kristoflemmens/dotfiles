@@ -121,6 +121,21 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `docker-config.json`                                  | a JSON object (its `credHelpers`) merged into `~/.docker/config.json` by `run_onchange_after_08` |
 | `Brewfile` (in the overlay's source dir)               | installed by `bin/brew-bundle.sh` after the shared one; ad-hoc installs land here        |
 
+Adding an overlay `<name>` to a Mac, after the base bootstrap, with 1Password's
+SSH agent on (overlays are private and clone over SSH):
+
+```sh
+chezmoi --config ~/.config/chezmoi-<name>/chezmoi.yaml \
+  --source ~/.local/share/chezmoi-<name> \
+  init --apply git@github.com:<owner>/<repo>.git
+exec zsh          # chez<name> now exists
+dotfiles apply    # the base picks up the fragments and installs the overlay's Brewfile
+dotfiles apply    # once more: overlay scripts that need a tool from that Brewfile
+```
+
+An overlay's own README lists only what it contains and what to do by hand
+(sign-ins); everything about how it plugs in is here.
+
 Because the base templates read overlay files, apply the overlay **first** and
 the base second when both changed: `dotfiles apply` does this for every
 overlay, `dotfiles update` pulls them all first (and fast-forwards the
