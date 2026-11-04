@@ -10,12 +10,6 @@ set -euo pipefail
 
 logs="${HOME}/.local/state/dotfiles/logs"
 mkdir -p "$logs"
-# Logs used to live in ~/.local/share/chezmoi-logs, which looked like an
-# overlay source; move what is left there to the Trash.
-old="${HOME}/.local/share/chezmoi-logs"
-if [ -d "$old" ]; then
-  mv "$old" "${HOME}/.Trash/chezmoi-logs-$(date +%Y%m%d%H%M%S)"
-fi
 domain="gui/$(id -u)"
 
 for plist in "${HOME}"/Library/LaunchAgents/com.kristoflemmens.dotfiles.*.plist; do
