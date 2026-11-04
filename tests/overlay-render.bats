@@ -76,4 +76,6 @@ script() { # rendered run_ script, by name pattern
   cm apply --force "$HOME/.config/herdr/config.toml"
   grep -q 'prefix = "ctrl+a"' "$HOME/.config/herdr/config.toml"
   grep -q 'name = "tokyo-night"' "$HOME/.config/herdr/config.toml"
+  grep -q 'agent_panel_sort = "fixture"' "$HOME/.config/herdr/config.toml"
+  grep -q 'status_indicators = "symbols"' "$HOME/.config/herdr/config.toml"
 }

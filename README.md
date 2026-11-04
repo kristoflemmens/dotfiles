@@ -116,6 +116,7 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `allowed_signers`                                     | appended to `~/.ssh/allowed_signers`                                                     |
 | `vscode-settings.jsonc`                               | VS Code `settings.json`: a JSONC object merged over the shared ones                      |
 | `claude-settings.jsonc`                               | `~/.claude/settings.json`: a JSONC object merged over the shared ones                    |
+| `herdr-settings.toml`                                 | `~/.config/herdr/config.toml`: TOML tables merged over the shared ones                   |
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files                                                                 |
 | `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
 | `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |

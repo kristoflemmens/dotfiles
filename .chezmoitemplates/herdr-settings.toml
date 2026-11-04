@@ -1,6 +1,7 @@
 # herdr preferences, laid over ~/.config/herdr/config.toml by
 # dot_config/herdr/modify_config.toml. What herdr writes there itself
-# (keybindings, settings changed in the app) stays as is.
+# (keybindings, settings changed in the app) stays as is; an overlay can add
+# or override keys in ~/.config/dotfiles-overlay/herdr-settings.toml.
 
 onboarding = false
 
