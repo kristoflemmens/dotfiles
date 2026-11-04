@@ -44,15 +44,14 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   - `run_onchange_after_03` (re)load the LaunchAgents listed in `.chezmoidata.yaml`
   - `run_onchange_after_05` put `RectangleConfig.json` where Rectangle imports it
     on its next launch (after asking); re-export over the file to change it
-  - `run_onchange_after_06` `apm install --global` when a skill list changes, then links the skills for Claude Code
-  - `run_onchange_after_07` links the skills in `~/.agents/skills/` into `~/.claude/skills/` when that set changes
+  - `run_onchange_after_06` agent skills: `apm install --global`, then links every skill in `~/.agents/skills/` into `~/.claude/skills/`; runs when a skill list or the own skills of any source change
   - `run_onchange_after_08` sets the Docker CLI keys (colima context, buildx alias and plugin dir) plus the overlay's `credHelpers` in `~/.docker/config.json`, leaving the rest to Docker
 
 ## Agent skills
 
 Every skill lives once in `~/.agents/skills/<name>/`, the location the agents
 share. Claude Code only reads `~/.claude/skills/`, so `bin/link-claude-skills.sh`
-links each skill there (`~/.claude/skills/synced/`, which Claude itself
+(run by `run_onchange_after_06`) links each skill there (`~/.claude/skills/synced/`, which Claude itself
 manages, is left alone).
 
 - **Own skills:** in a chezmoi source under `dot_agents/skills/<name>/`, here
@@ -152,7 +151,7 @@ committed automatically.
 | `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay (`bin/lib/overlays.sh`). Never writes.                                                                                                                                                                                                                                                                                                                                                            |
 
-`tests/` holds bats tests for the Brewfile scripts and `dotfiles` (brew and chezmoi stubbed) and for the drift check (real chezmoi, throwaway HOME): `bats tests/`.
+`tests/` holds bats tests for the Brewfile scripts and `dotfiles` (brew and chezmoi stubbed) and for the drift check and skill links (throwaway HOME): `bats tests/`.
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
 don't block it.
