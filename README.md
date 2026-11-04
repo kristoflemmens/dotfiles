@@ -46,6 +46,7 @@ here. That comes from a private overlay repo per Mac, personal or work (see
     on its next launch (after asking); re-export over the file to change it
   - `run_onchange_after_06` agent skills: `apm install --global`, then links every skill in `~/.agents/skills/` into `~/.claude/skills/`; runs when a skill list or the own skills of any source change
   - `run_onchange_after_08` sets the Docker CLI keys (colima context, buildx alias and plugin dir) plus the overlay's `credHelpers` in `~/.docker/config.json`, leaving the rest to Docker
+  - `run_onchange_after_09` lets herdr install its integration (`herdr integration install`) for each coding agent the machine has (claude, opencode); herdr owns those hook/plugin files, so chezmoi doesn't keep them
 
 ## Agent skills
 

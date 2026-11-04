@@ -68,3 +68,10 @@ script() { # rendered run_ script, by name pattern
   [[ $output == *'"fixture.example.com": "fixture"'* ]]
   [[ $output == *'"currentContext": "colima"'* ]]
 }
+
+@test "herdr integrations script reruns when herdr or an agent changes" {
+  command -v herdr >/dev/null || skip "herdr not installed"
+  run script herdr-integrations
+  [[ $output == *'# herdr: '* ]]
+  [[ $output == *'# claude: '* && $output == *'# opencode: '* ]]
+}
