@@ -8,6 +8,8 @@ brew "apm"
 brew "bash"
 # Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Bash Automated Testing System (bats tests/)
+brew "bats-core"
 # Resource monitor. C++ version and continuation of bashtop and bpytop
 brew "btop"
 # Manage your dotfiles across multiple diverse machines, securely

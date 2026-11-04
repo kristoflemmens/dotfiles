@@ -1,6 +1,6 @@
 // VS Code user settings every Mac gets. Code/User/modify_settings.json lays
 // these over settings.json, then the overlay's
-// ~/.config/dotfiles-overlay/vscode-settings.jsonc (bare keys, no braces);
+// ~/.config/dotfiles-overlay/vscode-settings.jsonc (a JSONC object, like this one);
 // keys set here win, what VS Code wrote itself stays.
 {
   "[json]": {
