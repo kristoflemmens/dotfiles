@@ -46,6 +46,7 @@ here. That comes from a private overlay repo per Mac, personal or work (see
     on its next launch (after asking); re-export over the file to change it
   - `run_onchange_after_06` `apm install --global` when a skill list changes, then links the skills for Claude Code
   - `run_onchange_after_07` links the skills in `~/.agents/skills/` into `~/.claude/skills/` when that set changes
+  - `run_onchange_after_08` sets the Docker CLI keys (colima context, buildx alias and plugin dir) plus the overlay's `credHelpers` in `~/.docker/config.json`, leaving the rest to Docker
 
 ## Agent skills
 
@@ -111,6 +112,7 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files                                                                 |
 | `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
 | `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |
+| `docker-config.json`                                  | a JSON object (its `credHelpers`) merged into `~/.docker/config.json` by `run_onchange_after_08` |
 | `~/.local/share/chezmoi-*/Brewfile`                   | installed by `bin/brew-bundle.sh` after the shared one; ad-hoc installs land here        |
 
 Because the base templates read overlay files, apply the overlay **first** and

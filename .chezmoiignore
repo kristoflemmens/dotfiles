@@ -23,4 +23,5 @@ Library/**
 02-macos-defaults.sh
 03-load-launch-agents.sh
 05-rectangle-config.sh
+08-docker-config.sh
 {{ end }}
