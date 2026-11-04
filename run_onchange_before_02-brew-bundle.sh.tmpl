@@ -2,11 +2,15 @@
 set -eufo pipefail
 # Brewfile hash: {{ include "Brewfile" | sha256sum }}
 {{- /* Overlay Brewfiles: this script installs them too, so it reruns when one changes. */}}
-{{- range glob (joinPath .chezmoi.homeDir ".local/share/chezmoi-*/Brewfile") }}
-# {{ . }} hash: {{ include . | sha256sum }}
+{{- /* Same overlays as bin/lib/overlays.sh: a config per overlay, its sourceDir. */}}
+{{- range glob (joinPath .chezmoi.homeDir ".config/chezmoi-*/chezmoi.yaml") }}
+{{-   $brewfile := joinPath (get (include . | fromYaml) "sourceDir" | default "") "Brewfile" }}
+{{-   if stat $brewfile }}
+# {{ $brewfile }} hash: {{ include $brewfile | sha256sum }}
+{{-   end }}
 {{- end }}
 
 # Shared Brewfile, then every overlay's, then the cleanup. Apply the overlay
-# first (dotfiles-apply): its own files, such as the SSH agent config a
+# first (dotfiles apply): its own files, such as the SSH agent config a
 # private tap needs, are then already in place.
 "{{ .chezmoi.sourceDir }}/bin/brew-bundle.sh"

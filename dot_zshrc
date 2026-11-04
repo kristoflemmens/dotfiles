@@ -108,36 +108,14 @@ alias -g -- --help='--help 2>&1 | _help_pager'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain'"
 
 # --- Dotfiles ---
-# Every overlay (own config in ~/.config/chezmoi-*/) first, then this repo:
-# its templates include fragments the overlays install.
-dotfiles-apply() {
-  local config
-  for config in ~/.config/chezmoi-*/chezmoi.yaml(N); do
-    chezmoi --config "$config" apply || return
-  done
-  chezmoi apply "$@"
-}
-dotfiles-update() {
-  local config
-  for config in ~/.config/chezmoi-*/chezmoi.yaml(N); do
-    chezmoi --config "$config" git pull -- --rebase || return
-  done
-  chezmoi git pull -- --rebase || return
-  _dotfiles-pull-nvim
-  dotfiles-apply "$@"
-}
-# The kickstart.nvim fork is a working copy chezmoi never pulls
-# (.chezmoiexternals/nvim.yaml): fast-forward it only when that can't lose
-# work, else say why and leave it.
-_dotfiles-pull-nvim() {
-  local nvim=~/.config/nvim
-  [[ -d $nvim/.git ]] || return 0
-  if [[ -n $(git -C $nvim status --porcelain) ]]; then
-    print -u2 "dotfiles-update: ~/.config/nvim has local changes, not pulled"
-  elif ! git -C $nvim pull --ff-only --quiet; then
-    print -u2 "dotfiles-update: ~/.config/nvim can't fast-forward, not pulled"
-  fi
-}
+# `dotfiles apply|update|status` (~/.local/bin, bin/dotfiles.sh): every
+# overlay first, then this repo. chez<name> is chezmoi with overlay <name>'s
+# own config and state, for each ~/.config/chezmoi-<name>/.
+alias dotfiles-apply='dotfiles apply' dotfiles-update='dotfiles update'
+for _config in ~/.config/chezmoi-*/chezmoi.yaml(N); do
+  eval "chez${${_config:h:t}#chezmoi-}() { chezmoi --config ${(q)_config} \"\$@\" }"
+done
+unset _config
 
 # Optional overlay hook (e.g. a private work overlay).
 [[ -f ~/.config/dotfiles-overlay/zsh/zshrc.zsh ]] && source ~/.config/dotfiles-overlay/zsh/zshrc.zsh

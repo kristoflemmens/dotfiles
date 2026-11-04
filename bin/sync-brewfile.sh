@@ -4,7 +4,7 @@
 # instead of silently drifting.
 #
 # Declared = Brewfile (shared) + the Brewfile of every overlay source
-# (~/.local/share/chezmoi-*/Brewfile).
+# (bin/lib/overlays.sh).
 #
 # Writes go to exactly one file, the machine's own: its overlay's Brewfile
 # (personal or work). Without an overlay nothing is written, drift is only
@@ -21,7 +21,7 @@
 # diff` and commit, or move entries to the shared Brewfile.
 #
 # Runs automatically via a LaunchAgent (login + every 4 hours). Logs to
-# ~/.local/share/chezmoi-logs/sync-brewfile.log.
+# ~/.local/state/dotfiles/logs/sync-brewfile.log.
 #
 # Usage: bin/sync-brewfile.sh
 

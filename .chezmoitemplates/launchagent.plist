@@ -18,9 +18,9 @@
 	<key>StartInterval</key>
 	<integer>14400</integer>
 	<key>StandardOutPath</key>
-	<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi-logs/{{ .name }}.log</string>
+	<string>{{ .chezmoi.homeDir }}/.local/state/dotfiles/logs/{{ .name }}.log</string>
 	<key>StandardErrorPath</key>
-	<string>{{ .chezmoi.homeDir }}/.local/share/chezmoi-logs/{{ .name }}.log</string>
+	<string>{{ .chezmoi.homeDir }}/.local/state/dotfiles/logs/{{ .name }}.log</string>
 	<key>ProcessType</key>
 	<string>Background</string>
 </dict>
