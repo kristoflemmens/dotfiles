@@ -1,0 +1,13 @@
+{{- /* A merged file in JSONC (GLOSSARY.md): lays .chezmoitemplates/<shared>
+       and then the overlay's fragment ~/.config/dotfiles-overlay/<fragment>
+       (a JSONC object, like the shared one) over the current file. Objects
+       are merged, lists replaced; what the app writes itself stays, and a
+       key removed here stays in the file until deleted there.
+       Call from a modify_ template:
+         includeTemplate "merge-jsonc" (dict "root" . "shared" "<x>.jsonc" "fragment" "<x>.jsonc") */ -}}
+{{- $settings := dict -}}
+{{- if .root.chezmoi.stdin }}{{ $settings = .root.chezmoi.stdin | fromJsonc }}{{ end -}}
+{{- $settings = mergeOverwrite $settings (includeTemplate .shared .root | fromJsonc) -}}
+{{- $overlay := joinPath .root.chezmoi.homeDir ".config/dotfiles-overlay" .fragment -}}
+{{- if stat $overlay }}{{ $settings = mergeOverwrite $settings (include $overlay | fromJsonc) }}{{ end -}}
+{{ toPrettyJson "  " $settings }}

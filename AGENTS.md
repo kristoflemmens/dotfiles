@@ -43,9 +43,11 @@ target; Linux gets the shell, git and editor config:
   Deleting an entry is how the user uninstalls: sync holds it back and
   `bin/brew-cleanup.sh` (on `chezmoi apply`) removes it.
 - Settings files apps also write themselves are merged, not owned: VS Code
-  and Claude Code `settings.json` come from `modify_` templates that lay
+  and Claude Code `settings.json` come from `modify_` templates that call
+  `.chezmoitemplates/merge-jsonc`: it lays
   `.chezmoitemplates/{vscode,claude}-settings.jsonc` and then the overlay's
-  fragment over the live file. Change a shared setting in the
+  fragment (a JSONC object) over the live file. A new merged JSONC file is
+  one such call. The drift check treats every `modify_` target alike. Change a shared setting in the
   `.chezmoitemplates` file; what the app writes stays and isn't drift. A key
   removed from the source stays in the live file until deleted there.
   OpenLogi's `config.toml` works the same way
