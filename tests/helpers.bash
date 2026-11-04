@@ -13,10 +13,13 @@ common_setup() {
   cat > "$BATS_TEST_TMPDIR/stubs/chezmoi" <<'STUB'
 #!/bin/bash
 name=base
-if [ "${1:-}" = --config ]; then
-  name=${2%/chezmoi.yaml}; name=${name##*/chezmoi-}
-  config=$2; shift 2
-fi
+while :; do
+  case "${1:-}" in
+    --config) name=${2%/chezmoi.yaml}; name=${name##*/chezmoi-}; config=$2; shift 2 ;;
+    --source) shift 2 ;;
+    *) break ;;
+  esac
+done
 case "${1:-}" in
   source-path) sed -n 's/^sourceDir: "\(.*\)"$/\1/p' "$config" ;;
   status) cat "$BATS_TEST_TMPDIR/status-$name" 2>/dev/null; echo "$name $*" >> "$BATS_TEST_TMPDIR/chezmoi.log" ;;
