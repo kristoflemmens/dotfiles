@@ -1,9 +1,8 @@
 # AGENTS.md
 
 chezmoi source for Kristof's macOS dotfiles. Public repo: anything machine-,
-employer- or client-specific belongs in a private overlay repo
-(`kristoflemmens/dotfiles-personal` and `kristoflemmens/dotfiles-cegeka`, each
-with its own AGENTS.md). README.md describes
+employer- or client-specific belongs in a private overlay repo (each with its
+own AGENTS.md); never name one here. README.md describes
 layout, bootstrap and the drift agents; read it before structural changes.
 GLOSSARY.md names the concepts (overlay, fragment, merged file, ...): use
 those words.
