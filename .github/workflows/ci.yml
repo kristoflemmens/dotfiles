@@ -49,7 +49,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - run: brew install --quiet bats-core
+      - run: brew install --quiet bats-core chezmoi   # chezmoi: the drift-check tests
       - run: bats tests/
 
   zsh-startup:

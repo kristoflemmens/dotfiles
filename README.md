@@ -114,8 +114,8 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | ----------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | `gitconfig`                                           | `[include]` in `.gitconfig` (e.g. includeIf identities)                                  |
 | `allowed_signers`                                     | appended to `~/.ssh/allowed_signers`                                                     |
-| `vscode-settings.jsonc`                               | VS Code `settings.json`: bare keys, merged over the shared ones                          |
-| `claude-settings.jsonc`                               | `~/.claude/settings.json`: a JSON object merged over the shared ones                     |
+| `vscode-settings.jsonc`                               | VS Code `settings.json`: a JSONC object merged over the shared ones                      |
+| `claude-settings.jsonc`                               | `~/.claude/settings.json`: a JSONC object merged over the shared ones                    |
 | `zsh/zshenv.zsh`, `zsh/zprofile.zsh`, `zsh/zshrc.zsh` | sourced by the zsh files                                                                 |
 | `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
 | `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |
@@ -152,7 +152,7 @@ committed automatically.
 | `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay (`bin/lib/overlays.sh`). Never writes.                                                                                                                                                                                                                                                                                                                                                            |
 
-`tests/` holds bats tests for the Brewfile scripts and `dotfiles` (brew and chezmoi stubbed): `bats tests/`.
+`tests/` holds bats tests for the Brewfile scripts and `dotfiles` (brew and chezmoi stubbed) and for the drift check (real chezmoi, throwaway HOME): `bats tests/`.
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
 don't block it.

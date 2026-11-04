@@ -1,11 +1,3 @@
 {{- /* chezmoi:modify-template */ -}}
-{{- /* Lays the shared settings (.chezmoitemplates/vscode-settings.jsonc) and
-       then the overlay's fragment (bare keys) over the current file. Lists
-       are replaced, objects merged; a key removed here stays in the file
-       until deleted. */ -}}
-{{- $settings := dict -}}
-{{- if .chezmoi.stdin }}{{ $settings = .chezmoi.stdin | fromJsonc }}{{ end -}}
-{{- $settings = mergeOverwrite $settings (includeTemplate "vscode-settings.jsonc" . | fromJsonc) -}}
-{{- $overlay := joinPath .chezmoi.homeDir ".config/dotfiles-overlay/vscode-settings.jsonc" -}}
-{{- if stat $overlay }}{{ $settings = mergeOverwrite $settings (printf "{%s}" (include $overlay) | fromJsonc) }}{{ end -}}
-{{ toPrettyJson "  " $settings }}
+{{- /* VS Code settings.json, a merged file: .chezmoitemplates/merge-jsonc. */ -}}
+{{ includeTemplate "merge-jsonc" (dict "root" . "shared" "vscode-settings.jsonc" "fragment" "vscode-settings.jsonc") -}}
