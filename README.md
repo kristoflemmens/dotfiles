@@ -100,6 +100,13 @@ an independent chezmoi source **with its own config and state** after the base
 bootstrap (by then 1Password, gh and SSH work, so cloning a private repo is no
 chicken-and-egg problem). See that repo's README.
 
+An overlay is found by its config, `~/.config/chezmoi-<name>/chezmoi.yaml`
+(written by `chezmoi --config <that file> init`); its source dir is whatever
+that config's `sourceDir` says. `bin/lib/overlays.sh` is the one place that
+lists them (`dotfiles`, the Brewfile scripts and the drift check use it), and
+`.zshrc` defines `chez<name>` for each: chezmoi with that overlay's own config
+and state.
+
 This repo never refers to a specific overlay. It reads these optional files
 when they exist, all under `~/.config/dotfiles-overlay/`:
 
@@ -113,10 +120,13 @@ when they exist, all under `~/.config/dotfiles-overlay/`:
 | `zsh/plugins.txt`                                     | extra antidote bundles, appended to `~/.config/zsh/plugins.txt`                          |
 | `apm-deps.yaml`                                       | extra third-party skills (`apm:` list), appended to the dependencies in `~/.apm/apm.yml` |
 | `docker-config.json`                                  | a JSON object (its `credHelpers`) merged into `~/.docker/config.json` by `run_onchange_after_08` |
-| `~/.local/share/chezmoi-*/Brewfile`                   | installed by `bin/brew-bundle.sh` after the shared one; ad-hoc installs land here        |
+| `Brewfile` (in the overlay's source dir)               | installed by `bin/brew-bundle.sh` after the shared one; ad-hoc installs land here        |
 
 Because the base templates read overlay files, apply the overlay **first** and
-the base second when both changed (`dotfiles-apply` does this for every overlay; `dotfiles-update` pulls them all first).
+the base second when both changed: `dotfiles apply` does this for every
+overlay, `dotfiles update` pulls them all first (and fast-forwards the
+Neovim config), `dotfiles status` shows what is left to apply in each.
+`dotfiles-apply` and `dotfiles-update` are aliases for the first two.
 
 ## Day to day
 
@@ -124,13 +134,15 @@ the base second when both changed (`dotfiles-apply` does this for every overlay;
 chezmoi edit ~/.zshrc   # edit through chezmoi
 chezmoi diff            # what would change
 chezmoi apply           # apply
-chezmoi update          # git pull + apply
+chezmoi update          # git pull + apply (base only)
+dotfiles update         # every overlay and the base: pull, then apply
+dotfiles status         # anything left to apply, per repo
 ```
 
 ## Drift detection
 
 LaunchAgents (listed in `.chezmoidata.yaml`, plus any `com.kristoflemmens.dotfiles.*` agent an overlay installs) run at login and every 4 hours (logs in
-`~/.local/share/chezmoi-logs/`, macOS notification on changes). Nothing is ever
+`~/.local/state/dotfiles/logs/`, macOS notification on changes). Nothing is ever
 committed automatically.
 
 | Script                        | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                        |
@@ -138,16 +150,16 @@ committed automatically.
 | `bin/sync-brewfile.sh`        | Writes Homebrew drift into **this machine's own Brewfile**: the overlay's `Brewfile` (or only reports, without an overlay). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
 | `bin/brew-cleanup.sh`         | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `bin/brew-bundle.sh`, or by hand. Without a terminal it only lists.                                                                                                                                                                                                                                                                            |
 | `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
-| `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay with a config in `~/.config/chezmoi-*/`. Never writes.                                                                                                                                                                                                                                                                                                                                     |
+| `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay (`bin/lib/overlays.sh`). Never writes.                                                                                                                                                                                                                                                                                                                                                            |
 
-`tests/` holds bats tests for the Brewfile scripts (brew stubbed): `bats tests/`.
+`tests/` holds bats tests for the Brewfile scripts and `dotfiles` (brew and chezmoi stubbed): `bats tests/`.
 
 `chezmoi update` pulls with `--autostash --rebase`, so uncommitted sync results
 don't block it.
 
 Resolving drift:
 
-- **Homebrew:** review `chezmoi git diff` (or `chezcegeka git diff`), commit, and
+- **Homebrew:** review `chezmoi git diff` (or `chez<overlay> git diff`), commit, and
   move packages you want everywhere to the shared `Brewfile` yourself.
 - **macOS defaults:** review `chezmoi git diff -- macos-defaults.tsv` and commit,
   or discard and force a re-apply (below).

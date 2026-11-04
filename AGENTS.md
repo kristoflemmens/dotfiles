@@ -5,6 +5,8 @@ employer- or client-specific belongs in a private overlay repo
 (`kristoflemmens/dotfiles-personal` and `kristoflemmens/dotfiles-cegeka`, each
 with its own AGENTS.md). README.md describes
 layout, bootstrap and the drift agents; read it before structural changes.
+GLOSSARY.md names the concepts (overlay, fragment, merged file, ...): use
+those words.
 
 ## Linux servers
 
@@ -28,7 +30,9 @@ target; Linux gets the shell, git and editor config:
   LaunchAgents (loaded by `run_onchange_after_03`).
 - Overlays are separate chezmoi sources with their own config and state
   (`~/.config/chezmoi-<name>/`). Apply the overlay first, then this repo
-  (`dotfiles-apply`): templates here read files the overlay installs.
+  (`dotfiles apply`): templates here read files the overlay installs.
+- Only `bin/lib/overlays.sh` (and, for templates, a glob over the same
+  configs) finds overlays: by config, never by a source-dir name.
 
 ## Ownership
 
@@ -70,8 +74,8 @@ Done means all of these hold:
    `.github/workflows/ci.yml`).
 2. `shellcheck bin/*.sh` is clean; `bin/` scripts run under macOS
    `/bin/bash` 3.2, so expand possibly-empty arrays as `${a[@]+"${a[@]}"}`.
-   A change to the Brewfile sync logic comes with a case in `tests/` (bats,
-   stubbed brew), and `bats tests/` passes.
+   A change to a `bin/` script's logic comes with a case in `tests/` (bats,
+   brew and chezmoi stubbed, see `tests/helpers.bash`), and `bats tests/` passes.
    CI job names are required checks in the `main` ruleset: renaming a job
    means updating the ruleset.
 3. On the machine: `chezmoi diff` shows only the intended change, then
@@ -132,7 +136,7 @@ The user settled these; build on them:
   kickstart.nvim fork in `~/.config/nvim` (repo kristoflemmens/kickstart.nvim),
   Tokyo Night. chezmoi only clones it where missing
   (`.chezmoiexternals/nvim.yaml`, pull is a `--dry-run`); edits are committed
-  in the fork itself. `dotfiles-update` fast-forwards it, but only when the
+  in the fork itself. `dotfiles update` fast-forwards it, but only when the
   working tree is clean and the branch hasn't diverged. VS Code runs vscode-neovim on that
   same config; `init.lua` stops after options/keymaps when `vim.g.vscode`.
 - Agent skills live in `~/.agents/skills/` (shared by all agents), linked

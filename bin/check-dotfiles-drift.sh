@@ -4,21 +4,22 @@
 # directly instead of via `chezmoi edit`, or a tool rewrote a config file
 # chezmoi manages.
 #
-# Checks this repo and every private overlay that has its own config in
-# ~/.config/chezmoi-*/chezmoi.yaml.
+# Checks this repo and every private overlay (bin/lib/overlays.sh).
 #
 # Deliberately notification-only: some files are composed from fragments a
 # private overlay provides, so blindly running `chezmoi re-add` here could
 # leak private overlay content into the public repo. Review manually, per file.
 #
 # Runs automatically via a LaunchAgent (login + every 4 hours). Logs to
-# ~/.local/share/chezmoi-logs/check-dotfiles-drift.log.
+# ~/.local/state/dotfiles/logs/check-dotfiles-drift.log.
 #
 # Usage: bin/check-dotfiles-drift.sh
 
 set -euo pipefail
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=bin/lib/overlays.sh
+. "${SOURCE_DIR}/bin/lib/overlays.sh"
 
 # Settings files merged by a modify_ template (VS Code, Claude Code) get
 # rewritten by their app in its own key order. Same content once both sides
@@ -53,9 +54,8 @@ report() {
 }
 
 report "dotfiles" --source "$SOURCE_DIR"
-for config in "${HOME}"/.config/chezmoi-*/chezmoi.yaml; do
-  [ -f "$config" ] || continue
-  report "$(basename "$(dirname "$config")")" --config "$config"
+for i in ${overlay_names[@]+"${!overlay_names[@]}"}; do
+  report "chezmoi-${overlay_names[$i]}" --config "${overlay_configs[$i]}"
 done
 
 if [ "$drift" -eq 0 ]; then
@@ -63,7 +63,7 @@ if [ "$drift" -eq 0 ]; then
   exit 0
 fi
 
-echo "==> Review with \`chezmoi diff\` (and \`chezmoi --config <overlay config> diff\`), then either:"
+echo "==> Review with \`chezmoi diff\` (and \`chez<overlay> diff\`), then either:"
 echo "      chezmoi add <path>     # pull a specific live change back into the source repo"
 echo "      chezmoi apply <path>   # overwrite a specific live file back to the declared state"
 echo "    VS Code / Claude Code settings.json: a shared key changed in the app. Keep it by"

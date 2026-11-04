@@ -3,12 +3,10 @@
 # fixture Brewfiles. The brew stub logs each call as `<command> <file
 # contents>`, so a test sees which Brewfile was installed in which order.
 
+load helpers
+
 setup() {
-  src="$BATS_TEST_TMPDIR/src"
-  export HOME="$BATS_TEST_TMPDIR/home"
-  unset XDG_STATE_HOME
-  mkdir -p "$src" "$HOME" "$BATS_TEST_TMPDIR/stubs"
-  cp -R "$BATS_TEST_DIRNAME/../bin" "$src/"
+  common_setup
   log="$BATS_TEST_TMPDIR/brew.log"
 
   cat > "$BATS_TEST_TMPDIR/stubs/brew" <<'STUB'
@@ -22,11 +20,6 @@ STUB
   export BREW="$BATS_TEST_TMPDIR/stubs/brew"
 
   printf 'brew "git"\n' > "$src/Brewfile"
-}
-
-overlay() { # name entry
-  mkdir -p "$HOME/.local/share/chezmoi-$1"
-  printf '%s\n' "$2" > "$HOME/.local/share/chezmoi-$1/Brewfile"
 }
 
 @test "installs the shared Brewfile, then each overlay's, then cleans up over all of them" {
@@ -56,8 +49,10 @@ cleanup brew "git" ' ]
 install brew "broken" ' ]
 }
 
-@test "a source dir without a Brewfile (chezmoi-logs) is no overlay" {
+@test "only overlay configs count: an overlay without a Brewfile, a stray chezmoi-* dir" {
+  overlay personal
   mkdir -p "$HOME/.local/share/chezmoi-logs"
+  printf 'brew "stray"\n' > "$HOME/.local/share/chezmoi-logs/Brewfile"
   run "$src/bin/brew-bundle.sh"
   [ "$status" -eq 0 ]
   [ "$(grep -c '^install' "$log")" -eq 1 ]

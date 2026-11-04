@@ -3,12 +3,10 @@
 # stubs: `brew bundle dump` writes $BATS_TEST_TMPDIR/live (what is
 # "installed"). The machine's own Brewfile is an overlay's ($own).
 
+load helpers
+
 setup() {
-  src="$BATS_TEST_TMPDIR/src"
-  export HOME="$BATS_TEST_TMPDIR/home"
-  unset XDG_STATE_HOME
-  mkdir -p "$src" "$HOME" "$BATS_TEST_TMPDIR/stubs"
-  cp -R "$BATS_TEST_DIRNAME/../bin" "$src/"
+  common_setup
 
   cat > "$BATS_TEST_TMPDIR/stubs/brew" <<'STUB'
 #!/bin/bash
@@ -19,8 +17,8 @@ STUB
   export PATH="$BATS_TEST_TMPDIR/stubs:$PATH" BREW="$BATS_TEST_TMPDIR/stubs/brew"
 
   printf 'brew "git"\n' > "$src/Brewfile"
-  own="$HOME/.local/share/chezmoi-personal/Brewfile"
-  mkdir -p "${own%/*}"
+  overlay personal
+  own="$BATS_TEST_TMPDIR/sources/personal/Brewfile"
   : > "$own"
 }
 
@@ -89,7 +87,7 @@ pending() { cat "$HOME/.local/state/dotfiles/brewfile-removed"; }
 }
 
 @test "without an overlay, drift is only reported" {
-  rm -r "$HOME/.local/share/chezmoi-personal"
+  rm -r "$HOME/.config/chezmoi-personal" "$BATS_TEST_TMPDIR/sources/personal"
   installed 'brew "git"' 'brew "bat"'
   sync
   [[ $output == *'reporting only'*'brew "bat"'* ]]

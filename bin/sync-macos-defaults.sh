@@ -8,7 +8,7 @@
 #   chezmoi git checkout -- macos-defaults.tsv        # discard (see README to re-apply)
 #
 # Runs automatically via a LaunchAgent at login and every 4 hours; logs go to
-# ~/.local/share/chezmoi-logs/sync-macos-defaults.log.
+# ~/.local/state/dotfiles/logs/sync-macos-defaults.log.
 #
 # Usage: bin/sync-macos-defaults.sh [--check]   (--check: report only, don't write)
 

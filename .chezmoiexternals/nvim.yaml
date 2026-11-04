@@ -1,6 +1,6 @@
 # Neovim config: the user's own kickstart.nvim fork, cloned when missing and
 # never pulled by chezmoi (it's a working copy: edit, commit and push there);
-# dotfiles-update fast-forwards it when clean. chezmoi
+# dotfiles update fast-forwards it when clean. chezmoi
 # runs `git pull` on an existing repo the first time it sees it and on `-R`;
 # --dry-run keeps that from touching the branch or the working tree.
 # Cloned over HTTPS (works before 1Password and SSH are set up), pushed over
