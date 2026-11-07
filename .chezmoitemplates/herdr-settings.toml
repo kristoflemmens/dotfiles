@@ -1,0 +1,22 @@
+# herdr preferences, laid over ~/.config/herdr/config.toml by
+# dot_config/herdr/modify_config.toml. What herdr writes there itself
+# (keybindings, settings changed in the app) stays as is; an overlay can add
+# or override keys in ~/.config/dotfiles-overlay/herdr-settings.toml.
+
+onboarding = false
+
+[ui]
+agent_panel_sort = "spaces"
+show_agent_labels_on_pane_borders = false
+status_indicators = "symbols"
+
+[ui.toast]
+delivery = "terminal"
+
+[experimental]
+pane_history = false
+switch_ascii_input_source_in_prefix = true
+
+[theme]
+name = "tokyo-night"
+auto_switch = false

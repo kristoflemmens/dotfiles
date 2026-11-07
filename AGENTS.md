@@ -49,8 +49,8 @@ target; Linux gets the shell, git and editor config:
   one such call. The drift check treats every `modify_` target alike. Change a shared setting in the
   `.chezmoitemplates` file; what the app writes stays and isn't drift. A key
   removed from the source stays in the live file until deleted there.
-  OpenLogi's `config.toml` works the same way
-  (`.chezmoitemplates/openlogi-settings.toml`); its mouse settings are keyed
+  OpenLogi's and herdr's `config.toml` work the same way
+  (`.chezmoitemplates/{openlogi,herdr}-settings.toml`); its mouse settings are keyed
   by model (`identity.codename`), not by the `unit:` ID of one device.
 - `allowed_signers.tmpl` is composed with the overlay's fragment: edit the
   `.tmpl`; `chezmoi add`/`re-add` would flatten it.
