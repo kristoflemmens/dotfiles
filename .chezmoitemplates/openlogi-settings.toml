@@ -18,7 +18,7 @@ appearance = "system"
 ui_scale = "normal"
 device_view_mode = "grid"
 theme_light = "Catppuccin Latte"
-theme_dark = "Catppuccin Mocha"
+theme_dark = "Tokyo Night"
 mouse_profile_target = "pointer"
 
 # Per model (the device's identity.codename), so they apply to every unit of
@@ -29,7 +29,7 @@ dpi = 4000
 scroll_resolution = "high"
 
 [models."Wireless Mouse MX Master 3".bindings]
-DpiToggle = "CycleDpiPresets"
+DpiToggle = "ToggleSmartShift"
 
 [models."Wireless Mouse MX Master 3".bindings.GestureButton]
 Up = "None"
