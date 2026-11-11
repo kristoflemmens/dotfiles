@@ -48,6 +48,7 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   - `run_onchange_after_06` agent skills: `apm install --global`, then links every skill in `~/.agents/skills/` into `~/.claude/skills/`; runs when a skill list or the own skills of any source change
   - `run_onchange_after_08` sets the Docker CLI keys (colima context, buildx alias and plugin dir) plus the overlay's `credHelpers` in `~/.docker/config.json`, leaving the rest to Docker
   - `run_onchange_after_09` lets herdr install its integration (`herdr integration install`) for each coding agent the machine has (claude, opencode); herdr owns those hook/plugin files, so chezmoi doesn't keep them
+  - `run_onchange_after_10` reruns `bin/brew-cleanup.sh` when `bin/sync-brewfile.sh` recorded new uninstall requests (a Brewfile entry deleted while no Brewfile changed since)
 
 ## Agent skills
 
@@ -142,7 +143,8 @@ An overlay's own README lists only what it contains and what to do by hand
 Because the base templates read overlay files, apply the overlay **first** and
 the base second when both changed: `dotfiles apply` does this for every
 overlay, `dotfiles update` pulls them all first (and fast-forwards the
-Neovim config), `dotfiles status` shows what is left to apply in each.
+Neovim config), `dotfiles status` shows what is left to apply in each,
+`dotfiles diff` what would change and `dotfiles push` pushes them.
 `dotfiles-apply` and `dotfiles-update` are aliases for the first two.
 
 ## Day to day
@@ -154,18 +156,20 @@ chezmoi apply           # apply
 chezmoi update          # git pull + apply (base only)
 dotfiles update         # every overlay and the base: pull, then apply
 dotfiles status         # anything left to apply, per repo
+dotfiles diff           # chezmoi diff of each repo with something to apply
+dotfiles push           # git push each repo with unpushed commits
 ```
 
 ## Drift detection
 
 LaunchAgents (listed in `.chezmoidata.yaml`, plus any `com.kristoflemmens.dotfiles.*` agent an overlay installs) run at login and every 4 hours (logs in
-`~/.local/state/dotfiles/logs/`, macOS notification on changes). Nothing is ever
+`~/.local/state/dotfiles/logs/`, every line timestamped by `dotfiles timestamp`; macOS notification on changes). Nothing is ever
 committed automatically.
 
 | Script                        | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `bin/sync-brewfile.sh`        | Writes Homebrew drift into **this machine's own Brewfile**: the overlay's `Brewfile` (or only reports, without an overlay). New installs are appended, uninstalled entries removed. An entry you delete from a Brewfile is held back as an uninstall request (not re-added) until `chezmoi apply` uninstalls it or you decline. The shared `Brewfile` is curated by hand and never written; shared entries that aren't installed are only reported. |
-| `bin/brew-cleanup.sh`         | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `bin/brew-bundle.sh`, or by hand. Without a terminal it only lists.                                                                                                                                                                                                                                                                            |
+| `bin/brew-cleanup.sh`         | Uninstalls what no Brewfile of this machine declares (shared + overlays) after brew asks; run by `bin/brew-bundle.sh`, on the next `chezmoi apply` after sync-brewfile records new uninstall requests, or by hand. Without a terminal it only lists.                                                                                                                                                                                                                                                                            |
 | `bin/sync-macos-defaults.sh`  | Writes live macOS defaults back into `macos-defaults.tsv` (`--check` to only report).                                                                                                                                                                                                                                                                                                                                                               |
 | `bin/check-dotfiles-drift.sh` | Reports `chezmoi status` for this repo and every overlay (`bin/lib/overlays.sh`). Never writes.                                                                                                                                                                                                                                                                                                                                                            |
 

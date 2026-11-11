@@ -93,7 +93,7 @@ alias -g -- --help='--help 2>&1 | _help_pager'
 export MANPAGER="sh -c 'col -bx | bat --language=man --style=plain'"
 
 # --- Dotfiles ---
-# `dotfiles apply|update|status` (~/.local/bin, bin/dotfiles.sh): every
+# `dotfiles apply|update|status|diff|push` (~/.local/bin, bin/dotfiles.sh): every
 # overlay first, then this repo. chez<name> is chezmoi with overlay <name>'s
 # own config and state, for each ~/.config/chezmoi-<name>/.
 alias dotfiles-apply='dotfiles apply' dotfiles-update='dotfiles update'

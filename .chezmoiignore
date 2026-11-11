@@ -23,6 +23,7 @@ Library
 Library/**
 01-install-homebrew.sh
 02-brew-bundle.sh
+10-brew-cleanup.sh
 02-macos-defaults.sh
 03-load-launch-agents.sh
 05-rectangle-config.sh

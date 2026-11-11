@@ -9,6 +9,13 @@
 #                                         the Neovim config, then apply
 #   dotfiles status                       chezmoi status per repo; exit 1 when any
 #                                         has something to apply
+#   dotfiles diff                         chezmoi diff of every repo with something
+#                                         to apply
+#   dotfiles push                         git push every repo with unpushed commits;
+#                                         names repos with uncommitted changes
+#   dotfiles timestamp <command> [args]   run a command, every output line (stdout
+#                                         and stderr) prefixed with the local time;
+#                                         exits with its status (LaunchAgents' logs)
 
 set -euo pipefail
 
@@ -16,12 +23,25 @@ SOURCE_DIR="$(cd "$(dirname "$(readlink "${BASH_SOURCE[0]}" || echo "${BASH_SOUR
 # shellcheck source=bin/lib/overlays.sh
 . "${SOURCE_DIR}/bin/lib/overlays.sh"
 
+# Every repo in apply order: the overlays, then the base (the last index).
+repos=(${overlay_names[@]+"${overlay_names[@]}"} dotfiles)
+base=$((${#repos[@]} - 1))
+
+# chezmoi on repo $1 (an index in repos): an overlay through its config.
+cz() {
+  local i=$1
+  shift
+  if [ "$i" -lt "$base" ]; then
+    "$DOTFILES_CHEZMOI" --config "${overlay_configs[$i]}" "$@"
+  else
+    "$DOTFILES_CHEZMOI" "$@"
+  fi
+}
+
 apply() {
-  local config
-  for config in ${overlay_configs[@]+"${overlay_configs[@]}"}; do
-    "$DOTFILES_CHEZMOI" --config "$config" apply
-  done
-  "$DOTFILES_CHEZMOI" apply "$@"
+  local i
+  for ((i = 0; i < base; i++)); do cz "$i" apply; done
+  cz "$base" apply "$@"
 }
 
 # The kickstart.nvim fork is a working copy chezmoi never pulls
@@ -38,28 +58,57 @@ pull_nvim() {
 }
 
 update() {
-  local config
-  for config in ${overlay_configs[@]+"${overlay_configs[@]}"}; do
-    "$DOTFILES_CHEZMOI" --config "$config" git pull -- --rebase
-  done
-  "$DOTFILES_CHEZMOI" git pull -- --rebase
+  local i
+  for i in "${!repos[@]}"; do cz "$i" git pull -- --rebase; done
   pull_nvim
   apply "$@"
 }
 
 status() {
   local i out pending=0
-  for i in ${overlay_names[@]+"${!overlay_names[@]}"}; do
-    out="$("$DOTFILES_CHEZMOI" --config "${overlay_configs[$i]}" status)"
-    if [ -n "$out" ]; then pending=1; printf '==> %s\n%s\n' "${overlay_names[$i]}" "$out"; fi
+  for i in "${!repos[@]}"; do
+    out="$(cz "$i" status)"
+    if [ -n "$out" ]; then pending=1; printf '==> %s\n%s\n' "${repos[$i]}" "$out"; fi
   done
-  out="$("$DOTFILES_CHEZMOI" status)"
-  if [ -n "$out" ]; then pending=1; printf '==> dotfiles\n%s\n' "$out"; fi
   return "$pending"
+}
+
+# Status first: a repo with nothing to apply gets no header and no pager.
+diff() {
+  local i
+  for i in "${!repos[@]}"; do
+    [ -n "$(cz "$i" status)" ] || continue
+    printf '==> %s\n' "${repos[$i]}"
+    cz "$i" diff
+  done
+}
+
+# Without an upstream (a new branch) rev-list fails: git push then says why.
+push() {
+  local i ahead
+  for i in "${!repos[@]}"; do
+    if [ -n "$(cz "$i" git -- status --porcelain)" ]; then
+      echo "dotfiles push: ${repos[$i]} has uncommitted changes, not pushed" >&2
+    fi
+    ahead="$(cz "$i" git -- rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo '?')"
+    [ "$ahead" != 0 ] || continue
+    printf '==> %s\n' "${repos[$i]}"
+    cz "$i" git -- push
+  done
+}
+
+# Bash 3.2 has no printf %(...)T, macOS awk no strftime: one date per line is
+# fine for the few lines an agent writes.
+timestamp() {
+  local line
+  "$@" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+    printf '[%s] %s\n' "$(date '+%F %T')" "$line"
+  done
 }
 
 case "${1:-}" in
   apply | update) cmd=$1; shift; "$cmd" "$@" ;;
-  status) status ;;
+  status | diff | push) "$1" ;;
+  timestamp) shift; [ $# -gt 0 ] || { echo "dotfiles timestamp: no command" >&2; exit 2; }; timestamp "$@" ;;
   *) sed -n 's/^# \{0,1\}//; /^Usage:/,/^$/p' "${BASH_SOURCE[0]}" >&2; exit 2 ;;
 esac

@@ -1,7 +1,8 @@
 # Shared bats setup: a throwaway HOME, a copy of bin/ as the base source, and
 # a chezmoi stub. The stub answers `source-path` from the config's sourceDir
 # and logs every other call to $BATS_TEST_TMPDIR/chezmoi.log as
-# `<config name or base> <args>`; `status` prints $BATS_TEST_TMPDIR/status-<name>.
+# `<config name or base> <args>`; `status` prints $BATS_TEST_TMPDIR/status-<name>,
+# `git -- <cmd>` prints $BATS_TEST_TMPDIR/git-<name>-<cmd> (rev-list: 0 without).
 
 common_setup() {
   src="$BATS_TEST_TMPDIR/src"
@@ -23,6 +24,12 @@ done
 case "${1:-}" in
   source-path) sed -n 's/^sourceDir: "\(.*\)"$/\1/p' "$config" ;;
   status) cat "$BATS_TEST_TMPDIR/status-$name" 2>/dev/null; echo "$name $*" >> "$BATS_TEST_TMPDIR/chezmoi.log" ;;
+  git) echo "$name $*" >> "$BATS_TEST_TMPDIR/chezmoi.log"
+     if [ "${2:-}" = -- ]; then
+       out="$BATS_TEST_TMPDIR/git-$name-$3"
+       if [ -f "$out" ]; then cat "$out"; elif [ "$3" = rev-list ]; then echo 0; fi
+     fi
+     [ -e "$BATS_TEST_TMPDIR/fail-$name" ] && exit 1 ;;
   *) echo "$name $*" >> "$BATS_TEST_TMPDIR/chezmoi.log"
      [ -e "$BATS_TEST_TMPDIR/fail-$name" ] && exit 1 ;;
 esac

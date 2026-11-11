@@ -90,3 +90,56 @@ setup() {
   [ "$status" -eq 0 ]
   [ "$(cat "$log")" = $'personal apply\nbase apply' ]
 }
+
+@test "timestamp: prefixes every stdout and stderr line, keeps the exit status" {
+  run "$src/bin/dotfiles.sh" timestamp bash -c 'echo out; echo err >&2; printf last; exit 3'
+  [ "$status" -eq 3 ]
+  [ "${#lines[@]}" -eq 3 ]
+  for line in "${lines[@]}"; do
+    [[ $line =~ ^\[[0-9]{4}-[0-9]{2}-[0-9]{2}\ [0-9]{2}:[0-9]{2}:[0-9]{2}\]\  ]]
+  done
+  [[ ${lines[0]} == *'] out' && ${lines[1]} == *'] err' && ${lines[2]} == *'] last' ]]
+}
+
+@test "timestamp without a command is a usage error" {
+  run "$src/bin/dotfiles.sh" timestamp
+  [ "$status" -eq 2 ]
+}
+
+@test "diff: only repos with something to apply, each under a header" {
+  overlay personal
+  overlay work
+  echo ' M .zshrc' > "$BATS_TEST_TMPDIR/status-work"
+  run "$src/bin/dotfiles.sh" diff
+  [ "$status" -eq 0 ]
+  [ "$output" = '==> work' ]
+  [ "$(grep diff "$log")" = 'work diff' ]
+}
+
+@test "push: only repos with unpushed commits" {
+  overlay personal
+  echo 2 > "$BATS_TEST_TMPDIR/git-personal-rev-list"
+  run "$src/bin/dotfiles.sh" push
+  [ "$status" -eq 0 ]
+  [ "$output" = '==> personal' ]
+  [ "$(grep -- '-- push' "$log")" = 'personal git -- push' ]
+}
+
+@test "push: names a repo with uncommitted changes, still pushes its commits" {
+  echo ' M Brewfile' > "$BATS_TEST_TMPDIR/git-base-status"
+  echo 1 > "$BATS_TEST_TMPDIR/git-base-rev-list"
+  run "$src/bin/dotfiles.sh" push
+  [ "$status" -eq 0 ]
+  [[ $output == *'dotfiles has uncommitted changes'* ]]
+  [ "$(grep -- '-- push' "$log")" = 'base git -- push' ]
+}
+
+@test "push: a failing push stops before the next repo" {
+  overlay personal
+  echo 1 > "$BATS_TEST_TMPDIR/git-personal-rev-list"
+  echo 1 > "$BATS_TEST_TMPDIR/git-base-rev-list"
+  touch "$BATS_TEST_TMPDIR/fail-personal"
+  run "$src/bin/dotfiles.sh" push
+  [ "$status" -ne 0 ]
+  ! grep -q 'base git -- push' "$log"
+}

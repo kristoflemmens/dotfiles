@@ -66,3 +66,22 @@ install brew "broken" ' ]
   [[ $output == *'No terminal: nothing uninstalled'* ]]
   [ -s "$HOME/.local/state/dotfiles/brewfile-removed" ]
 }
+
+@test "cleanup: a requested type no Brewfile lists any more gets a placeholder entry" {
+  mkdir -p "$HOME/.local/state/dotfiles"
+  printf 'krew "resource-capacity"\nbrew "jq"\n' > "$HOME/.local/state/dotfiles/brewfile-removed"
+  run "$src/bin/brew-cleanup.sh" < /dev/null
+  [ "$status" -eq 0 ]
+  [ "$(cat "$log")" = 'cleanup brew "git" krew "dotfiles-cleanup-placeholder" ' ]
+}
+
+@test "cleanup: no placeholder for a type a Brewfile still lists, or without requests" {
+  overlay personal 'krew "ctx"'
+  mkdir -p "$HOME/.local/state/dotfiles"
+  echo 'krew "ns"' > "$HOME/.local/state/dotfiles/brewfile-removed"
+  run "$src/bin/brew-cleanup.sh" < /dev/null
+  rm "$HOME/.local/state/dotfiles/brewfile-removed"
+  run "$src/bin/brew-cleanup.sh" < /dev/null
+  [ "$(cat "$log")" = 'cleanup brew "git" krew "ctx" 
+cleanup brew "git" krew "ctx" ' ]
+}

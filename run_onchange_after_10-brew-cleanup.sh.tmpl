@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+# Uninstall requests sync-brewfile recorded after the last brew bundle run:
+# run_onchange_before_02 only reruns when a Brewfile changes, so this offers
+# them, once per new set of requests.
+{{- $removed := joinPath .chezmoi.homeDir ".local/state/dotfiles/brewfile-removed" }}
+{{- if stat $removed }}
+# requests hash: {{ include $removed | sha256sum }}
+{{- end }}
+[ -s "${HOME}/.local/state/dotfiles/brewfile-removed" ] || exit 0
+"{{ .chezmoi.sourceDir }}/bin/brew-cleanup.sh"
