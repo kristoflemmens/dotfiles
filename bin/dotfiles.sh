@@ -9,6 +9,9 @@
 #                                         the Neovim config, then apply
 #   dotfiles status                       chezmoi status per repo; exit 1 when any
 #                                         has something to apply
+#   dotfiles timestamp <command> [args]   run a command, every output line (stdout
+#                                         and stderr) prefixed with the local time;
+#                                         exits with its status (LaunchAgents' logs)
 
 set -euo pipefail
 
@@ -58,8 +61,18 @@ status() {
   return "$pending"
 }
 
+# Bash 3.2 has no printf %(...)T, macOS awk no strftime: one date per line is
+# fine for the few lines an agent writes.
+timestamp() {
+  local line
+  "$@" 2>&1 | while IFS= read -r line || [ -n "$line" ]; do
+    printf '[%s] %s\n' "$(date '+%F %T')" "$line"
+  done
+}
+
 case "${1:-}" in
   apply | update) cmd=$1; shift; "$cmd" "$@" ;;
   status) status ;;
+  timestamp) shift; [ $# -gt 0 ] || { echo "dotfiles timestamp: no command" >&2; exit 2; }; timestamp "$@" ;;
   *) sed -n 's/^# \{0,1\}//; /^Usage:/,/^$/p' "${BASH_SOURCE[0]}" >&2; exit 2 ;;
 esac

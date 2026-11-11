@@ -159,7 +159,7 @@ dotfiles status         # anything left to apply, per repo
 ## Drift detection
 
 LaunchAgents (listed in `.chezmoidata.yaml`, plus any `com.kristoflemmens.dotfiles.*` agent an overlay installs) run at login and every 4 hours (logs in
-`~/.local/state/dotfiles/logs/`, macOS notification on changes). Nothing is ever
+`~/.local/state/dotfiles/logs/`, every line timestamped by `dotfiles timestamp`; macOS notification on changes). Nothing is ever
 committed automatically.
 
 | Script                        | What it does                                                                                                                                                                                                                                                                                                                                                                                                                                        |

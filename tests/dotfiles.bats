@@ -90,3 +90,19 @@ setup() {
   [ "$status" -eq 0 ]
   [ "$(cat "$log")" = $'personal apply\nbase apply' ]
 }
+
+@test "timestamp: prefixes every stdout and stderr line, keeps the exit status" {
+  run "$src/bin/dotfiles.sh" timestamp bash -c 'echo out; echo err >&2; printf last; exit 3'
+  [ "$status" -eq 3 ]
+  [ "${#lines[@]}" -eq 3 ]
+  for line in "${lines[@]}"; do
+    [[ $line =~ ^\[[0-9]{4}-[0-9]{2}-[0-9]{2}\ [0-9]{2}:[0-9]{2}:[0-9]{2}\]\  ]]
+  done
+  [[ ${lines[0]} == *'] out' && ${lines[1]} == *'] err' && ${lines[2]} == *'] last' ]]
+}
+
+@test "timestamp without a command is a usage error" {
+  run "$src/bin/dotfiles.sh" timestamp
+  [ "$status" -eq 2 ]
+}
+

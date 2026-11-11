@@ -6,6 +6,8 @@
 	<string>com.kristoflemmens.dotfiles.{{ .name }}</string>
 	<key>ProgramArguments</key>
 	<array>
+		<string>{{ .chezmoi.homeDir }}/.local/bin/dotfiles</string>
+		<string>timestamp</string>
 		<string>{{ .chezmoi.sourceDir }}/bin/{{ .name }}.sh</string>
 	</array>
 	<key>EnvironmentVariables</key>
