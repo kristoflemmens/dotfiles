@@ -46,9 +46,13 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # --- Plugins (antidote; list in ~/.config/zsh/plugins.txt) ---
 # The bundle is regenerated only when a plugin list changes.
 source "$HOMEBREW_PREFIX/opt/antidote/share/antidote/antidote.zsh"
+# Deferred bundles without zsh-defer's -p: it sets RPS1='' when it thinks
+# there's no right prompt, which wipes Starship's RPROMPT. Read when the
+# bundle is generated, hence ~/.zshrc in the freshness check below.
+zstyle ':antidote:bundle:*' defer-options '-p'
 plugin_lists=(~/.config/zsh/plugins.txt ~/.config/dotfiles-overlay/zsh/plugins.txt(N))
 plugin_bundle="$ZSH_CACHE_DIR/plugins.zsh"
-for f in $plugin_lists; do
+for f in $plugin_lists ~/.zshrc; do
   if [[ ! -s $plugin_bundle || $f -nt $plugin_bundle ]]; then
     cat $plugin_lists | antidote bundle >| "$plugin_bundle"
     break

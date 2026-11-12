@@ -1,0 +1,6 @@
+[azure]
+disabled = false
+format = '[ $subscription ]($style)'
+
+[azure.subscription_aliases]
+FIXTURE_SUBSCRIPTION = "fixture"

@@ -52,8 +52,9 @@ target; Linux gets the shell, git and editor config:
   OpenLogi's and herdr's `config.toml` work the same way
   (`.chezmoitemplates/{openlogi,herdr}-settings.toml`); its mouse settings are keyed
   by model (`identity.codename`), not by the `unit:` ID of one device.
-- `allowed_signers.tmpl` is composed with the overlay's fragment: edit the
-  `.tmpl`; `chezmoi add`/`re-add` would flatten it.
+- `allowed_signers.tmpl` and `starship.toml.tmpl` are composed with the
+  overlay's fragment (appended; a Starship fragment only adds tables the base
+  doesn't define): edit the `.tmpl`; `chezmoi add`/`re-add` would flatten it.
 - chezmoi's own files are YAML (the user prefers it over TOML), e.g.
   `.chezmoiexternals/*.yaml`. Tool config stays in the tool's own format
   (Starship and mise TOML): converting it would break `chezmoi edit`/`add`/
@@ -103,9 +104,10 @@ The user settled these; build on them:
 - Theme: Tokyo Night in Ghostty, VS Code (Catppuccin icons) and claude-statusbar
   (colour overrides in `~/.claude/claude-statusbar.json`; `cs` has no themes).
 - git and `chezmoi diff` page through delta, side-by-side.
-- Shell: no oh-my-zsh, no Powerlevel10k. Starship prompt (tokyo-night preset
-  + kube, duration, herdr), plugins via antidote (`~/.config/zsh/plugins.txt`,
-  overlays append their own list), only the oh-my-zsh alias sets for
+- Shell: no oh-my-zsh, no Powerlevel10k. Starship prompt (tokyo-night preset;
+  right side: status, duration, terraform, Azure (overlay), kube always:
+  Starship can't react to what's being typed), plugins via antidote
+  (`~/.config/zsh/plugins.txt`, overlays append their own list), only the oh-my-zsh alias sets for
   git/kubectl/brew/eza, zoxide as `cd` instead of wd bookmarks (`wd` aliases `cd`),
   fzf key bindings and completion (no option-as-alt in Ghostty, so no alt-c).
 - Personal Mac: Node from Homebrew, no mise, no Java. Runtimes for work live
