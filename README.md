@@ -10,7 +10,8 @@ here. That comes from a private overlay repo per Mac, personal or work (see
 - Shell: zsh without a framework. `.zshenv`, `.zprofile`, `.zshrc`,
   `~/.config/zsh/path.zsh` (PATH setup shared by `.zshenv` and `.zprofile`, see
   comments there). Prompt: Starship (`~/.config/starship.toml`, Tokyo Night
-  preset plus kube context, command duration and herdr pane). `cd` jumps
+  preset; on the right exit status, duration, terraform, Azure (from the
+  overlay's fragment) and the kube context, production in red). `cd` jumps
   through zoxide (`cd homelab`; `cdi` picks with fzf, `wd` is an alias). fzf: ctrl-r searches history,
   ctrl-t inserts a file, `**<tab>` completes paths, processes and hosts.
 - Replacements under the classic name: `cat` (bat), `top` (btop), `df` (duf),

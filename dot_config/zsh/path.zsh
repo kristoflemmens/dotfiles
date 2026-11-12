@@ -26,6 +26,7 @@ path=(
   "${KREW_ROOT:-$HOME/.krew}"/bin(N)
   "${CARGO_HOME:-$HOME/.cargo}"/bin(N)
   "$HOMEBREW_PREFIX/opt/rustup/bin"(N)   # cargo/rustc proxies (rustup is keg-only)
+  "$HOMEBREW_PREFIX/opt/postgresql@15/bin"(N)   # psql, pg_dump (keg-only)
   "$HOMEBREW_PREFIX/bin"
   "$HOMEBREW_PREFIX/sbin"
   $path

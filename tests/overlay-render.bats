@@ -37,6 +37,14 @@ script() { # rendered run_ script, by name pattern
   grep -q '^fixture@example.com ' "$HOME/.ssh/allowed_signers"
 }
 
+@test "starship.toml gets the overlay's fragment appended, still valid TOML" {
+  grep -q '^FIXTURE_SUBSCRIPTION = "fixture"' "$HOME/.config/starship.toml"
+  if command -v starship >/dev/null; then
+    run env STARSHIP_CONFIG="$HOME/.config/starship.toml" starship print-config azure
+    [[ $output == *'disabled = false'* ]]
+  fi
+}
+
 @test "Claude Code settings: shared keys plus the overlay fragment" {
   grep -q '"fixtureClaude": true' "$HOME/.claude/settings.json"
 }
