@@ -1,0 +1,67 @@
+#!/bin/bash
+set -euo pipefail
+# sudo with the Apple Watch or Touch ID, also inside herdr/tmux:
+# /etc/pam.d/sudo_local (macOS includes it from /etc/pam.d/sudo and keeps it
+# across updates) lists
+# - pam_reattach (Brewfile): reattaches to the GUI session first, so the
+#   prompt also appears from a multiplexer;
+# - pam_watchid, built here from the commit pinned in .chezmoidata.yaml
+#   (pamWatchid) and installed in /usr/local/lib/pam: Apple Watch or Touch ID,
+#   so it also works with the lid closed;
+# - pam_tid: Apple's Touch ID module, the fallback.
+# The pam_watchid line is only written once the module is installed, so a
+# failed build never breaks sudo. Needs sudo: without a terminal it says what
+# to run instead.
+{{- $module := "/usr/local/lib/pam/pam_watchid.so" }}
+{{- $marker := printf "# pam-watchid %s" .pamWatchid.rev }}
+{{- $current := "" }}
+{{- if stat "/etc/pam.d/sudo_local" }}{{ $current = output "cat" "/etc/pam.d/sudo_local" }}{{ end }}
+# Runs on every apply until sudo_local and the module are in place; after that
+# only when the pin or this script changes.
+# state: {{ if and (stat $module) (contains $marker $current) }}ok{{ else }}pending {{ now | unixEpoch }}{{ end }}
+
+module={{ $module | quote }}
+rev={{ .pamWatchid.rev | quote }}
+sudo_local=/etc/pam.d/sudo_local
+
+desired() {
+  echo "# sudo_local: local config file which survives system update and is included for sudo"
+  echo "# Managed by chezmoi (dotfiles: run_onchange_after_11-sudo-local); edit there."
+  echo {{ $marker | quote }}
+  echo "auth       optional       /opt/homebrew/lib/pam/pam_reattach.so"
+  if [ -f "$module" ]; then
+    echo "auth       sufficient     $module"
+  fi
+  echo "auth       sufficient     pam_tid.so"
+}
+
+can_sudo() { sudo -n true 2>/dev/null || [ -t 0 ]; }
+
+if ! grep -qxF {{ $marker | quote }} "$sudo_local" 2>/dev/null || [ ! -f "$module" ]; then
+  if ! can_sudo; then
+    echo "sudo_local: pam-watchid not installed; run 'dotfiles apply' in a terminal (needs sudo)" >&2
+    exit 0
+  fi
+  work=$(mktemp -d)
+  trap 'rm -rf "$work"' EXIT
+  echo "==> Building pam-watchid ${rev:0:7}..."
+  curl -fsSL -o "$work/src.tar.gz" "https://github.com/{{ .pamWatchid.repo }}/archive/$rev.tar.gz"
+  echo {{ printf "%s  %s" .pamWatchid.sha256 "$work/src.tar.gz" | quote }} | shasum -a 256 -c --quiet -
+  tar -xzf "$work/src.tar.gz" -C "$work" --strip-components 1
+  make -C "$work" >/dev/null
+  sudo mkdir -p "$(dirname "$module")"
+  sudo install -o root -g wheel -m 444 "$work/pam_watchid.so" "$module"
+fi
+
+new=$(mktemp)
+desired >"$new"
+if ! cmp -s "$new" "$sudo_local"; then
+  if ! can_sudo; then
+    echo "sudo_local: out of date; run 'dotfiles apply' in a terminal (needs sudo)" >&2
+    rm -f "$new"
+    exit 0
+  fi
+  echo "==> Writing $sudo_local..."
+  sudo install -o root -g wheel -m 444 "$new" "$sudo_local"
+fi
+rm -f "$new"

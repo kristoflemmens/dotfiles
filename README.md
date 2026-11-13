@@ -50,6 +50,7 @@ here. That comes from a private overlay repo per Mac, personal or work (see
   - `run_onchange_after_08` sets the Docker CLI keys (colima context, buildx alias and plugin dir) plus the overlay's `credHelpers` in `~/.docker/config.json`, leaving the rest to Docker
   - `run_onchange_after_09` lets herdr install its integration (`herdr integration install`) for each coding agent the machine has (claude, opencode); herdr owns those hook/plugin files, so chezmoi doesn't keep them
   - `run_onchange_after_10` reruns `bin/brew-cleanup.sh` when `bin/sync-brewfile.sh` recorded new uninstall requests (a Brewfile entry deleted while no Brewfile changed since)
+  - `run_onchange_after_11` sudo with the Apple Watch or Touch ID, also inside herdr/tmux: builds [pam-watchid](https://github.com/mostpinkest/pam-watchid) (not in Homebrew; `pamWatchid` in `.chezmoidata.yaml` pins the commit and archive checksum) into `/usr/local/lib/pam`, and owns `/etc/pam.d/sudo_local`: `pam_reattach` (Brewfile), `pam_watchid`, then `pam_tid` as fallback. The `pam_watchid` line is written only once the module is installed. Needs sudo: without a terminal it prints what to do and keeps running on every apply until done (its rendered content checks the live file, unlike the other scripts)
 
 ## Agent skills
 

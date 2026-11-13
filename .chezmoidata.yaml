@@ -6,3 +6,12 @@ launchAgents:
   - name: check-dotfiles-drift
   - name: sync-brewfile
   - name: sync-macos-defaults
+
+# pam-watchid: PAM module that lets sudo ask the Apple Watch (or Touch ID).
+# Not in Homebrew; run_onchange_after_11-sudo-local builds this commit from
+# source (one swiftc call) and installs it. Bump rev and sha256 (of the
+# GitHub archive of that commit) together.
+pamWatchid:
+  repo: mostpinkest/pam-watchid
+  rev: ce04b062ccb70ac781a68c832f9d84bb42816718
+  sha256: 052f2fae66c31e7c39fc513fd6c19fbdaed84a047859ce894d1481506155b52e
