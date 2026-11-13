@@ -28,4 +28,5 @@ Library/**
 03-load-launch-agents.sh
 05-rectangle-config.sh
 08-docker-config.sh
+11-sudo-local.sh
 {{ end }}
