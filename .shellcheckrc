@@ -1,0 +1,3 @@
+# Follow `source`d files (bin/lib/), like `shellcheck -x`. chezmoi ignores this
+# file (it starts with a dot); dot_shellcheckrc is the one it installs in ~.
+external-sources=true
