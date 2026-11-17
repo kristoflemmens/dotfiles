@@ -49,7 +49,9 @@ target; Linux gets the shell, git and editor config:
   `.chezmoitemplates/merge-jsonc`: it lays
   `.chezmoitemplates/{vscode,claude}-settings.jsonc` and then the overlay's
   fragment (a JSONC object) over the live file. A new merged JSONC file is
-  one such call. The drift check treats every `modify_` target alike. Change a shared setting in the
+  one such call; pass `"keep" true` for an app that rewrites the file in
+  its own order (1Password): a file that already holds every value is then
+  left as is. The drift check treats every `modify_` target alike. Change a shared setting in the
   `.chezmoitemplates` file; what the app writes stays and isn't drift. A key
   removed from the source stays in the live file until deleted there.
   OpenLogi's and herdr's `config.toml` work the same way

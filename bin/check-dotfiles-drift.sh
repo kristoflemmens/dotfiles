@@ -18,6 +18,10 @@
 set -euo pipefail
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# macOS keeps a LaunchAgent out of other apps' group containers (App Data
+# protection: "operation not permitted"); .chezmoiignore skips the merged
+# files there when this is set.
+export DOTFILES_NO_APP_CONTAINERS=1
 # shellcheck source=bin/lib/overlays.sh
 . "${SOURCE_DIR}/bin/lib/overlays.sh"
 

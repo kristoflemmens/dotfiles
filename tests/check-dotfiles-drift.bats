@@ -67,3 +67,10 @@ drift() { run "$src/bin/check-dotfiles-drift.sh"; }
   drift
   [[ $output == *'Drift in dotfiles'*'.plain'* ]]
 }
+
+@test "files .chezmoiignore leaves to the terminal (app group containers) are skipped" {
+  printf '{{ if env "DOTFILES_NO_APP_CONTAINERS" }}.plain{{ end }}\n' > "$src/.chezmoiignore"
+  echo edited > "$HOME/.plain"
+  drift
+  [[ $output == *'No drift'* ]]
+}
