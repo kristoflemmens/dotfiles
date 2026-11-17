@@ -12,6 +12,7 @@ RectangleConfig.json
 {{ if eq .chezmoi.os "darwin" }}
 01-install-linuxbrew.sh
 02-brew-bundle-linux.sh
+12-brew-login-shell.sh
 {{ else }}
 .colima
 .colima/**
