@@ -8,25 +8,17 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: shellcheck
-        # -x: follow `source`d files (bin/lib/) like a local `shellcheck -x`.
-        run: shellcheck -x bin/*.sh bin/lib/*.sh dot_git-template/hooks/executable_pre-commit
-      - name: zsh syntax
-        run: |
-          sudo apt-get install -y zsh >/dev/null
-          # One file per call: `zsh -n a b` only checks a (b is an argument).
-          git ls-files -z -- dot_zshrc dot_zshenv dot_zprofile '*.zsh' |
-            xargs -0 -n1 zsh -n
-      - name: gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  shell:
+    # shellcheck, zsh -n and gitleaks, from the shared workflow.
+    permissions:
+      contents: read
+      pull-requests: read # gitleaks lists a PR's commits
+    uses: klconsultancy/workflows/.github/workflows/shell.yml@c9502596494c47704b890d5cc66de73c06ba93d8 # main
+    with:
+      # git's * also matches across /, so bin/*.sh includes bin/lib/. -x (follow
+      # `source`d files) comes from .shellcheckrc.
+      shellcheck-pathspec: "bin/*.sh dot_git-template/hooks/executable_pre-commit"
+      zsh-pathspec: "dot_zshrc dot_zshenv dot_zprofile *.zsh"
 
   render:
     # Renders every template and script without touching a real home
