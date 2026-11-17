@@ -36,3 +36,8 @@ path=(
 [[ -z ${MANPATH-} ]] || export MANPATH=":${MANPATH#:}"
 [[ :${INFOPATH-}: == *:$HOMEBREW_PREFIX/share/info:* ]] ||
   export INFOPATH="$HOMEBREW_PREFIX/share/info:${INFOPATH:-}"
+
+# Linux: every ncurses program, apt's included, reads Homebrew's full terminfo
+# database. Debian's lacks e.g. xterm-ghostty, Ghostty's TERM over SSH.
+[[ $OSTYPE == darwin* || ! -d $HOMEBREW_PREFIX/share/terminfo ]] ||
+  export TERMINFO_DIRS="$HOMEBREW_PREFIX/share/terminfo:"

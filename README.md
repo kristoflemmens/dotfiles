@@ -91,7 +91,8 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- -b ~/.local/bin init --apply kristoflemm
 ```
 
 This installs Homebrew in `/home/linuxbrew`, the tools from `Brewfile.linux` and
-the shell, git and editor config. Everything macOS-only is skipped (see
+the shell, git and editor config, and makes Homebrew's zsh the login shell (apt's
+zsh only bootstraps; terminfo also comes from Homebrew). Everything macOS-only is skipped (see
 `.chezmoiignore`), and commits aren't signed. There is no overlay and no drift
 detection: `chezmoi update` by hand.
 

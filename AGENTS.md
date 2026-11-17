@@ -18,6 +18,9 @@ target; Linux gets the shell, git and editor config:
 - Packages come from `Brewfile.linux` (curated by hand, no drift sync, no
   cleanup), Homebrew from `run_once_before_01-install-linuxbrew.sh`, which
   needs passwordless sudo.
+- Homebrew's zsh is the login shell (`run_onchange_after_12`) and
+  `TERMINFO_DIRS` points at Homebrew's terminfo (`path.zsh`): Debian's
+  database lacks terminals like `xterm-ghostty`.
 - No commit signing and no VS Code on Linux: 1Password isn't there.
 
 ## Model
