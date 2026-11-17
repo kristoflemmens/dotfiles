@@ -13,7 +13,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: read # gitleaks lists a PR's commits
-    uses: klconsultancy/workflows/.github/workflows/shell.yml@c9502596494c47704b890d5cc66de73c06ba93d8 # main
+    uses: klconsultancy/workflows/.github/workflows/shell.yml@e6939b6be36b833baf87de0ce25c0ff4cac96b2f # v1.0.0
     with:
       # git's * also matches across /, so bin/*.sh includes bin/lib/. -x (follow
       # `source`d files) comes from .shellcheckrc.
