@@ -13,6 +13,13 @@ RectangleConfig.json
 01-install-linuxbrew.sh
 02-brew-bundle-linux.sh
 12-brew-login-shell.sh
+{{- /* 1Password's settings only once the app has written them (chezmoi
+       mustn't create its group container before the app does), and not for
+       the drift check, which macOS keeps out of it (bin/check-dotfiles-drift.sh). */}}
+{{ if or (env "DOTFILES_NO_APP_CONTAINERS") (not (stat (joinPath .chezmoi.homeDir "Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json"))) }}
+Library/Group Containers
+Library/Group Containers/**
+{{ end }}
 {{ else }}
 .colima
 .colima/**

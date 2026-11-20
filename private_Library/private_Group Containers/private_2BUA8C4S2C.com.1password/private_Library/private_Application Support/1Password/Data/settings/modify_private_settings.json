@@ -1,0 +1,5 @@
+{{- /* chezmoi:modify-template */ -}}
+{{- /* 1Password settings.json, a merged file: .chezmoitemplates/merge-jsonc.
+       Ignored until 1Password has written it (.chezmoiignore); "keep":
+       no rewrite while the values already hold. */ -}}
+{{ includeTemplate "merge-jsonc" (dict "root" . "shared" "1password-settings.jsonc" "fragment" "1password-settings.jsonc" "keep" true) -}}

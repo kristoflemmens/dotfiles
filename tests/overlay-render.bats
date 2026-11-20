@@ -94,3 +94,20 @@ script() { # rendered run_ script, by name pattern
   [[ $output == *'# herdr: '* ]]
   [[ $output == *'# claude: '* && $output == *'# opencode: '* ]]
 }
+
+@test "1Password settings: no file before the app's first start, merged after, left alone when it holds (macOS)" {
+  [[ $OSTYPE == darwin* ]] || skip "1Password settings are macOS-only"
+  local f="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json"
+  [[ ! -e "$HOME/Library/Group Containers" ]]
+  mkdir -p "$(dirname "$f")"
+  printf '{\n  "version": 1,\n  "security.autolock.minutes": 5,\n  "app.state": "kept"\n}\n' > "$f"
+  cm apply --force "$f"
+  grep -q '"security.autolock.minutes": 60' "$f"
+  grep -q '"app.state": "kept"' "$f"
+  grep -q '"fixture.onepassword": true' "$f"
+  # the app writes the same values back in its own order: no drift, no rewrite
+  jq --indent 4 . "$f" > "$f.app" && mv "$f.app" "$f"
+  cp "$f" "$f.before"
+  cm apply --force "$f"
+  cmp "$f" "$f.before"
+}

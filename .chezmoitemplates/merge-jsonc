@@ -3,11 +3,21 @@
        (a JSONC object, like the shared one) over the current file. Objects
        are merged, lists replaced; what the app writes itself stays, and a
        key removed here stays in the file until deleted there.
+       With "keep" true (an app that rewrites the file in its own key order),
+       an empty file stays empty and a file that already holds every value
+       is left byte for byte, so the app's reordering isn't drift.
        Call from a modify_ template:
          includeTemplate "merge-jsonc" (dict "root" . "shared" "<x>.jsonc" "fragment" "<x>.jsonc") */ -}}
+{{- $keep := get . "keep" -}}
 {{- $settings := dict -}}
 {{- if .root.chezmoi.stdin }}{{ $settings = .root.chezmoi.stdin | fromJsonc }}{{ end -}}
+{{- $before := toJson $settings -}}
 {{- $settings = mergeOverwrite $settings (includeTemplate .shared .root | fromJsonc) -}}
 {{- $overlay := joinPath .root.chezmoi.homeDir ".config/dotfiles-overlay" .fragment -}}
 {{- if stat $overlay }}{{ $settings = mergeOverwrite $settings (include $overlay | fromJsonc) }}{{ end -}}
+{{- if and $keep (not .root.chezmoi.stdin) -}}
+{{- else if and $keep (eq $before (toJson $settings)) -}}
+{{ .root.chezmoi.stdin }}
+{{- else -}}
 {{ toPrettyJson "  " $settings }}
+{{ end -}}
