@@ -13,6 +13,11 @@
 #                                         to apply
 #   dotfiles push                         git push every repo with unpushed commits;
 #                                         names repos with uncommitted changes
+#   dotfiles git <git command> [args]     that git command in every repo's source
+#                                         dir, a header per repo with output; on a
+#                                         terminal in colour, through git's pager
+#                                         (dotfiles git status -sb, git diff, git log
+#                                         @{u}..). Not for interactive ones (add -p)
 #   dotfiles timestamp <command> [args]   run a command, every output line (stdout
 #                                         and stderr) prefixed with the local time;
 #                                         exits with its status (LaunchAgents' logs)
@@ -35,6 +40,20 @@ cz() {
     "$DOTFILES_CHEZMOI" --config "${overlay_configs[$i]}" "$@"
   else
     "$DOTFILES_CHEZMOI" "$@"
+  fi
+}
+
+# The header above a repo's output: overlay or base, each in its own colour
+# on a terminal (or when git_all forces colour).
+color=
+[ -t 1 ] && color=1
+header() {
+  local role=overlay c='35' # magenta
+  if [ "$1" -eq "$base" ]; then role=base c='34'; fi # blue
+  if [ -n "$color" ]; then
+    printf '\033[1;%sm==> %s %s\033[0m\n' "$c" "$role" "${repos[$1]}"
+  else
+    printf '==> %s %s\n' "$role" "${repos[$1]}"
   fi
 }
 
@@ -68,7 +87,7 @@ status() {
   local i out pending=0
   for i in "${!repos[@]}"; do
     out="$(cz "$i" status)"
-    if [ -n "$out" ]; then pending=1; printf '==> %s\n%s\n' "${repos[$i]}" "$out"; fi
+    if [ -n "$out" ]; then pending=1; header "$i"; printf '%s\n' "$out"; fi
   done
   return "$pending"
 }
@@ -78,7 +97,7 @@ diff() {
   local i
   for i in "${!repos[@]}"; do
     [ -n "$(cz "$i" status)" ] || continue
-    printf '==> %s\n' "${repos[$i]}"
+    header "$i"
     cz "$i" diff
   done
 }
@@ -92,9 +111,28 @@ push() {
     fi
     ahead="$(cz "$i" git -- rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo '?')"
     [ "$ahead" != 0 ] || continue
-    printf '==> %s\n' "${repos[$i]}"
+    header "$i"
     cz "$i" git -- push
   done
+}
+
+# Output is captured to know whether a repo gets a header.
+git_each() {
+  local i out rc=0
+  for i in "${!repos[@]}"; do
+    out="$(cz "$i" git -- "$@")" || rc=1
+    if [ -n "$out" ]; then header "$i"; printf '%s\n' "$out"; fi
+  done
+  return "$rc"
+}
+
+# Captured output isn't a terminal: colour is forced, and git's own pager
+# (delta) gets all repos at once, with git's default LESS.
+git_all() {
+  if [ ! -t 1 ]; then git_each "$@"; return; fi
+  color=1
+  export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=color.ui GIT_CONFIG_VALUE_0=always
+  git_each "$@" | LESS="${LESS-FRX}" sh -c "$(git var GIT_PAGER)"
 }
 
 # Bash 3.2 has no printf %(...)T, macOS awk no strftime: one date per line is
@@ -109,6 +147,7 @@ timestamp() {
 case "${1:-}" in
   apply | update) cmd=$1; shift; "$cmd" "$@" ;;
   status | diff | push) "$1" ;;
+  git) shift; [ $# -gt 0 ] || { echo "dotfiles git: no git command" >&2; exit 2; }; git_all "$@" ;;
   timestamp) shift; [ $# -gt 0 ] || { echo "dotfiles timestamp: no command" >&2; exit 2; }; timestamp "$@" ;;
   *) sed -n 's/^# \{0,1\}//; /^Usage:/,/^$/p' "${BASH_SOURCE[0]}" >&2; exit 2 ;;
 esac
