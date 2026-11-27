@@ -1,9 +1,9 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 # Official "tokyo-night" preset (starship preset tokyo-night) on the left:
-# os, directory, git, languages. On the right, on the input line: last exit
-# status, command duration, terraform workspace, Azure subscription, kube
-# context and the clock.
+# os, directory, git, languages. Right-aligned on that same first line, via
+# $fill (right_format would sit on the input line): last exit status, command
+# duration, terraform workspace, Azure subscription, kube context and the clock.
 #
 # A template: the overlay's ~/.config/dotfiles-overlay/starship.toml is
 # appended. It may only add tables this file doesn't define (TOML allows a
@@ -26,9 +26,7 @@ $rust\
 $golang\
 $php\
 [ ](fg:#212736)\
-\n$character"""
-
-right_format = """
+$fill\
 [](fg:#1d2230)\
 $status\
 $cmd_duration\
@@ -36,7 +34,11 @@ $terraform\
 $azure\
 $kubernetes\
 $time\
-[▓▒░](fg:#1d2230)"""
+[▓▒░](fg:#1d2230)\
+\n$character"""
+
+[fill]
+symbol = " "
 
 [character]
 success_symbol = "[❯](bold #9ece6a)"
@@ -165,7 +167,7 @@ symbol = "󱁢"
 format = '[ $symbol $workspace ]($style)'
 style = "bg:#1d2230 fg:#bb9af7"
 
-# $azure is in right_format but off by default: an overlay that wants it
+# $azure is on the right side but off by default: an overlay that wants it
 # defines [azure] in its fragment (style "bg:#1d2230 ..." to fit in).
 
 [kubernetes]
