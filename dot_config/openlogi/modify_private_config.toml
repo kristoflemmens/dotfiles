@@ -6,6 +6,9 @@
        with only the app settings, OpenLogi adds the devices. */ -}}
 {{- $config := dict -}}
 {{- if .chezmoi.stdin }}{{ $config = .chezmoi.stdin | fromToml }}{{ end -}}
+{{- /* Compared after the merge: a file that already holds every value is
+       left byte for byte, so the app's own layout isn't drift. */ -}}
+{{- $before := toJson $config -}}
 {{- $want := includeTemplate "openlogi-settings.toml" . | fromToml -}}
 {{- if not (hasKey $config "schema_version") }}{{ $_ := set $config "schema_version" 7 }}{{ end -}}
 {{- $_ := set $config "app_settings" (mergeOverwrite (get $config "app_settings" | default (dict)) $want.app_settings) -}}
@@ -13,4 +16,8 @@
 {{-   $model := dig "identity" "codename" "" $device -}}
 {{-   if hasKey $want.models $model }}{{ $_ := mergeOverwrite $device (index $want.models $model) }}{{ end -}}
 {{- end -}}
+{{- if and .chezmoi.stdin (eq $before (toJson $config)) -}}
+{{ .chezmoi.stdin }}
+{{- else -}}
 {{ toToml $config }}
+{{ end -}}
