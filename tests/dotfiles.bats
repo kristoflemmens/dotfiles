@@ -60,7 +60,38 @@ setup() {
   echo ' M .zshrc' > "$BATS_TEST_TMPDIR/status-work"
   run "$src/bin/dotfiles.sh" status
   [ "$status" -eq 1 ]
-  [ "$output" = $'==> work\n M .zshrc' ]
+  [ "$output" = $'==> overlay work\n M .zshrc' ]
+}
+
+@test "status: the base's header says base, an overlay's says overlay" {
+  overlay work
+  echo ' M .zshrc' > "$BATS_TEST_TMPDIR/status-work"
+  echo ' M .gitconfig' > "$BATS_TEST_TMPDIR/status-base"
+  run "$src/bin/dotfiles.sh" status
+  [ "$output" = $'==> overlay work\n M .zshrc\n==> base dotfiles\n M .gitconfig' ]
+}
+
+@test "git: runs in every repo, a header only for repos with output" {
+  overlay personal
+  overlay work
+  echo '## main...origin/main [ahead 1]' > "$BATS_TEST_TMPDIR/git-work-status"
+  run "$src/bin/dotfiles.sh" git status -sb
+  [ "$status" -eq 0 ]
+  [ "$output" = $'==> overlay work\n## main...origin/main [ahead 1]' ]
+  [ "$(cat "$log")" = $'personal git -- status -sb\nwork git -- status -sb\nbase git -- status -sb' ]
+}
+
+@test "git: a failing repo doesn't stop the others, the exit status says so" {
+  overlay personal
+  touch "$BATS_TEST_TMPDIR/fail-personal"
+  run "$src/bin/dotfiles.sh" git diff
+  [ "$status" -eq 1 ]
+  [ "$(cat "$log")" = $'personal git -- diff\nbase git -- diff' ]
+}
+
+@test "git without a git command is an error" {
+  run "$src/bin/dotfiles.sh" git
+  [ "$status" -eq 2 ]
 }
 
 @test "an unknown command prints the usage" {
@@ -112,7 +143,7 @@ setup() {
   echo ' M .zshrc' > "$BATS_TEST_TMPDIR/status-work"
   run "$src/bin/dotfiles.sh" diff
   [ "$status" -eq 0 ]
-  [ "$output" = '==> work' ]
+  [ "$output" = '==> overlay work' ]
   [ "$(grep diff "$log")" = 'work diff' ]
 }
 
@@ -121,7 +152,7 @@ setup() {
   echo 2 > "$BATS_TEST_TMPDIR/git-personal-rev-list"
   run "$src/bin/dotfiles.sh" push
   [ "$status" -eq 0 ]
-  [ "$output" = '==> personal' ]
+  [ "$output" = '==> overlay personal' ]
   [ "$(grep -- '-- push' "$log")" = 'personal git -- push' ]
 }
 

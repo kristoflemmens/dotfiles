@@ -150,7 +150,8 @@ Because the base templates read overlay files, apply the overlay **first** and
 the base second when both changed: `dotfiles apply` does this for every
 overlay, `dotfiles update` pulls them all first (and fast-forwards the
 Neovim config), `dotfiles status` shows what is left to apply in each,
-`dotfiles diff` what would change and `dotfiles push` pushes them.
+`dotfiles diff` what would change and `dotfiles push` pushes them;
+`dotfiles git <command>` runs any git command in each of them.
 `dotfiles-apply` and `dotfiles-update` are aliases for the first two.
 
 ## Day to day
@@ -164,6 +165,7 @@ dotfiles update         # every overlay and the base: pull, then apply
 dotfiles status         # anything left to apply, per repo
 dotfiles diff           # chezmoi diff of each repo with something to apply
 dotfiles push           # git push each repo with unpushed commits
+dotfiles git status -sb # any git command in each repo (git diff, git log, ...)
 ```
 
 ## Drift detection
