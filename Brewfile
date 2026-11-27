@@ -72,7 +72,7 @@ brew "kubectx"
 brew "lazygit"
 # Utility for directing compilation
 brew "make"
-# Ambitious Vim-fork focused on extensibility and agility (vscode-neovim needs it)
+# Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
 # PAM module for reattaching to the user's GUI (Aqua) session
 brew "pam-reattach"
@@ -138,7 +138,6 @@ cask "openlogi"
 cask "rectangle"
 # Open-source code editor
 cask "visual-studio-code"
-vscode "asvetliakov.vscode-neovim"
 vscode "catppuccin.catppuccin-vsc-icons"
 vscode "chrisdias.vscode-opennewinstance"
 vscode "codezombiech.gitignore"
