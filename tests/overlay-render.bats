@@ -88,6 +88,17 @@ script() { # rendered run_ script, by name pattern
   grep -q 'status_indicators = "symbols"' "$HOME/.config/herdr/config.toml"
 }
 
+@test "merged TOML files: one that already holds every value is left byte for byte" {
+  local f
+  for f in "$HOME/.config/herdr/config.toml" "$HOME/.config/openlogi/config.toml"; do
+    [ -f "$f" ] || continue
+    printf '# the app\x27s own layout\n' >> "$f"
+    cp "$f" "$f.before"
+    cm apply --force "$f"
+    cmp "$f.before" "$f"
+  done
+}
+
 @test "herdr integrations script reruns when herdr or an agent changes" {
   command -v herdr >/dev/null || skip "herdr not installed"
   run script herdr-integrations
